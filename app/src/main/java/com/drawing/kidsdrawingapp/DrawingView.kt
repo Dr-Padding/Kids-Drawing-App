@@ -77,13 +77,13 @@ class DrawingView(context: Context, attrs: AttributeSet) : View(context, attrs) 
     @TargetApi(Build.VERSION_CODES.Q)
     private fun setUpDrawing() {
         mDrawPaint = Paint()
-        mDrawPath = CustomPath(color, mBrushSize)
         mDrawPaint!!.color = color
         mDrawPaint!!.style = Paint.Style.STROKE
         mDrawPaint!!.strokeJoin = Paint.Join.ROUND
         mDrawPaint!!.strokeCap = Paint.Cap.ROUND
-        mCanvasPaint = Paint(Paint.DITHER_FLAG)
         mDrawPaint!!.isDither = true
+        mDrawPath = CustomPath(color, mBrushSize)
+        mCanvasPaint = Paint(Paint.DITHER_FLAG)
     }
 
     override fun onSizeChanged(w: Int, h: Int, oldw: Int, oldh: Int) {
@@ -100,109 +100,97 @@ class DrawingView(context: Context, attrs: AttributeSet) : View(context, attrs) 
         canvas.drawBitmap(mCanvasBitmap!!, 0f, 0f, mCanvasPaint)
 
 
+        if (!erase) {
+
             for (path in mPaths) {
-
-                    // commit the path to our offscreen
-                    //canvas.drawPath(mDrawPath!!, mDrawPaint!!)
-                    // kill this so we don't double draw
-                    //mDrawPath!!.reset()
-
-                    mDrawPaint!!.strokeWidth = path.brushThickness
-                    mDrawPaint!!.color = path.color
-                    canvas.drawPath(path, mDrawPaint!!)
+                mDrawPaint!!.strokeWidth = path.brushThickness
+                mDrawPaint!!.color = path.color
+                canvas.drawPath(path, mDrawPaint!!)
 
             }
 
-        if (!mDrawPath!!.isEmpty) {
-            mDrawPaint!!.strokeWidth = mDrawPath!!.brushThickness
-            mDrawPaint!!.color = mDrawPath!!.color
-            canvas.drawPath(mDrawPath!!, mDrawPaint!!)
+            if (!mDrawPath!!.isEmpty) {
+                mDrawPaint!!.strokeWidth = mDrawPath!!.brushThickness
+                mDrawPaint!!.color = mDrawPath!!.color
+                canvas.drawPath(mDrawPath!!, mDrawPaint!!)
+            }
+
         }
 
 
 
     }
+//
+//
+//    private var mX = 0f
+//    private var mY = 0f
+//    private fun touchStart(x: Float, y: Float) {
+//        mDrawPath!!.reset()
+//        mDrawPath!!.moveTo(x, y)
+//        mX = x
+//        mY = y
+//    }
+//
+//    private fun touchMove(x: Float, y: Float) {
+//
+//        val dx = abs(x - mX)
+//        val dy = abs(y - mY)
+//        if (dx >= TOUCH_TOLERANCE || dy >= TOUCH_TOLERANCE) {
+//            mDrawPath!!.quadTo(mX, mY, (x + mX) / 2, (y + mY) / 2)
+//            mX = x
+//            mY = y
+//        }
+//    }
+//
+//    private fun touchUp() {
+//
+//
+//
+//
+//    }
+//
+//    @SuppressLint("ClickableViewAccessibility")
+//    override fun onTouchEvent(event: MotionEvent?): Boolean {
+//        val x = event?.x
+//        val y = event?.y
+//
+//        if (event != null) {
+//            when (event.action) {
+//                MotionEvent.ACTION_DOWN -> {
+//
+//                    mDrawPath!!.color = color
+//                    mDrawPath!!.brushThickness = mBrushSize
+//
+//                    if (x != null) {
+//                        if (y != null) {
+//                            touchStart(x, y)
+//                        }
+//                    }
+//                    invalidate()
+//                }
+//                MotionEvent.ACTION_MOVE -> {
+//                    if (x != null) {
+//                        if (y != null) {
+//                            touchMove(x, y)
+//                        }
+//                    }
+//                    invalidate()
+//                }
+//                MotionEvent.ACTION_UP -> {
+//                    touchUp()
+//                    invalidate()
+//                }
+//            }
+//        }
+//        return true
+//    }
+//
+//    companion object {
+//        private const val TOUCH_TOLERANCE = 4f
+//    }
 
-
-    private var mX = 0f
-    private var mY = 0f
-    private fun touchStart(x: Float, y: Float) {
-        mDrawPath!!.reset()
-        mDrawPath!!.moveTo(x, y)
-        mX = x
-        mY = y
-    }
-
-    private fun touchMove(x: Float, y: Float) {
-
-        val dx = abs(x - mX)
-        val dy = abs(y - mY)
-        if (dx >= TOUCH_TOLERANCE || dy >= TOUCH_TOLERANCE) {
-            mDrawPath!!.quadTo(mX, mY, (x + mX) / 2, (y + mY) / 2)
-            mX = x
-            mY = y
-        }
-    }
-
-    private fun touchUp() {
-            mDrawPath!!.lineTo(mX, mY)
-
-
-
-            // commit the path to our offscreen
-            canvas!!.drawPath(mDrawPath!!, mDrawPaint!!)
-
-        mPaths.add(mDrawPath!!)
-        //mDrawPath = CustomPath(color, mBrushSize)
-
-            // kill this so we don't double draw
-            mDrawPath!!.reset()
-
-
-    }
 
     @SuppressLint("ClickableViewAccessibility")
-    override fun onTouchEvent(event: MotionEvent?): Boolean {
-        val x = event?.x
-        val y = event?.y
-
-        if (event != null) {
-            when (event.action) {
-                MotionEvent.ACTION_DOWN -> {
-
-                    mDrawPath!!.color = color
-                    mDrawPath!!.brushThickness = mBrushSize
-
-                    if (x != null) {
-                        if (y != null) {
-                            touchStart(x, y)
-                        }
-                    }
-                    invalidate()
-                }
-                MotionEvent.ACTION_MOVE -> {
-                    if (x != null) {
-                        if (y != null) {
-                            touchMove(x, y)
-                        }
-                    }
-                    invalidate()
-                }
-                MotionEvent.ACTION_UP -> {
-                    touchUp()
-                    invalidate()
-                }
-            }
-        }
-        return true
-    }
-
-    companion object {
-        private const val TOUCH_TOLERANCE = 4f
-    }
-
-
-    /*   @SuppressLint("ClickableViewAccessibility")
        override fun onTouchEvent(event: MotionEvent?): Boolean {
            val touchX = event?.x
            val touchY = event?.y
@@ -212,7 +200,9 @@ class DrawingView(context: Context, attrs: AttributeSet) : View(context, attrs) 
                    mDrawPath!!.color = color
                    mDrawPath!!.brushThickness = mBrushSize
 
+
                    mDrawPath!!.reset()
+
                    if (touchX != null) {
                        if (touchY != null) {
                            mDrawPath!!.moveTo(touchX, touchY)
@@ -227,8 +217,27 @@ class DrawingView(context: Context, attrs: AttributeSet) : View(context, attrs) 
                    }
                }
                MotionEvent.ACTION_UP ->{
-                   mPaths.add(mDrawPath!!)
-                   mDrawPath = CustomPath(color, mBrushSize)
+
+                   if (touchX != null) {
+                       if (touchY != null) {
+                           mDrawPath!!.lineTo(touchX, touchY)
+                       }
+                   }
+
+
+            if (erase) {
+                // commit the path to our offscreen
+                canvas!!.drawPath(mDrawPath!!, mDrawPaint!!)
+            }
+
+            mPaths.add(mDrawPath!!)
+            mDrawPath = CustomPath(color, mBrushSize)
+
+
+            if (erase) {
+                // kill this so we don't double draw
+                mDrawPath!!.reset()
+            }
 
                }
                else -> return false
@@ -236,7 +245,7 @@ class DrawingView(context: Context, attrs: AttributeSet) : View(context, attrs) 
            invalidate()
 
            return true
-       }*/
+       }
 
     fun setSizeForBrush(newSize: Float) {
         mBrushSize = TypedValue.applyDimension(

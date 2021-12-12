@@ -487,6 +487,9 @@ class MainActivity : AppCompatActivity(), Adapter.MyOnClickListener {
             8 -> {
                 bottomSheetFragment.show(supportFragmentManager, tag)
             }
+            9 -> {
+
+            }
         }
     }
 
