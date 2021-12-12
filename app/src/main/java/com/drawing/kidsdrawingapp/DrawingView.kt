@@ -34,7 +34,10 @@ class DrawingView(context: Context, attrs: AttributeSet) : View(context, attrs) 
     }
 
     fun onClickUndo() {
-        //erase = true
+
+//            erase = false
+//        mDrawPaint!!.xfermode = null
+
         if (mPaths.size > 0) {
             mUndoPaths.add(mPaths.removeAt(mPaths.size - 1))
             invalidate()
@@ -59,12 +62,9 @@ class DrawingView(context: Context, attrs: AttributeSet) : View(context, attrs) 
 
             mDrawPaint!!.apply {
                 isAntiAlias = true
-
                 // destination pixels covered by the source are cleared to 0
                 xfermode = PorterDuffXfermode(PorterDuff.Mode.CLEAR)
             }
-
-            //mDrawPaint!!.xfermode = PorterDuffXfermode(PorterDuff.Mode.CLEAR)
         } else {
             mDrawPaint!!.xfermode = null
         }
@@ -100,7 +100,7 @@ class DrawingView(context: Context, attrs: AttributeSet) : View(context, attrs) 
         canvas.drawBitmap(mCanvasBitmap!!, 0f, 0f, mCanvasPaint)
 
 
-        if (!erase) {
+        //if (!erase) {
 
             for (path in mPaths) {
                 mDrawPaint!!.strokeWidth = path.brushThickness
@@ -115,7 +115,7 @@ class DrawingView(context: Context, attrs: AttributeSet) : View(context, attrs) 
                 canvas.drawPath(mDrawPath!!, mDrawPaint!!)
             }
 
-        }
+        //}
 
 
 
@@ -197,6 +197,7 @@ class DrawingView(context: Context, attrs: AttributeSet) : View(context, attrs) 
 
            when(event?.action){
                MotionEvent.ACTION_DOWN ->{
+
                    mDrawPath!!.color = color
                    mDrawPath!!.brushThickness = mBrushSize
 
@@ -224,20 +225,23 @@ class DrawingView(context: Context, attrs: AttributeSet) : View(context, attrs) 
                        }
                    }
 
+                if (erase) {
+                    // commit the path to our offscreen
+                    canvas!!.drawPath(mDrawPath!!, mDrawPaint!!)
 
-            if (erase) {
-                // commit the path to our offscreen
-                canvas!!.drawPath(mDrawPath!!, mDrawPaint!!)
-            }
+                    // kill this so we don't double draw
+                    mDrawPath!!.reset()
+                }
+
 
             mPaths.add(mDrawPath!!)
             mDrawPath = CustomPath(color, mBrushSize)
 
 
-            if (erase) {
-                // kill this so we don't double draw
-                mDrawPath!!.reset()
-            }
+
+
+
+
 
                }
                else -> return false
