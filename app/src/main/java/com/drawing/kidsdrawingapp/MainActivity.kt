@@ -37,9 +37,6 @@ import java.util.concurrent.Executors
 import com.drawing.kidsdrawingapp.adapters.Adapter
 import com.drawing.kidsdrawingapp.databinding.DialogBrushSizeBinding
 import com.drawing.kidsdrawingapp.fragments.BottomSheetFragment
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
 
 
 //Bismillahi-r-Rahmani-r-Rahim

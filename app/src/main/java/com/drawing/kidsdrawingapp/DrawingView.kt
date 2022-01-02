@@ -26,6 +26,8 @@ class DrawingView(context: Context, attrs: AttributeSet) : View(context, attrs) 
     private val mPaths = ArrayList<CustomPath>()
     private val mUndoPaths = ArrayList<CustomPath>()
     // Eraser mode
+    private val mEraserPaths = ArrayList<CustomPath>()
+    private var mDrawEraserPaint: Paint? = null
     private var erase = false
 
 
@@ -36,7 +38,7 @@ class DrawingView(context: Context, attrs: AttributeSet) : View(context, attrs) 
     fun onClickUndo() {
 
 //            erase = false
-//        mDrawPaint!!.xfermode = null
+
 
         if (mPaths.size > 0) {
             mUndoPaths.add(mPaths.removeAt(mPaths.size - 1))
@@ -61,6 +63,10 @@ class DrawingView(context: Context, attrs: AttributeSet) : View(context, attrs) 
         if (erase) {
 
             mDrawPaint!!.apply {
+
+                maskFilter = null
+                alpha = 0xFF
+
                 isAntiAlias = true
                 // destination pixels covered by the source are cleared to 0
                 xfermode = PorterDuffXfermode(PorterDuff.Mode.CLEAR)
@@ -197,6 +203,11 @@ class DrawingView(context: Context, attrs: AttributeSet) : View(context, attrs) 
 
            when(event?.action){
                MotionEvent.ACTION_DOWN ->{
+
+//                   if (erase){
+//                       for (i in mPaths.indices - 2)
+//                       mDrawPaint!!.xfermode = null
+//                   }
 
                    mDrawPath!!.color = color
                    mDrawPath!!.brushThickness = mBrushSize
