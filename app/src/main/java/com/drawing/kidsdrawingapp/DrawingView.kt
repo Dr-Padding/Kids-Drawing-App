@@ -138,7 +138,6 @@ class DrawingView(context: Context, attrs: AttributeSet): View(context, attrs) {
             MotionEvent.ACTION_UP -> {
                 mDrawPath!!.lineTo(touchX!!, touchY!!)
 
-                //THESE 2 LINES OF CODE
                 // commit the path to our offscreen
                 canvas?.drawPath(mDrawPath!!, mDrawPaint!!)
                 //kill this so we don't double draw
