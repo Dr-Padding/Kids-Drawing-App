@@ -186,6 +186,11 @@ class DrawingView(context: Context, attrs: AttributeSet): View(context, attrs) {
     private val undoBitmap = ArrayList<Bitmap>()
 
 
+    init {
+        setUpDrawing()
+    }
+
+
     override fun onSizeChanged(w: Int, h: Int, oldw: Int, oldh: Int) {
         super.onSizeChanged(w, h, oldw, oldh)
         if (mBitmap == null) {
@@ -205,13 +210,13 @@ class DrawingView(context: Context, attrs: AttributeSet): View(context, attrs) {
         if (isEraserOn) {
             eraserOn = true
             drawPaint!!.setColor(resources.getColor(R.color.transparent))
-            drawPaint!!.setXfermode(PorterDuffXfermode(PorterDuff.Mode.CLEAR))
+            drawPaint!!.xfermode = PorterDuffXfermode(PorterDuff.Mode.CLEAR)
             penSelected = false
             eraserSelected = true
         } else {
             eraserOn = false
-            drawPaint!!.setColor(drawPaint!!.color) //??
-            drawPaint!!.setXfermode(null)
+            //drawPaint!!.setColor(drawPaint!!.color) //??
+            drawPaint!!.xfermode = null
             eraserSelected = false
             penSelected = true
         }
@@ -276,6 +281,7 @@ class DrawingView(context: Context, attrs: AttributeSet): View(context, attrs) {
                     drawPath.lineTo(touchX, touchY)
                 }
                 MotionEvent.ACTION_UP -> {
+                    drawPath.lineTo(touchX, touchY)
                     mCanvas!!.drawPath(drawPath, drawPaint!!)
                     drawPath.reset()
                 }
@@ -288,7 +294,7 @@ class DrawingView(context: Context, attrs: AttributeSet): View(context, attrs) {
         return false
     }
 
-    init {
+    private fun setUpDrawing() {
         circlePaint.isAntiAlias = true
         circlePaint.color = Color.BLUE
         circlePaint.style = Paint.Style.STROKE
@@ -302,7 +308,6 @@ class DrawingView(context: Context, attrs: AttributeSet): View(context, attrs) {
         drawPaint!!.setStrokeJoin(Paint.Join.ROUND)
         drawPaint!!.setStrokeCap(Paint.Cap.ROUND)
         drawPaint!!.setStrokeWidth(20F)
-        //   drawPaint.setAlpha(80);
     }
 
         fun setSizeForBrush(newSize: Float) {
