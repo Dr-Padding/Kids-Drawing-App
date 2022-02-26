@@ -20,7 +20,9 @@
         <entry key="app/src/main/res/layout/bottom_sheet_fragment.xml" value="0.16621376811594202" />
         <entry key="app/src/main/res/layout/custom_toast.xml" value="0.25" />
         <entry key="app/src/main/res/layout/dialog_brush_size.xml" value="0.25181159420289856" />
+        <entry key="app/src/main/res/layout/dialog_eraser_size.xml" value="0.25181159420289856" />
         <entry key="app/src/main/res/layout/gif_item.xml" value="0.23596014492753623" />
+        <entry key="app/src/main/res/layout/item_tool.xml" value="0.13652482269503546" />
       </map>
     </option>
   </component>

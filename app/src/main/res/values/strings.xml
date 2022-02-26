@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">Kids Drawing app</string>
+    <string name="more_sizes">More sizes</string>
+    <string name="clear_all">Clear all</string>
 </resources>

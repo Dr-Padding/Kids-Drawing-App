@@ -37,6 +37,7 @@ import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
 import com.drawing.kidsdrawingapp.adapters.Adapter
 import com.drawing.kidsdrawingapp.databinding.DialogBrushSizeBinding
+import com.drawing.kidsdrawingapp.databinding.DialogEraserSizeBinding
 import com.drawing.kidsdrawingapp.fragments.BottomSheetFragment
 
 
@@ -226,7 +227,7 @@ class MainActivity : AppCompatActivity(), Adapter.MyOnClickListener {
         val brushDialog = Dialog(this)
         brushDialog.setTitle("Eraser size:")
 
-        val dialogBinding: DialogBrushSizeBinding = DialogBrushSizeBinding.inflate(layoutInflater)
+        val dialogBinding: DialogEraserSizeBinding = DialogEraserSizeBinding.inflate(layoutInflater)
         brushDialog.setContentView(dialogBinding.root)
 
 
