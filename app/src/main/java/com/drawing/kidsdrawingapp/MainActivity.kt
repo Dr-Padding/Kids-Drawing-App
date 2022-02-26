@@ -24,6 +24,7 @@ import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.OrientationHelper
+import androidx.recyclerview.widget.RecyclerView
 import com.drawing.kidsdrawingapp.Constants.STORAGE_PERMISSION_CODE
 import com.drawing.kidsdrawingapp.Constants.STORAGE_REQUEST_CODE
 import com.drawing.kidsdrawingapp.Constants.UPLOAD_PERMISSION
@@ -52,9 +53,7 @@ class MainActivity : AppCompatActivity(), Adapter.MyOnClickListener {
     var mCameraLaunched = false
     private val bottomSheetFragment = BottomSheetFragment()
 
-    ///////////////////////////////OnCreate method START
-    @SuppressLint("WrongConstant")
-    @RequiresApi(Build.VERSION_CODES.Q)
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
@@ -78,7 +77,7 @@ class MainActivity : AppCompatActivity(), Adapter.MyOnClickListener {
         val adapter = Adapter(toolsList, this@MainActivity)
         binding.rvToolsMenu.adapter = adapter
         binding.rvToolsMenu.layoutManager =
-            LinearLayoutManager(this, OrientationHelper.HORIZONTAL, false)
+            LinearLayoutManager(this, RecyclerView.HORIZONTAL, false)
 
         binding.drawingView.setSizeForBrush(10.toFloat())
 
@@ -99,7 +98,6 @@ class MainActivity : AppCompatActivity(), Adapter.MyOnClickListener {
             mCameraLaunched = false
             binding.drawingView.visibility = View.VISIBLE
         }
-                ///////////////////////////////OnCreate method END
     }
 
     /*   internal fun getBitmapFromView(view: View): Bitmap {
@@ -154,7 +152,7 @@ class MainActivity : AppCompatActivity(), Adapter.MyOnClickListener {
         }
     }
 
-    @RequiresApi(Build.VERSION_CODES.N)
+
     private fun cameraLaunch() {
         if (cameraPermissionGranted()) {
             startCamera()
@@ -190,7 +188,6 @@ class MainActivity : AppCompatActivity(), Adapter.MyOnClickListener {
     }
 
 
-    @RequiresApi(Build.VERSION_CODES.Q)
     private fun brushSizeChooseDialog() {
 
         val brushDialog = Dialog(this)
@@ -202,21 +199,21 @@ class MainActivity : AppCompatActivity(), Adapter.MyOnClickListener {
         val smallBtn = dialogBinding.ibSmallBrush
         smallBtn.setOnClickListener {
             binding.drawingView.onClickEraser(false)
-            binding.drawingView.setSizeForBrush(10.toFloat())
+            binding.drawingView.setSizeForBrush(4.toFloat())
             brushDialog.dismiss()
         }
 
         val mediumBtn = dialogBinding.ibMediumBrush
         mediumBtn.setOnClickListener {
             binding.drawingView.onClickEraser(false)
-            binding.drawingView.setSizeForBrush(20.toFloat())
+            binding.drawingView.setSizeForBrush(10.toFloat())
             brushDialog.dismiss()
         }
 
         val largeBtn = dialogBinding.ibLargeBrush
         largeBtn.setOnClickListener {
             binding.drawingView.onClickEraser(false)
-            binding.drawingView.setSizeForBrush(30.toFloat())
+            binding.drawingView.setSizeForBrush(20.toFloat())
             brushDialog.dismiss()
         }
 
@@ -224,7 +221,6 @@ class MainActivity : AppCompatActivity(), Adapter.MyOnClickListener {
     }
 
 
-    @RequiresApi(Build.VERSION_CODES.Q)
     private fun eraserSizeChooseDialog() {
 
         val brushDialog = Dialog(this)
@@ -237,21 +233,21 @@ class MainActivity : AppCompatActivity(), Adapter.MyOnClickListener {
         val smallBtn = dialogBinding.ibSmallBrush
         smallBtn.setOnClickListener {
             binding.drawingView.onClickEraser(true)
-            binding.drawingView.setSizeForBrush(10.toFloat())
+            binding.drawingView.setSizeForBrush(4.toFloat())
             brushDialog.dismiss()
         }
 
         val mediumBtn = dialogBinding.ibMediumBrush
         mediumBtn.setOnClickListener {
             binding.drawingView.onClickEraser(true)
-            binding.drawingView.setSizeForBrush(20.toFloat())
+            binding.drawingView.setSizeForBrush(10.toFloat())
             brushDialog.dismiss()
         }
 
         val largeBtn = dialogBinding.ibLargeBrush
         largeBtn.setOnClickListener {
             binding.drawingView.onClickEraser(true)
-            binding.drawingView.setSizeForBrush(30.toFloat())
+            binding.drawingView.setSizeForBrush(20.toFloat())
             brushDialog.dismiss()
         }
 
@@ -259,11 +255,7 @@ class MainActivity : AppCompatActivity(), Adapter.MyOnClickListener {
     }
 
 
-    @RequiresApi(Build.VERSION_CODES.Q)
     private fun colorPicker() {
-
-        //TODO set the brush size back to the last one, for this create getLastBrushSize() function
-
         binding.drawingView.onClickEraser(false)
         val colorPicker = ColorPicker(this)
         colorPicker.setOnFastChooseColorListener(object :
