@@ -209,13 +209,13 @@ class DrawingView(context: Context, attrs: AttributeSet): View(context, attrs) {
     fun onClickEraser(isEraserOn: Boolean) {
         if (isEraserOn) {
             eraserOn = true
-            drawPaint!!.setColor(resources.getColor(R.color.transparent))
+            //drawPaint!!.setColor(resources.getColor(R.color.transparent))
             drawPaint!!.xfermode = PorterDuffXfermode(PorterDuff.Mode.CLEAR)
             penSelected = false
             eraserSelected = true
         } else {
             eraserOn = false
-            //drawPaint!!.setColor(drawPaint!!.color) //??
+            drawPaint!!.color = drawPaint!!.color
             drawPaint!!.xfermode = null
             eraserSelected = false
             penSelected = true
@@ -233,11 +233,13 @@ class DrawingView(context: Context, attrs: AttributeSet): View(context, attrs) {
             mCanvas = Canvas(mBitmap!!)
             invalidate()
             if (bitmap.size == 1) allClear = true
-        } else {
-            val toast = Toast.makeText(context.applicationContext, "nothing to Undo", Toast.LENGTH_SHORT)
-            toast.setGravity(Gravity.CENTER, 0, 0)
-            toast.show()
         }
+
+//        else {
+//            val toast = Toast.makeText(context.applicationContext, "nothing to Undo", Toast.LENGTH_SHORT)
+//            toast.setGravity(Gravity.CENTER, 0, 0)
+//            toast.show()
+//        }
     }
 
     fun onClickRedo() {
@@ -246,11 +248,13 @@ class DrawingView(context: Context, attrs: AttributeSet): View(context, attrs) {
             mBitmap = bitmap[bitmap.size - 1].copy(mBitmap!!.config, mBitmap!!.isMutable)
             mCanvas = Canvas(mBitmap!!)
             invalidate()
-        } else {
-            val toast = Toast.makeText(context, "nothing to Redo", Toast.LENGTH_SHORT)
-            toast.setGravity(Gravity.CENTER, 0, 0)
-            toast.show()
         }
+
+//        else {
+//            val toast = Toast.makeText(context, "nothing to Redo", Toast.LENGTH_SHORT)
+//            toast.setGravity(Gravity.CENTER, 0, 0)
+//            toast.show()
+//        }
     }
 
     override fun performClick(): Boolean {
@@ -299,15 +303,15 @@ class DrawingView(context: Context, attrs: AttributeSet): View(context, attrs) {
         circlePaint.color = Color.BLUE
         circlePaint.style = Paint.Style.STROKE
         circlePaint.strokeJoin = Paint.Join.MITER
-        circlePaint.strokeWidth = 4f
+        //circlePaint.strokeWidth = 4f
         drawPaint = Paint()
-        drawPaint!!.setAntiAlias(true)
-        drawPaint!!.setDither(true)
-        drawPaint!!.setColor(Color.BLACK)
-        drawPaint!!.setStyle(Paint.Style.STROKE)
-        drawPaint!!.setStrokeJoin(Paint.Join.ROUND)
-        drawPaint!!.setStrokeCap(Paint.Cap.ROUND)
-        drawPaint!!.setStrokeWidth(20F)
+        drawPaint!!.isAntiAlias = true
+        drawPaint!!.isDither = true
+        drawPaint!!.color = Color.BLACK
+        drawPaint!!.style = Paint.Style.STROKE
+        drawPaint!!.strokeJoin = Paint.Join.ROUND
+        drawPaint!!.strokeCap = Paint.Cap.ROUND
+        //drawPaint!!.strokeWidth = 20F
     }
 
         fun setSizeForBrush(newSize: Float) {
