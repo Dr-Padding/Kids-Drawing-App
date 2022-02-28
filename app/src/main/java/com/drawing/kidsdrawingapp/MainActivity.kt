@@ -53,6 +53,7 @@ class MainActivity : AppCompatActivity(), Adapter.MyOnClickListener {
     lateinit var cameraProvider: ProcessCameraProvider
     var mCameraLaunched = false
     private val bottomSheetFragment = BottomSheetFragment()
+    private var allClearSelected = false
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -253,6 +254,19 @@ class MainActivity : AppCompatActivity(), Adapter.MyOnClickListener {
         }
 
         brushDialog.show()
+
+        val clearAllBtn = dialogBinding.btnClearAll
+        clearAllBtn.setOnClickListener {
+
+                binding.drawingView.onClickEraser(true)
+                binding.drawingView.setSizeForBrush(999999.toFloat())
+
+            allClearSelected = true //??
+            binding.drawingView.allCleared(allClearSelected)
+
+
+            brushDialog.dismiss()
+        }
     }
 
 
@@ -289,8 +303,7 @@ class MainActivity : AppCompatActivity(), Adapter.MyOnClickListener {
     }
 
 
-    @RequiresApi(Build.VERSION_CODES.N)
-    fun takePhoto() {
+    private fun takePhoto() {
         val imageCapture = imageCapture ?: return
         val photoFile = File(
             outputDirectory,
@@ -340,7 +353,6 @@ class MainActivity : AppCompatActivity(), Adapter.MyOnClickListener {
         }
 
 
-    @RequiresApi(Build.VERSION_CODES.N)
     override fun onRequestPermissionsResult(
         requestCode: Int,
         permissions: Array<out String>,
@@ -381,7 +393,6 @@ class MainActivity : AppCompatActivity(), Adapter.MyOnClickListener {
     }
 
 
-    @RequiresApi(Build.VERSION_CODES.N)
     private fun startCamera() {
         val cameraProviderFuture = ProcessCameraProvider.getInstance(this)
         cameraProviderFuture.addListener({
@@ -446,7 +457,6 @@ class MainActivity : AppCompatActivity(), Adapter.MyOnClickListener {
     }
 
 
-    @RequiresApi(Build.VERSION_CODES.Q)
     override fun onClick(position: Int) {
         when (position) {
             0 -> {
@@ -469,7 +479,6 @@ class MainActivity : AppCompatActivity(), Adapter.MyOnClickListener {
             }
             6 -> {
                 eraserSizeChooseDialog()
-                binding.drawingView.onClickEraser(true)
             }
             7 -> {
                 onClickBin()
