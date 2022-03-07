@@ -261,8 +261,8 @@ class MainActivity : AppCompatActivity(), Adapter.MyOnClickListener {
                 binding.drawingView.onClickEraser(true)
                 binding.drawingView.setSizeForBrush(999999.toFloat())
 
-            allClearSelected = true //??
-            binding.drawingView.allCleared(allClearSelected)
+            //allClearSelected = true //??
+            //binding.drawingView.allCleared(allClearSelected)
 
 
             brushDialog.dismiss()

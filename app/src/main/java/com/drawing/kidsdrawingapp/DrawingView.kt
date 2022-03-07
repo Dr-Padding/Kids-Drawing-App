@@ -7,6 +7,7 @@ import android.util.AttributeSet
 import android.util.TypedValue
 import android.view.MotionEvent
 import android.view.View
+import android.widget.Toast
 
 
 class DrawingView(context: Context, attrs: AttributeSet): View(context, attrs) {
@@ -99,10 +100,6 @@ class DrawingView(context: Context, attrs: AttributeSet): View(context, attrs) {
                         )
                     ) else allClear = false
 
-//                    if (eraserSelected){
-//                        tappedOnce = true
-//                    }
-
                     drawPath.moveTo(touchX, touchY)
                 }
                 MotionEvent.ACTION_MOVE -> if (eraserOn) {
@@ -117,6 +114,11 @@ class DrawingView(context: Context, attrs: AttributeSet): View(context, attrs) {
                     drawPath.lineTo(touchX, touchY)
                     mCanvas!!.drawPath(drawPath, drawPaint!!)
                     drawPath.reset()
+
+                    if (drawPaint!!.strokeWidth >= 9999.toFloat()){
+                        onClickEraser(false)
+                        setSizeForBrush(10.toFloat())
+                    }
                 }
                 MotionEvent.ACTION_CANCEL -> return false
                 else -> return false
@@ -150,12 +152,6 @@ class DrawingView(context: Context, attrs: AttributeSet): View(context, attrs) {
 
     fun setColor(color: Int) {
         drawPaint!!.color = color
-    }
-
-    fun allCleared(allClearSelected: Boolean){
-        if (allClearSelected && tappedOnce){
-            eraserOn = false
-        }
     }
 
 }
