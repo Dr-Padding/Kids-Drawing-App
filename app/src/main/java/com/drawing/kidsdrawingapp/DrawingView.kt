@@ -25,7 +25,6 @@ class DrawingView(context: Context, attrs: AttributeSet): View(context, attrs) {
     private val drawPath: Path = Path()
     private val bitmap = ArrayList<Bitmap>()
     private val undoBitmap = ArrayList<Bitmap>()
-    var tappedOnce = false
 
 
     init {

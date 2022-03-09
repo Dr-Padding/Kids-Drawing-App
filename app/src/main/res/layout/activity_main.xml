@@ -26,6 +26,9 @@
         android:contentDescription="Take Photo Button"
         android:src="@drawable/ic_camera_snap"
         app:fabSize="auto"
+        android:backgroundTint="@color/white"
+        app:borderWidth="3dp"
+
         app:layout_constraintBottom_toTopOf="@id/guideline2"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
