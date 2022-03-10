@@ -1,10 +1,11 @@
-package com.drawing.kidsdrawingapp.adapters
+package com.drawing.paint.adapters
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.drawing.kidsdrawingapp.Tools
-import com.drawing.kidsdrawingapp.databinding.ItemToolBinding
+import com.drawing.paint.Tools
+import com.drawing.paint.databinding.ItemToolBinding
+
 
 
 class Adapter(val tools: List<Tools>, val listener: MyOnClickListener): RecyclerView.Adapter<Adapter.ToolsViewHolder>() {

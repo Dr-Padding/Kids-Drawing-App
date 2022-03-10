@@ -5,7 +5,19 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MainActivity">
+    tools:context="com.drawing.paint.MainActivity">
+
+    <com.google.android.gms.ads.AdView
+        android:id="@+id/avTopBanner"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:adSize ="BANNER"
+        app:adUnitId="ca-app-pub-3940256099942544/6300978111"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/guideline1"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rv_tools_menu"
@@ -23,16 +35,16 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="16dp"
+        android:backgroundTint="@color/grey1"
         android:contentDescription="Take Photo Button"
         android:src="@drawable/ic_camera_snap"
+        app:borderWidth="4dp"
         app:fabSize="auto"
-        android:backgroundTint="@color/white"
-        app:borderWidth="3dp"
-
         app:layout_constraintBottom_toTopOf="@id/guideline2"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:tint="@color/white" />
 
     <ProgressBar
         android:id="@+id/ProgressBar"
@@ -45,8 +57,7 @@
         app:layout_constraintBottom_toTopOf="@id/guideline2"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="parent"
-        />
+        app:layout_constraintStart_toStartOf="parent" />
 
 
     <ImageView
@@ -68,7 +79,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@id/guideline1" />
 
-    <com.drawing.kidsdrawingapp.DrawingView
+    <com.drawing.paint.DrawingView
         android:id="@+id/drawing_view"
         android:layout_width="0dp"
         android:layout_height="0dp"

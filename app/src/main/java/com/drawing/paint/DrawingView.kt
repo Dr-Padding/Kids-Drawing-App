@@ -1,4 +1,4 @@
-package com.drawing.kidsdrawingapp
+package com.drawing.paint
 
 
 import android.content.Context
@@ -7,7 +7,6 @@ import android.util.AttributeSet
 import android.util.TypedValue
 import android.view.MotionEvent
 import android.view.View
-import android.widget.Toast
 
 
 class DrawingView(context: Context, attrs: AttributeSet): View(context, attrs) {

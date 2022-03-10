@@ -1,21 +1,18 @@
-package com.drawing.kidsdrawingapp
+package com.drawing.paint
 
 
 import android.Manifest
-import android.annotation.SuppressLint
 import android.app.Dialog
 import android.content.DialogInterface
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.icu.text.SimpleDateFormat
 import android.net.Uri
-import android.os.Build
 import android.os.Bundle
 import android.provider.MediaStore
 import android.util.Log
 import android.view.View
 import android.widget.Toast
-import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.camera.core.*
@@ -23,22 +20,24 @@ import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.OrientationHelper
 import androidx.recyclerview.widget.RecyclerView
-import com.drawing.kidsdrawingapp.Constants.STORAGE_PERMISSION_CODE
-import com.drawing.kidsdrawingapp.Constants.STORAGE_REQUEST_CODE
-import com.drawing.kidsdrawingapp.Constants.UPLOAD_PERMISSION
-import com.drawing.kidsdrawingapp.Constants.tag
-import com.drawing.kidsdrawingapp.databinding.ActivityMainBinding
+import com.drawing.paint.Constants.STORAGE_PERMISSION_CODE
+import com.drawing.paint.Constants.STORAGE_REQUEST_CODE
+import com.drawing.paint.Constants.UPLOAD_PERMISSION
+import com.drawing.paint.Constants.tag
 import petrov.kristiyan.colorpicker.ColorPicker
 import java.io.File
 import java.util.*
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
-import com.drawing.kidsdrawingapp.adapters.Adapter
-import com.drawing.kidsdrawingapp.databinding.DialogBrushSizeBinding
-import com.drawing.kidsdrawingapp.databinding.DialogEraserSizeBinding
-import com.drawing.kidsdrawingapp.fragments.BottomSheetFragment
+import com.drawing.paint.adapters.Adapter
+import com.drawing.paint.databinding.ActivityMainBinding
+import com.drawing.paint.databinding.DialogBrushSizeBinding
+import com.drawing.paint.databinding.DialogEraserSizeBinding
+import com.drawing.paint.fragments.BottomSheetFragment
+import com.google.android.gms.ads.AdRequest
+import com.google.android.gms.ads.MobileAds
+
 
 
 //Bismillahi-r-Rahmani-r-Rahim
@@ -53,13 +52,16 @@ class MainActivity : AppCompatActivity(), Adapter.MyOnClickListener {
     lateinit var cameraProvider: ProcessCameraProvider
     var mCameraLaunched = false
     private val bottomSheetFragment = BottomSheetFragment()
-    private var allClearSelected = false
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        MobileAds.initialize(this@MainActivity)
+        val adRequest = AdRequest.Builder().build()
+        binding.avTopBanner.loadAd(adRequest)
 
 
         val toolsList = mutableListOf(

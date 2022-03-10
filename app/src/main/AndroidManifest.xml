@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.drawing.kidsdrawingapp">
+    package="com.drawing.paint">
 
     <uses-feature android:name="android.hardware.camera.any"
         android:required="false" />
@@ -18,9 +18,14 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.KidsDrawingApp">
-        <activity android:name=".MainActivity"
+
+        <meta-data
+            android:name="com.google.android.gms.ads.APPLICATION_ID"
+            android:value="ca-app-pub-7754594115862131~1847238440"/>
+
+        <activity android:name="com.drawing.paint.MainActivity"
             android:screenOrientation="portrait"
-            >
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

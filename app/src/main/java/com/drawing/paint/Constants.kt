@@ -1,6 +1,4 @@
-package com.drawing.kidsdrawingapp
-
-import java.util.jar.Manifest
+package com.drawing.paint
 
 object Constants {
     const val tag = "BottomSheetDialog"

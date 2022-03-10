@@ -1,16 +1,15 @@
-package com.drawing.kidsdrawingapp.fragments
+package com.drawing.paint.fragments
 
 
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.viewpager2.widget.ViewPager2
-import com.drawing.kidsdrawingapp.R
-import com.drawing.kidsdrawingapp.adapters.Adapter
-import com.drawing.kidsdrawingapp.adapters.ViewPagerAdapter
-import com.drawing.kidsdrawingapp.databinding.BottomSheetFragmentBinding
+import com.drawing.paint.R
+import com.drawing.paint.adapters.ViewPagerAdapter
+import com.drawing.paint.databinding.BottomSheetFragmentBinding
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
+
 
 class BottomSheetFragment: BottomSheetDialogFragment() {
 

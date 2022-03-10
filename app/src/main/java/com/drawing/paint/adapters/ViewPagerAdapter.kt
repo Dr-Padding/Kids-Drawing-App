@@ -1,12 +1,11 @@
-package com.drawing.kidsdrawingapp.adapters
+package com.drawing.paint.adapters
 
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
-import com.drawing.kidsdrawingapp.databinding.GifItemBinding
-
+import com.drawing.paint.databinding.GifItemBinding
 
 
 class ViewPagerAdapter(val gifs: List<Int>) :
