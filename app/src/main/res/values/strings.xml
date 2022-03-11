@@ -1,5 +1,9 @@
 <resources>
     <string name="app_name">Handy Paints</string>
     <string name="more_sizes">More sizes</string>
+    <string name="more_colors">More colors</string>
     <string name="clear_all">Clear all</string>
+    <string name="choose_the_color">Choose the color:</string>
+    <string name="brush_size">Brush size:</string>
+    <string name="eraser_size">Eraser size:</string>
 </resources>

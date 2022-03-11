@@ -6,6 +6,7 @@ import android.app.Dialog
 import android.content.DialogInterface
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.graphics.Color
 import android.icu.text.SimpleDateFormat
 import android.net.Uri
 import android.os.Bundle
@@ -25,7 +26,6 @@ import com.drawing.paint.Constants.STORAGE_PERMISSION_CODE
 import com.drawing.paint.Constants.STORAGE_REQUEST_CODE
 import com.drawing.paint.Constants.UPLOAD_PERMISSION
 import com.drawing.paint.Constants.tag
-import petrov.kristiyan.colorpicker.ColorPicker
 import java.io.File
 import java.util.*
 import java.util.concurrent.ExecutorService
@@ -33,6 +33,7 @@ import java.util.concurrent.Executors
 import com.drawing.paint.adapters.Adapter
 import com.drawing.paint.databinding.ActivityMainBinding
 import com.drawing.paint.databinding.DialogBrushSizeBinding
+import com.drawing.paint.databinding.DialogColorPickerBinding
 import com.drawing.paint.databinding.DialogEraserSizeBinding
 import com.drawing.paint.fragments.BottomSheetFragment
 import com.google.android.gms.ads.AdRequest
@@ -195,7 +196,7 @@ class MainActivity : AppCompatActivity(), Adapter.MyOnClickListener {
     private fun brushSizeChooseDialog() {
 
         val brushDialog = Dialog(this)
-        brushDialog.setTitle("Brush size:")
+        brushDialog.setTitle(R.string.brush_size)
 
         val dialogBinding: DialogBrushSizeBinding = DialogBrushSizeBinding.inflate(layoutInflater)
         brushDialog.setContentView(dialogBinding.root)
@@ -228,7 +229,7 @@ class MainActivity : AppCompatActivity(), Adapter.MyOnClickListener {
     private fun eraserSizeChooseDialog() {
 
         val brushDialog = Dialog(this)
-        brushDialog.setTitle("Eraser size:")
+        brushDialog.setTitle(R.string.eraser_size)
 
         val dialogBinding: DialogEraserSizeBinding = DialogEraserSizeBinding.inflate(layoutInflater)
         brushDialog.setContentView(dialogBinding.root)
@@ -262,35 +263,57 @@ class MainActivity : AppCompatActivity(), Adapter.MyOnClickListener {
 
                 binding.drawingView.onClickEraser(true)
                 binding.drawingView.setSizeForBrush(999999.toFloat())
-
-            //allClearSelected = true //??
-            //binding.drawingView.allCleared(allClearSelected)
-
-
             brushDialog.dismiss()
         }
     }
 
 
-    private fun colorPicker() {
+    private fun colorPicker(view: View) {
         binding.drawingView.onClickEraser(false)
-        val colorPicker = ColorPicker(this)
-        colorPicker.setOnFastChooseColorListener(object :
-            ColorPicker.OnFastChooseColorListener {
-            override fun setOnFastChooseColorListener(position: Int, color: Int) {
-                binding.drawingView.setColor(color) //set color to brush
-            }
 
-            override fun onCancel() {
-                colorPicker.dismissDialog()
-            }
-        })
+        val colorPickerDialog = Dialog(this)
+        colorPickerDialog.setTitle(R.string.choose_the_color)
 
-            .disableDefaultButtons(true)
-            .setColumns(5)
-            .setRoundColorButton(true)
-            // .setColors(Color.BLACK, Color.WHITE)  Use it to add your own colors
-            .show()
+        val dialogBinding: DialogColorPickerBinding = DialogColorPickerBinding.inflate(layoutInflater)
+        colorPickerDialog.setContentView(dialogBinding.root)
+
+        val white = dialogBinding.ibWhite
+        white.setOnClickListener {
+            binding.drawingView.setColor() //set color to brush
+            colorPickerDialog.dismiss()
+        }
+
+        val black = dialogBinding.ibBlack
+        black.setOnClickListener {
+            binding.drawingView.setColor(R.color.black)
+            colorPickerDialog.dismiss()
+        }
+
+        val green = dialogBinding.ibGreen
+        green.setOnClickListener {
+            binding.drawingView.setColor(R.color.green)
+            colorPickerDialog.dismiss()
+        }
+
+        colorPickerDialog.show()
+
+//        val colorPicker = ColorPicker(this)
+//        colorPicker.setOnFastChooseColorListener(object :
+//            ColorPicker.OnFastChooseColorListener {
+//            override fun setOnFastChooseColorListener(position: Int, color: Int) {
+//                binding.drawingView.setColor(color) //set color to brush
+//            }
+//
+//            override fun onCancel() {
+//                colorPicker.dismissDialog()
+//            }
+//        })
+//
+//            .disableDefaultButtons(true)
+//            .setColumns(5)
+//            .setRoundColorButton(true)
+//            // .setColors(Color.BLACK, Color.WHITE)  Use it to add your own colors
+//            .show()
     }
 
 

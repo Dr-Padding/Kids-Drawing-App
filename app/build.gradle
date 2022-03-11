@@ -57,7 +57,7 @@ dependencies {
     implementation "androidx.camera:camera-view:1.1.0-beta02"
 
     //kristiyan Color Picker
-    implementation 'petrov.kristiyan:colorpicker-library:1.1.10'
+//    implementation 'petrov.kristiyan:colorpicker-library:1.1.10'
 
     //recyclerview
     implementation "androidx.recyclerview:recyclerview:1.2.1"
