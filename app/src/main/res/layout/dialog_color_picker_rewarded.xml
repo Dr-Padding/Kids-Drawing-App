@@ -8,16 +8,23 @@
     android:orientation="vertical"
     >
 
+    <androidx.appcompat.widget.LinearLayoutCompat
+        android:id="@+id/ll_first_row"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        >
+
     <ImageButton
         android:id="@+id/ib_white"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:contentDescription="white_color"
         android:src="@drawable/color_circle"
-        app:layout_constraintEnd_toStartOf="@id/ib_black"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toTopOf="@id/btnMoreColors"
         app:tint="@color/white"
         android:tag="@color/white"
         />
@@ -30,10 +37,6 @@
         android:src="@drawable/color_circle"
         app:tint="@color/black"
         android:tag="@color/black"
-        app:layout_constraintEnd_toStartOf="@id/ib_green"
-        app:layout_constraintStart_toEndOf="@id/ib_white"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toTopOf="@id/btnMoreColors"
         />
 
     <ImageButton
@@ -42,23 +45,31 @@
         android:layout_height="wrap_content"
         android:contentDescription="image_large"
         android:src="@drawable/color_circle"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@id/ib_black"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toTopOf="@id/btnMoreColors"
         app:tint="@color/green"
         android:tag="@color/green"
         />
 
-    <Button
-        android:id="@+id/btnMoreColors"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/more_colors"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/ib_black"
-        />
+        <ImageButton
+            android:id="@+id/ib_red"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:contentDescription="image_large"
+            android:src="@drawable/color_circle"
+            app:tint="@color/red"
+            android:tag="@color/red"
+            />
+
+        <ImageButton
+            android:id="@+id/ib_yellow"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:contentDescription="image_large"
+            android:src="@drawable/color_circle"
+            app:tint="@color/yellow"
+            android:tag="@color/yellow"
+            />
+
+    </androidx.appcompat.widget.LinearLayoutCompat>
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

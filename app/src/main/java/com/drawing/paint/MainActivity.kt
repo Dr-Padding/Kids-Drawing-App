@@ -6,7 +6,6 @@ import android.app.Dialog
 import android.content.DialogInterface
 import android.content.Intent
 import android.content.pm.PackageManager
-import android.graphics.Color
 import android.icu.text.SimpleDateFormat
 import android.net.Uri
 import android.os.Bundle
@@ -31,15 +30,15 @@ import java.util.*
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
 import com.drawing.paint.adapters.Adapter
-import com.drawing.paint.databinding.ActivityMainBinding
-import com.drawing.paint.databinding.DialogBrushSizeBinding
-import com.drawing.paint.databinding.DialogColorPickerBinding
-import com.drawing.paint.databinding.DialogEraserSizeBinding
+import com.drawing.paint.databinding.*
 import com.drawing.paint.fragments.BottomSheetFragment
-import com.google.android.gms.ads.AdRequest
-import com.google.android.gms.ads.MobileAds
+import com.google.android.gms.ads.*
+import com.google.android.gms.ads.rewarded.RewardItem
+import com.google.android.gms.ads.rewarded.RewardedAd
+import com.google.android.gms.ads.rewarded.RewardedAdLoadCallback
 
-
+const val AD_UNIT_ID = "ca-app-pub-3940256099942544/5224354917"
+const val TAG = "MainActivity"
 
 //Bismillahi-r-Rahmani-r-Rahim
 class MainActivity : AppCompatActivity(), Adapter.MyOnClickListener {
@@ -53,6 +52,11 @@ class MainActivity : AppCompatActivity(), Adapter.MyOnClickListener {
     lateinit var cameraProvider: ProcessCameraProvider
     var mCameraLaunched = false
     private val bottomSheetFragment = BottomSheetFragment()
+    private var mIsLoading = false
+    private var mRewardedAd: RewardedAd? = null
+    private lateinit var adRequest: AdRequest
+    //var rewarded = false
+
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -61,8 +65,11 @@ class MainActivity : AppCompatActivity(), Adapter.MyOnClickListener {
         setContentView(binding.root)
 
         MobileAds.initialize(this@MainActivity)
-        val adRequest = AdRequest.Builder().build()
+        adRequest = AdRequest.Builder().build()
         binding.avTopBanner.loadAd(adRequest)
+
+
+        loadRewardedAd()
 
 
         val toolsList = mutableListOf(
@@ -96,9 +103,7 @@ class MainActivity : AppCompatActivity(), Adapter.MyOnClickListener {
         binding.btnTakePhoto.setOnClickListener {
             binding.btnTakePhoto.visibility = View.INVISIBLE
             showProgressBar()
-           // CoroutineScope(Dispatchers.Main).launch {
                 takePhoto()
-           // }
             cameraProvider.unbind(preview)
             mCameraLaunched = false
             binding.drawingView.visibility = View.VISIBLE
@@ -268,52 +273,61 @@ class MainActivity : AppCompatActivity(), Adapter.MyOnClickListener {
     }
 
 
-    private fun colorPicker(view: View) {
+    private fun colorPicker() {
         binding.drawingView.onClickEraser(false)
 
         val colorPickerDialog = Dialog(this)
         colorPickerDialog.setTitle(R.string.choose_the_color)
 
+
+        val dialogBindingRewarded: DialogColorPickerRewardedBinding = DialogColorPickerRewardedBinding.inflate(layoutInflater)
+
         val dialogBinding: DialogColorPickerBinding = DialogColorPickerBinding.inflate(layoutInflater)
-        colorPickerDialog.setContentView(dialogBinding.root)
+
+
+//        if (rewarded){
+//            colorPickerDialog.setContentView(dialogBindingRewarded.root)
+//        }else {
+            colorPickerDialog.setContentView(dialogBinding.root)
+        //}
 
         val white = dialogBinding.ibWhite
         white.setOnClickListener {
-            binding.drawingView.setColor() //set color to brush
+            val colorTag = white.tag.toString()
+            binding.drawingView.setColor(colorTag) //set color to brush
             colorPickerDialog.dismiss()
         }
 
         val black = dialogBinding.ibBlack
         black.setOnClickListener {
-            binding.drawingView.setColor(R.color.black)
+            val colorTag = black.tag.toString()
+            binding.drawingView.setColor(colorTag)
             colorPickerDialog.dismiss()
         }
 
         val green = dialogBinding.ibGreen
         green.setOnClickListener {
-            binding.drawingView.setColor(R.color.green)
+            val colorTag = green.tag.toString()
+            binding.drawingView.setColor(colorTag)
             colorPickerDialog.dismiss()
         }
 
+        val getMoreColors = dialogBinding.btnMoreColors
+        getMoreColors.setOnClickListener {
+            showRewardedVideo()
+            if(mRewardedAd != null){
+                mRewardedAd?.show(
+                    this,
+                    OnUserEarnedRewardListener() {
+                        fun onUserEarnedReward(rewardItem: RewardItem) {
+                            colorPickerDialog.setContentView(dialogBindingRewarded.root)
+                            Log.d(TAG, "User earned the reward.")
+                        }
+                    }
+                )
+            }
+        }
         colorPickerDialog.show()
-
-//        val colorPicker = ColorPicker(this)
-//        colorPicker.setOnFastChooseColorListener(object :
-//            ColorPicker.OnFastChooseColorListener {
-//            override fun setOnFastChooseColorListener(position: Int, color: Int) {
-//                binding.drawingView.setColor(color) //set color to brush
-//            }
-//
-//            override fun onCancel() {
-//                colorPicker.dismissDialog()
-//            }
-//        })
-//
-//            .disableDefaultButtons(true)
-//            .setColumns(5)
-//            .setRoundColorButton(true)
-//            // .setColors(Color.BLACK, Color.WHITE)  Use it to add your own colors
-//            .show()
     }
 
 
@@ -516,6 +530,59 @@ class MainActivity : AppCompatActivity(), Adapter.MyOnClickListener {
             }
         }
     }
+
+    private fun loadRewardedAd() {
+        if (mRewardedAd == null) {
+            mIsLoading = true
+
+            RewardedAd.load(
+                this, AD_UNIT_ID, adRequest,
+                object : RewardedAdLoadCallback() {
+                    override fun onAdFailedToLoad(adError: LoadAdError) {
+                        Log.d(TAG, adError.message)
+                        mIsLoading = false
+                        mRewardedAd = null
+                    }
+
+                    override fun onAdLoaded(rewardedAd: RewardedAd) {
+                        Log.d(TAG, "Ad was loaded.")
+                        mRewardedAd = rewardedAd
+                        mIsLoading = false
+                    }
+                }
+            )
+        }
+    }
+
+
+    private fun showRewardedVideo() {
+        //show_video_button.visibility = View.INVISIBLE
+        if (mRewardedAd != null) {
+            mRewardedAd?.fullScreenContentCallback = object : FullScreenContentCallback() {
+                override fun onAdDismissedFullScreenContent() {
+                    Log.d(TAG, "Ad was dismissed.")
+                    // Don't forget to set the ad reference to null so you
+                    // don't show the ad a second time.
+                    mRewardedAd = null
+                    loadRewardedAd()
+                }
+
+                override fun onAdFailedToShowFullScreenContent(adError: AdError?) {
+                    Log.d(TAG, "Ad failed to show.")
+                    // Don't forget to set the ad reference to null so you
+                    // don't show the ad a second time.
+                    mRewardedAd = null
+                }
+
+                override fun onAdShowedFullScreenContent() {
+                    Log.d(TAG, "Ad showed fullscreen content.")
+                    // Called when ad is dismissed.
+                }
+            }
+        }
+    }
+
+
 
 
     override fun onBackPressed() {
