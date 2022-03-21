@@ -52,10 +52,10 @@ class MainActivity : AppCompatActivity(), Adapter.MyOnClickListener {
     lateinit var cameraProvider: ProcessCameraProvider
     var mCameraLaunched = false
     private val bottomSheetFragment = BottomSheetFragment()
-    private var mIsLoading = false
     private var mRewardedAd: RewardedAd? = null
     private lateinit var adRequest: AdRequest
-    //var rewarded = false
+    private var mRewardedAdShowed = false
+
 
 
 
@@ -64,10 +64,9 @@ class MainActivity : AppCompatActivity(), Adapter.MyOnClickListener {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        MobileAds.initialize(this@MainActivity)
+        MobileAds.initialize(this@MainActivity) {}
         adRequest = AdRequest.Builder().build()
         binding.avTopBanner.loadAd(adRequest)
-
 
         loadRewardedAd()
 
@@ -279,17 +278,16 @@ class MainActivity : AppCompatActivity(), Adapter.MyOnClickListener {
         val colorPickerDialog = Dialog(this)
         colorPickerDialog.setTitle(R.string.choose_the_color)
 
-
         val dialogBindingRewarded: DialogColorPickerRewardedBinding = DialogColorPickerRewardedBinding.inflate(layoutInflater)
 
-        val dialogBinding: DialogColorPickerBinding = DialogColorPickerBinding.inflate(layoutInflater)
+        val dialogBinding: DialogColorPickerBinding =
+            DialogColorPickerBinding.inflate(layoutInflater)
 
-
-//        if (rewarded){
-//            colorPickerDialog.setContentView(dialogBindingRewarded.root)
-//        }else {
+        if(!mRewardedAdShowed) {
             colorPickerDialog.setContentView(dialogBinding.root)
-        //}
+        }else{
+            colorPickerDialog.setContentView(dialogBindingRewarded.root)
+        }
 
         val white = dialogBinding.ibWhite
         white.setOnClickListener {
@@ -314,18 +312,27 @@ class MainActivity : AppCompatActivity(), Adapter.MyOnClickListener {
 
         val getMoreColors = dialogBinding.btnMoreColors
         getMoreColors.setOnClickListener {
-            showRewardedVideo()
-            if(mRewardedAd != null){
-                mRewardedAd?.show(
-                    this,
-                    OnUserEarnedRewardListener() {
-                        fun onUserEarnedReward(rewardItem: RewardItem) {
-                            colorPickerDialog.setContentView(dialogBindingRewarded.root)
-                            Log.d(TAG, "User earned the reward.")
-                        }
-                    }
-                )
+
+            if (mRewardedAd != null) {
+                mRewardedAd?.show(this, OnUserEarnedRewardListener() {
+
+                    colorPickerDialog.setContentView(dialogBindingRewarded.root)
+
+                    mRewardedAdShowed = true
+
+
+
+//                    fun onUserEarnedReward(rewardItem: RewardItem) {
+//                        var rewardAmount = rewardItem.getReward()
+//                        var rewardType = rewardItem.getType()
+//                        Log.d(TAG, "User earned the reward.")
+//                    }
+                })
+            } else {
+                Log.d(TAG, "The rewarded ad wasn't ready yet.")
             }
+
+
         }
         colorPickerDialog.show()
     }
@@ -532,51 +539,39 @@ class MainActivity : AppCompatActivity(), Adapter.MyOnClickListener {
     }
 
     private fun loadRewardedAd() {
-        if (mRewardedAd == null) {
-            mIsLoading = true
+        RewardedAd.load(this, AD_UNIT_ID, adRequest, object : RewardedAdLoadCallback() {
+            override fun onAdFailedToLoad(adError: LoadAdError) {
+                Log.d(TAG, adError.message)
+                mRewardedAd = null
+            }
 
-            RewardedAd.load(
-                this, AD_UNIT_ID, adRequest,
-                object : RewardedAdLoadCallback() {
-                    override fun onAdFailedToLoad(adError: LoadAdError) {
-                        Log.d(TAG, adError.message)
-                        mIsLoading = false
-                        mRewardedAd = null
-                    }
-
-                    override fun onAdLoaded(rewardedAd: RewardedAd) {
-                        Log.d(TAG, "Ad was loaded.")
-                        mRewardedAd = rewardedAd
-                        mIsLoading = false
-                    }
-                }
-            )
-        }
+            override fun onAdLoaded(rewardedAd: RewardedAd) {
+                Log.d(TAG, "Ad was loaded.")
+                mRewardedAd = rewardedAd
+                setFullScreenContentCallbackForRewardedAd()
+            }
+        })
     }
 
 
-    private fun showRewardedVideo() {
-        //show_video_button.visibility = View.INVISIBLE
+    private fun setFullScreenContentCallbackForRewardedAd() {
         if (mRewardedAd != null) {
-            mRewardedAd?.fullScreenContentCallback = object : FullScreenContentCallback() {
-                override fun onAdDismissedFullScreenContent() {
-                    Log.d(TAG, "Ad was dismissed.")
-                    // Don't forget to set the ad reference to null so you
-                    // don't show the ad a second time.
-                    mRewardedAd = null
-                    loadRewardedAd()
+            mRewardedAd?.fullScreenContentCallback = object: FullScreenContentCallback() {
+                override fun onAdShowedFullScreenContent() {
+                    // Called when ad is shown.
+                    Log.d(TAG, "Ad was shown.")
                 }
 
                 override fun onAdFailedToShowFullScreenContent(adError: AdError?) {
+                    // Called when ad fails to show.
                     Log.d(TAG, "Ad failed to show.")
-                    // Don't forget to set the ad reference to null so you
-                    // don't show the ad a second time.
-                    mRewardedAd = null
                 }
 
-                override fun onAdShowedFullScreenContent() {
-                    Log.d(TAG, "Ad showed fullscreen content.")
+                override fun onAdDismissedFullScreenContent() {
                     // Called when ad is dismissed.
+                    // Set the ad reference to null so you don't show the ad a second time.
+                    Log.d(TAG, "Ad was dismissed.")
+                    mRewardedAd = null
                 }
             }
         }
