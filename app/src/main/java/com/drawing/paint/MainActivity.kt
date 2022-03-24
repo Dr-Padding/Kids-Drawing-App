@@ -37,10 +37,11 @@ import com.google.android.gms.ads.rewarded.RewardItem
 import com.google.android.gms.ads.rewarded.RewardedAd
 import com.google.android.gms.ads.rewarded.RewardedAdLoadCallback
 
+//Bismillahi-r-Rahmani-r-Rahim
 const val AD_UNIT_ID = "ca-app-pub-3940256099942544/5224354917"
 const val TAG = "MainActivity"
 
-//Bismillahi-r-Rahmani-r-Rahim
+
 class MainActivity : AppCompatActivity(), Adapter.MyOnClickListener {
 
     lateinit var binding: ActivityMainBinding
@@ -53,8 +54,9 @@ class MainActivity : AppCompatActivity(), Adapter.MyOnClickListener {
     var mCameraLaunched = false
     private val bottomSheetFragment = BottomSheetFragment()
     private var mRewardedAd: RewardedAd? = null
-    private lateinit var adRequest: AdRequest
+    //private lateinit var adRequest: AdRequest
     private var mRewardedAdShowed = false
+    private var mIsLoading = false
 
 
 
@@ -65,11 +67,10 @@ class MainActivity : AppCompatActivity(), Adapter.MyOnClickListener {
         setContentView(binding.root)
 
         MobileAds.initialize(this@MainActivity) {}
-        adRequest = AdRequest.Builder().build()
-        binding.avTopBanner.loadAd(adRequest)
+        val adRequestBanner = AdRequest.Builder().build()
+        binding.avTopBanner.loadAd(adRequestBanner)
 
         loadRewardedAd()
-
 
         val toolsList = mutableListOf(
             Tools(R.drawable.ic_camera_sign),
@@ -107,6 +108,11 @@ class MainActivity : AppCompatActivity(), Adapter.MyOnClickListener {
             mCameraLaunched = false
             binding.drawingView.visibility = View.VISIBLE
         }
+
+        if (mRewardedAd == null && !mIsLoading) {
+            loadRewardedAd()
+        }
+
     }
 
     /*   internal fun getBitmapFromView(view: View): Bitmap {
@@ -278,10 +284,13 @@ class MainActivity : AppCompatActivity(), Adapter.MyOnClickListener {
         val colorPickerDialog = Dialog(this)
         colorPickerDialog.setTitle(R.string.choose_the_color)
 
-        val dialogBindingRewarded: DialogColorPickerRewardedBinding = DialogColorPickerRewardedBinding.inflate(layoutInflater)
+        val dialogBindingRewarded: DialogColorPickerRewardedBinding =
+            DialogColorPickerRewardedBinding.inflate(layoutInflater)
 
         val dialogBinding: DialogColorPickerBinding =
             DialogColorPickerBinding.inflate(layoutInflater)
+
+        colorPickerDialog.setContentView(dialogBinding.root)
 
         if(!mRewardedAdShowed) {
             colorPickerDialog.setContentView(dialogBinding.root)
@@ -311,28 +320,32 @@ class MainActivity : AppCompatActivity(), Adapter.MyOnClickListener {
         }
 
         val getMoreColors = dialogBinding.btnMoreColors
+        if (mRewardedAd != null){
+            getMoreColors.visibility = View.VISIBLE
+        }else{
+            getMoreColors.visibility = View.INVISIBLE
+        }
+
         getMoreColors.setOnClickListener {
 
+            showRewardedVideo()
+
             if (mRewardedAd != null) {
-                mRewardedAd?.show(this, OnUserEarnedRewardListener() {
-
-                    colorPickerDialog.setContentView(dialogBindingRewarded.root)
-
-                    mRewardedAdShowed = true
-
-
+                mRewardedAd?.show(
+                    this,
+                    OnUserEarnedRewardListener() {
+                        colorPickerDialog.setContentView(dialogBindingRewarded.root)
+                        Log.d("TAG", "User earned the reward.")
+                        mRewardedAdShowed = true
 
 //                    fun onUserEarnedReward(rewardItem: RewardItem) {
-//                        var rewardAmount = rewardItem.getReward()
-//                        var rewardType = rewardItem.getType()
-//                        Log.d(TAG, "User earned the reward.")
+//                        var rewardAmount = rewardItem.amount
+//                        //addCoins(rewardAmount)
+//
 //                    }
-                })
-            } else {
-                Log.d(TAG, "The rewarded ad wasn't ready yet.")
+                    }
+                )
             }
-
-
         }
         colorPickerDialog.show()
     }
@@ -539,43 +552,56 @@ class MainActivity : AppCompatActivity(), Adapter.MyOnClickListener {
     }
 
     private fun loadRewardedAd() {
-        RewardedAd.load(this, AD_UNIT_ID, adRequest, object : RewardedAdLoadCallback() {
-            override fun onAdFailedToLoad(adError: LoadAdError) {
-                Log.d(TAG, adError.message)
-                mRewardedAd = null
-            }
+        if (mRewardedAd == null) {
+            mIsLoading = true
+            var adRequest = AdRequest.Builder().build()
 
-            override fun onAdLoaded(rewardedAd: RewardedAd) {
-                Log.d(TAG, "Ad was loaded.")
-                mRewardedAd = rewardedAd
-                setFullScreenContentCallbackForRewardedAd()
-            }
-        })
+            RewardedAd.load(
+                this, AD_UNIT_ID, adRequest,
+                object : RewardedAdLoadCallback() {
+                    override fun onAdFailedToLoad(adError: LoadAdError) {
+                        Log.d(TAG, adError?.message)
+                        mIsLoading = false
+                        mRewardedAd = null
+                    }
+
+                    override fun onAdLoaded(rewardedAd: RewardedAd) {
+                        Log.d(TAG, "Ad was loaded.")
+                        mRewardedAd = rewardedAd
+                        mIsLoading = false
+                    }
+                }
+            )
+        }
     }
 
 
-    private fun setFullScreenContentCallbackForRewardedAd() {
+    private fun showRewardedVideo() {
         if (mRewardedAd != null) {
-            mRewardedAd?.fullScreenContentCallback = object: FullScreenContentCallback() {
-                override fun onAdShowedFullScreenContent() {
-                    // Called when ad is shown.
-                    Log.d(TAG, "Ad was shown.")
+            mRewardedAd?.fullScreenContentCallback = object : FullScreenContentCallback() {
+                override fun onAdDismissedFullScreenContent() {
+                    Log.d(TAG, "Ad was dismissed.")
+                    // Don't forget to set the ad reference to null so you
+                    // don't show the ad a second time.
+                    mRewardedAd = null
+                    loadRewardedAd()
                 }
 
                 override fun onAdFailedToShowFullScreenContent(adError: AdError?) {
-                    // Called when ad fails to show.
                     Log.d(TAG, "Ad failed to show.")
+                    // Don't forget to set the ad reference to null so you
+                    // don't show the ad a second time.
+                    mRewardedAd = null
                 }
 
-                override fun onAdDismissedFullScreenContent() {
-                    // Called when ad is dismissed.
-                    // Set the ad reference to null so you don't show the ad a second time.
-                    Log.d(TAG, "Ad was dismissed.")
-                    mRewardedAd = null
+                override fun onAdShowedFullScreenContent() {
+                    Log.d(TAG, "Ad showed fullscreen content.")
+                    // Called when ad is shown.
                 }
             }
         }
     }
+
 
 
 
@@ -597,6 +623,7 @@ class MainActivity : AppCompatActivity(), Adapter.MyOnClickListener {
     override fun onDestroy() {
         super.onDestroy()
         cameraExecutor.shutdown()
+        mRewardedAd = null
     }
 
 }
