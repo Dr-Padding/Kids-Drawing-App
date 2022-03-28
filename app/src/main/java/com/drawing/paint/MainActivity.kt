@@ -12,6 +12,7 @@ import android.os.Bundle
 import android.provider.MediaStore
 import android.util.Log
 import android.view.View
+import android.widget.ImageButton
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
@@ -25,17 +26,17 @@ import com.drawing.paint.Constants.STORAGE_PERMISSION_CODE
 import com.drawing.paint.Constants.STORAGE_REQUEST_CODE
 import com.drawing.paint.Constants.UPLOAD_PERMISSION
 import com.drawing.paint.Constants.tag
-import java.io.File
-import java.util.*
-import java.util.concurrent.ExecutorService
-import java.util.concurrent.Executors
 import com.drawing.paint.adapters.Adapter
 import com.drawing.paint.databinding.*
 import com.drawing.paint.fragments.BottomSheetFragment
 import com.google.android.gms.ads.*
-import com.google.android.gms.ads.rewarded.RewardItem
 import com.google.android.gms.ads.rewarded.RewardedAd
 import com.google.android.gms.ads.rewarded.RewardedAdLoadCallback
+import java.io.File
+import java.util.*
+import java.util.concurrent.ExecutorService
+import java.util.concurrent.Executors
+
 
 //Bismillahi-r-Rahmani-r-Rahim
 const val AD_UNIT_ID = "ca-app-pub-3940256099942544/5224354917"
@@ -54,9 +55,9 @@ class MainActivity : AppCompatActivity(), Adapter.MyOnClickListener {
     var mCameraLaunched = false
     private val bottomSheetFragment = BottomSheetFragment()
     private var mRewardedAd: RewardedAd? = null
-    //private lateinit var adRequest: AdRequest
     private var mRewardedAdShowed = false
     private var mIsLoading = false
+    var colorChecked = false
 
 
 
@@ -128,7 +129,7 @@ class MainActivity : AppCompatActivity(), Adapter.MyOnClickListener {
     private fun uploadLaunch() {
         //check if permission is granted
         if (ContextCompat.checkSelfPermission(
-                this,
+                this@MainActivity,
                 Manifest.permission.READ_EXTERNAL_STORAGE
             ) == PackageManager.PERMISSION_GRANTED
         ) {
@@ -141,18 +142,18 @@ class MainActivity : AppCompatActivity(), Adapter.MyOnClickListener {
         } else {
             //Request the permission
             if (ActivityCompat.shouldShowRequestPermissionRationale(
-                    this,
+                    this@MainActivity,
                     UPLOAD_PERMISSION.toString()
                 )
             ) {
                 Toast.makeText(
-                    this,
+                    this@MainActivity,
                     "Requires permission to add background",
                     Toast.LENGTH_SHORT
                 ).show()
             }
             ActivityCompat.requestPermissions(
-                this,
+                this@MainActivity,
                 UPLOAD_PERMISSION, STORAGE_PERMISSION_CODE
             )
         }
@@ -173,7 +174,7 @@ class MainActivity : AppCompatActivity(), Adapter.MyOnClickListener {
             startCamera()
         } else {
             ActivityCompat.requestPermissions(
-                this,
+                this@MainActivity,
                 Constants.CAMERA_PERMISSION,
                 Constants.REQUEST_CODE_PERMISSIONS
             )
@@ -198,14 +199,14 @@ class MainActivity : AppCompatActivity(), Adapter.MyOnClickListener {
                 .setPositiveButton("Yes", dialogClickListener)
                 .setNegativeButton("No", dialogClickListener).show()
         } else {
-            Toast.makeText(this, "No background", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this@MainActivity, "No background", Toast.LENGTH_SHORT).show()
         }
     }
 
 
     private fun brushSizeChooseDialog() {
 
-        val brushDialog = Dialog(this)
+        val brushDialog = Dialog(this@MainActivity)
         brushDialog.setTitle(R.string.brush_size)
 
         val dialogBinding: DialogBrushSizeBinding = DialogBrushSizeBinding.inflate(layoutInflater)
@@ -238,7 +239,7 @@ class MainActivity : AppCompatActivity(), Adapter.MyOnClickListener {
 
     private fun eraserSizeChooseDialog() {
 
-        val brushDialog = Dialog(this)
+        val brushDialog = Dialog(this@MainActivity)
         brushDialog.setTitle(R.string.eraser_size)
 
         val dialogBinding: DialogEraserSizeBinding = DialogEraserSizeBinding.inflate(layoutInflater)
@@ -281,7 +282,7 @@ class MainActivity : AppCompatActivity(), Adapter.MyOnClickListener {
     private fun colorPicker() {
         binding.drawingView.onClickEraser(false)
 
-        val colorPickerDialog = Dialog(this)
+        val colorPickerDialog = Dialog(this@MainActivity)
         colorPickerDialog.setTitle(R.string.choose_the_color)
 
         val dialogBindingRewarded: DialogColorPickerRewardedBinding =
@@ -289,7 +290,6 @@ class MainActivity : AppCompatActivity(), Adapter.MyOnClickListener {
 
         val dialogBinding: DialogColorPickerBinding =
             DialogColorPickerBinding.inflate(layoutInflater)
-
         colorPickerDialog.setContentView(dialogBinding.root)
 
         if(!mRewardedAdShowed) {
@@ -298,26 +298,7 @@ class MainActivity : AppCompatActivity(), Adapter.MyOnClickListener {
             colorPickerDialog.setContentView(dialogBindingRewarded.root)
         }
 
-        val white = dialogBinding.ibWhite
-        white.setOnClickListener {
-            val colorTag = white.tag.toString()
-            binding.drawingView.setColor(colorTag) //set color to brush
-            colorPickerDialog.dismiss()
-        }
-
-        val black = dialogBinding.ibBlack
-        black.setOnClickListener {
-            val colorTag = black.tag.toString()
-            binding.drawingView.setColor(colorTag)
-            colorPickerDialog.dismiss()
-        }
-
-        val green = dialogBinding.ibGreen
-        green.setOnClickListener {
-            val colorTag = green.tag.toString()
-            binding.drawingView.setColor(colorTag)
-            colorPickerDialog.dismiss()
-        }
+        colorPickerDialog.setCanceledOnTouchOutside(true)
 
         val getMoreColors = dialogBinding.btnMoreColors
         if (mRewardedAd != null){
@@ -325,14 +306,11 @@ class MainActivity : AppCompatActivity(), Adapter.MyOnClickListener {
         }else{
             getMoreColors.visibility = View.INVISIBLE
         }
-
         getMoreColors.setOnClickListener {
-
             showRewardedVideo()
-
             if (mRewardedAd != null) {
                 mRewardedAd?.show(
-                    this,
+                    this@MainActivity,
                     OnUserEarnedRewardListener() {
                         colorPickerDialog.setContentView(dialogBindingRewarded.root)
                         Log.d("TAG", "User earned the reward.")
@@ -341,7 +319,6 @@ class MainActivity : AppCompatActivity(), Adapter.MyOnClickListener {
 //                    fun onUserEarnedReward(rewardItem: RewardItem) {
 //                        var rewardAmount = rewardItem.amount
 //                        //addCoins(rewardAmount)
-//
 //                    }
                     }
                 )
@@ -373,7 +350,7 @@ class MainActivity : AppCompatActivity(), Adapter.MyOnClickListener {
         )
         val outputOption = ImageCapture.OutputFileOptions.Builder(photoFile).build()
         imageCapture.takePicture(
-            outputOption, ContextCompat.getMainExecutor(this),
+            outputOption, ContextCompat.getMainExecutor(this@MainActivity),
             object : ImageCapture.OnImageSavedCallback {
 
                 override fun onImageSaved(outputFileResults: ImageCapture.OutputFileResults) {
@@ -421,7 +398,7 @@ class MainActivity : AppCompatActivity(), Adapter.MyOnClickListener {
         if (requestCode == STORAGE_PERMISSION_CODE) {
             if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 Toast.makeText(
-                    this,
+                    this@MainActivity,
                     "Permission granted, now you can read the storage!",
                     Toast.LENGTH_SHORT
                 ).show()
@@ -431,7 +408,7 @@ class MainActivity : AppCompatActivity(), Adapter.MyOnClickListener {
                 )
             } else {
                 Toast.makeText(
-                    this,
+                    this@MainActivity,
                     "Oops, you just denied permission for the storage! You can also allow it from settings!",
                     Toast.LENGTH_LONG
                 ).show()
@@ -442,7 +419,7 @@ class MainActivity : AppCompatActivity(), Adapter.MyOnClickListener {
                 startCamera()
             } else {
                 Toast.makeText(
-                    this,
+                    this@MainActivity,
                     "Oops, you just denied permission for the storage! You can also allow it from settings!",
                     Toast.LENGTH_LONG
                 ).show()
@@ -453,7 +430,7 @@ class MainActivity : AppCompatActivity(), Adapter.MyOnClickListener {
 
 
     private fun startCamera() {
-        val cameraProviderFuture = ProcessCameraProvider.getInstance(this)
+        val cameraProviderFuture = ProcessCameraProvider.getInstance(this@MainActivity)
         cameraProviderFuture.addListener({
 
             cameraProvider = cameraProviderFuture.get()
@@ -480,14 +457,14 @@ class MainActivity : AppCompatActivity(), Adapter.MyOnClickListener {
                 cameraProvider.unbindAll()
 
                 cameraProvider.bindToLifecycle(
-                    this, cameraSelector, preview, imageCapture
+                    this@MainActivity, cameraSelector, preview, imageCapture
                 )
 
             } catch (e: Exception) {
                 Log.d(Constants.TAG, "Start Camera Fail:", e)
             }
 
-        }, ContextCompat.getMainExecutor(this))
+        }, ContextCompat.getMainExecutor(this@MainActivity))
 
         mCameraLaunched = true
     }
@@ -503,7 +480,7 @@ class MainActivity : AppCompatActivity(), Adapter.MyOnClickListener {
                         binding.ivBackground.setImageURI(data.data)
                     } else {
                         Toast.makeText(
-                            this,
+                            this@MainActivity,
                             "Oops! Error in parsing the image or its corrupted!", Toast.LENGTH_SHORT
                         ).show()
                     }
@@ -557,7 +534,7 @@ class MainActivity : AppCompatActivity(), Adapter.MyOnClickListener {
             var adRequest = AdRequest.Builder().build()
 
             RewardedAd.load(
-                this, AD_UNIT_ID, adRequest,
+                this@MainActivity, AD_UNIT_ID, adRequest,
                 object : RewardedAdLoadCallback() {
                     override fun onAdFailedToLoad(adError: LoadAdError) {
                         Log.d(TAG, adError?.message)
@@ -603,6 +580,18 @@ class MainActivity : AppCompatActivity(), Adapter.MyOnClickListener {
     }
 
 
+    fun chooseColor(view: View){
+        val colorTag = view.tag.toString()
+        binding.drawingView.setColor(colorTag) //set color to brush
+
+
+            if (!colorChecked) {
+                (view as ImageButton).setImageResource(R.drawable.color_circle_with_tick)
+                colorChecked = true
+            }
+
+
+    }
 
 
 

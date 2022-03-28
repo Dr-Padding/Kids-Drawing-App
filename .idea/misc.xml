@@ -12,10 +12,14 @@
         <entry key="..\:/Android Studio Projects/KidsDrawingApp/backUp/KidsDrawingapp/app/src/main/res/layout/dialog_brush_size.xml" value="0.129981884057971" />
         <entry key="..\:/Android Studio Projects/KidsDrawingApp/backUp/KidsDrawingapp/app/src/main/res/layout/gif_item.xml" value="0.16530797101449277" />
         <entry key="..\:/Android Studio Projects/KidsDrawingApp/backUp/KidsDrawingapp/app/src/main/res/layout/item_tool.xml" value="0.1716485507246377" />
+        <entry key="app/src/main/res/drawable-v24/color_circle_with_tick.xml" value="0.235" />
         <entry key="app/src/main/res/drawable-v24/large.xml" value="0.14" />
         <entry key="app/src/main/res/drawable-v24/medium.xml" value="0.14" />
         <entry key="app/src/main/res/drawable/color_circle.xml" value="0.219" />
+        <entry key="app/src/main/res/drawable/color_circle_with_tick.xml" value="0.235" />
+        <entry key="app/src/main/res/drawable/color_selector.xml" value="0.1535" />
         <entry key="app/src/main/res/drawable/ic_brush.xml" value="0.14" />
+        <entry key="app/src/main/res/drawable/ic_tick.xml" value="0.1425" />
         <entry key="app/src/main/res/drawable/small.xml" value="0.14" />
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.16621376811594202" />
         <entry key="app/src/main/res/layout/bottom_sheet_fragment.xml" value="0.16621376811594202" />
