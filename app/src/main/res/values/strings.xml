@@ -6,4 +6,15 @@
     <string name="choose_the_color">Choose the color:</string>
     <string name="brush_size">Brush size:</string>
     <string name="eraser_size">Eraser size:</string>
+    <string name="white_color">white_color</string>
+    <string name="black_color">black_color</string>
+    <string name="green_color">green_color</string>
+    <string name="red_color">red_color</string>
+    <string name="yellow_color">yellow_color</string>
+    <string name="blue_color">blue_color</string>
+    <string name="orange_color">orange_color</string>
+    <string name="sky_blue_color">sky_blue_color</string>
+    <string name="dark_violet_color">dark_violet_color</string>
+    <string name="hot_pink_color">hot_pink_color</string>
+    <string name="green_yellow_color">green_yellow_color</string>
 </resources>

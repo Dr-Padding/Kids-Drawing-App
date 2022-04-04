@@ -149,7 +149,7 @@ class DrawingView(context: Context, attrs: AttributeSet): View(context, attrs) {
     }
 
     fun setColor(newColor: String) {
-        var color = Color.parseColor(newColor)
+        val color = Color.parseColor(newColor)
         drawPaint!!.color = color
     }
 

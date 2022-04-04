@@ -160,11 +160,4 @@
     <color name="DarkBlue">#00008B</color>
     <color name="Navy">#000080</color>
 
-
-
-           <!-- Here you can add color of your choice  -->
-        <color name="positiveButtonTextColor">#35a79c</color>
-        <color name="negativeButtonTextColor">#A349B1</color>
-        <color name="bottomSheetDividerColor">#F5F5F5</color>
-
 </resources>

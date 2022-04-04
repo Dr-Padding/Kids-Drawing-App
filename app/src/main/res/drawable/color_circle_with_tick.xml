@@ -11,6 +11,6 @@
     </item>
     <item
         android:drawable="@drawable/ic_tick"
-        android:gravity="center_vertical|center_horizontal"
+        android:gravity="center"
         />
 </layer-list>

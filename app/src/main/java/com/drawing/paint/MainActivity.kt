@@ -18,6 +18,7 @@ import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.camera.core.*
 import androidx.camera.lifecycle.ProcessCameraProvider
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -271,7 +272,6 @@ class MainActivity : AppCompatActivity(), Adapter.MyOnClickListener {
 
         val clearAllBtn = dialogBinding.btnClearAll
         clearAllBtn.setOnClickListener {
-
                 binding.drawingView.onClickEraser(true)
                 binding.drawingView.setSizeForBrush(999999.toFloat())
             brushDialog.dismiss()
@@ -280,32 +280,32 @@ class MainActivity : AppCompatActivity(), Adapter.MyOnClickListener {
 
 
     private fun colorPicker() {
-        binding.drawingView.onClickEraser(false)
-
         val colorPickerDialog = Dialog(this@MainActivity)
         colorPickerDialog.setTitle(R.string.choose_the_color)
 
         val dialogBindingRewarded: DialogColorPickerRewardedBinding =
             DialogColorPickerRewardedBinding.inflate(layoutInflater)
 
-        val dialogBinding: DialogColorPickerBinding =
+        val dialogBindingWithMoreColorsBtn: DialogColorPickerBinding =
             DialogColorPickerBinding.inflate(layoutInflater)
-        colorPickerDialog.setContentView(dialogBinding.root)
+
+        val dialogBindingInitial: DialogColorPickerWithoutMoreColorsBtnBinding =
+            DialogColorPickerWithoutMoreColorsBtnBinding.inflate(layoutInflater)
+        colorPickerDialog.setContentView(dialogBindingInitial.root)
+
+        if (mRewardedAd != null){
+            colorPickerDialog.setContentView(dialogBindingWithMoreColorsBtn.root)
+        }else{
+            colorPickerDialog.setContentView(dialogBindingInitial.root)
+        }
 
         if(!mRewardedAdShowed) {
-            colorPickerDialog.setContentView(dialogBinding.root)
+            colorPickerDialog.setContentView(dialogBindingWithMoreColorsBtn.root)
         }else{
             colorPickerDialog.setContentView(dialogBindingRewarded.root)
         }
 
-        colorPickerDialog.setCanceledOnTouchOutside(true)
-
-        val getMoreColors = dialogBinding.btnMoreColors
-        if (mRewardedAd != null){
-            getMoreColors.visibility = View.VISIBLE
-        }else{
-            getMoreColors.visibility = View.INVISIBLE
-        }
+        val getMoreColors = dialogBindingWithMoreColorsBtn.btnMoreColors
         getMoreColors.setOnClickListener {
             showRewardedVideo()
             if (mRewardedAd != null) {
@@ -324,6 +324,91 @@ class MainActivity : AppCompatActivity(), Adapter.MyOnClickListener {
                 )
             }
         }
+
+        dialogBindingInitial.apply {
+            ibWhite.setOnClickListener {
+                binding.drawingView.onClickEraser(false)
+                val colorTag = it.tag.toString()
+                binding.drawingView.setColor(colorTag) //set color to brush
+                colorPickerDialog.dismiss()
+            }
+
+            ibBlack.setOnClickListener {
+                binding.drawingView.onClickEraser(false)
+                val colorTag = it.tag.toString()
+                binding.drawingView.setColor(colorTag) //set color to brush
+                colorPickerDialog.dismiss()
+            }
+
+            ibGreen.setOnClickListener {
+                binding.drawingView.onClickEraser(false)
+                val colorTag = it.tag.toString()
+                binding.drawingView.setColor(colorTag) //set color to brush
+                colorPickerDialog.dismiss()
+            }
+        }
+
+        dialogBindingWithMoreColorsBtn.apply {
+            ibWhite.setOnClickListener {
+                binding.drawingView.onClickEraser(false)
+                val colorTag = it.tag.toString()
+                binding.drawingView.setColor(colorTag) //set color to brush
+                colorPickerDialog.dismiss()
+            }
+
+            ibBlack.setOnClickListener {
+                binding.drawingView.onClickEraser(false)
+                val colorTag = it.tag.toString()
+                binding.drawingView.setColor(colorTag) //set color to brush
+                colorPickerDialog.dismiss()
+            }
+
+            ibGreen.setOnClickListener {
+                binding.drawingView.onClickEraser(false)
+                val colorTag = it.tag.toString()
+                binding.drawingView.setColor(colorTag) //set color to brush
+                colorPickerDialog.dismiss()
+            }
+        }
+
+        dialogBindingRewarded.apply {
+            ibWhite.setOnClickListener {
+                binding.drawingView.onClickEraser(false)
+                val colorTag = it.tag.toString()
+                binding.drawingView.setColor(colorTag) //set color to brush
+                colorPickerDialog.dismiss()
+            }
+
+            ibBlack.setOnClickListener {
+                binding.drawingView.onClickEraser(false)
+                val colorTag = it.tag.toString()
+                binding.drawingView.setColor(colorTag) //set color to brush
+                colorPickerDialog.dismiss()
+            }
+
+            ibGreen.setOnClickListener {
+                binding.drawingView.onClickEraser(false)
+                val colorTag = it.tag.toString()
+                binding.drawingView.setColor(colorTag) //set color to brush
+                colorPickerDialog.dismiss()
+            }
+
+            ibRed.setOnClickListener {
+                binding.drawingView.onClickEraser(false)
+                val colorTag = it.tag.toString()
+                binding.drawingView.setColor(colorTag) //set color to brush
+                colorPickerDialog.dismiss()
+            }
+
+            ibYellow.setOnClickListener {
+                binding.drawingView.onClickEraser(false)
+                val colorTag = it.tag.toString()
+                binding.drawingView.setColor(colorTag) //set color to brush
+                colorPickerDialog.dismiss()
+            }
+
+        }
+
         colorPickerDialog.show()
     }
 
@@ -578,22 +663,6 @@ class MainActivity : AppCompatActivity(), Adapter.MyOnClickListener {
             }
         }
     }
-
-
-    fun chooseColor(view: View){
-        val colorTag = view.tag.toString()
-        binding.drawingView.setColor(colorTag) //set color to brush
-
-
-            if (!colorChecked) {
-                (view as ImageButton).setImageResource(R.drawable.color_circle_with_tick)
-                colorChecked = true
-            }
-
-
-    }
-
-
 
     override fun onBackPressed() {
         if (mCameraLaunched){
