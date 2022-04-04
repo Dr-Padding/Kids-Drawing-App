@@ -3,199 +3,279 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:padding="8dp"
     android:gravity="center"
     android:orientation="vertical"
-    >
+    android:padding="8dp">
 
     <androidx.appcompat.widget.LinearLayoutCompat
         android:id="@+id/ll_first_row"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
         android:gravity="center"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
+        android:orientation="horizontal"
         app:layout_constraintBottom_toTopOf="@id/ll_second_row"
-        >
-
-    <ImageButton
-        android:id="@+id/ib_white"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:contentDescription="@string/white_color"
-        android:src="@drawable/color_circle"
-        app:tint="@color/white"
-        android:tag="@color/white"
-        />
-
-    <ImageButton
-        android:id="@+id/ib_black"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:contentDescription="@string/black_color"
-        android:src="@drawable/color_circle"
-        app:tint="@color/black"
-        android:tag="@color/black"
-        />
-
-    <ImageButton
-        android:id="@+id/ib_green"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:contentDescription="@string/green_color"
-        android:src="@drawable/color_circle"
-        app:tint="@color/green"
-        android:tag="@color/green"
-        />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
         <ImageButton
-            android:id="@+id/ib_red"
+            android:id="@+id/ib_white"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:contentDescription="@string/red_color"
-            android:src="@drawable/color_circle"
-            app:tint="@color/red"
-            android:tag="@color/red"
-            />
+            android:contentDescription="@string/white_color"
+            android:src="@drawable/color_circle_rewarded"
+            android:tag="@color/white"
+            app:tint="@color/white" />
 
         <ImageButton
-            android:id="@+id/ib_yellow"
+            android:id="@+id/ib_antique_white"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:contentDescription="@string/yellow_color"
-            android:src="@drawable/color_circle"
-            app:tint="@color/yellow"
-            android:tag="@color/yellow"
-            />
+            android:contentDescription="@string/antique_white_color"
+            android:src="@drawable/color_circle_rewarded"
+            android:tag="@color/AntiqueWhite"
+            app:tint="@color/AntiqueWhite" />
+
+        <ImageButton
+            android:id="@+id/ib_lemon_chiffon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:contentDescription="@string/lemon_chiffon_color"
+            android:src="@drawable/color_circle_rewarded"
+            android:tag="@color/LemonChiffon"
+            app:tint="@color/LemonChiffon" />
+
+        <ImageButton
+            android:id="@+id/ib_black"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:contentDescription="@string/black_color"
+            android:src="@drawable/color_circle_rewarded"
+            android:tag="@color/black"
+            app:tint="@color/black" />
+
+        <ImageButton
+            android:id="@+id/ib_steel_grey"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:contentDescription="@string/steel_grey_color"
+            android:src="@drawable/color_circle_rewarded"
+            android:tag="@color/SteelGrey"
+            app:tint="@color/SteelGrey" />
+
+        <ImageButton
+            android:id="@+id/ib_grey_goose"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:contentDescription="@string/grey_goose_color"
+            android:src="@drawable/color_circle_rewarded"
+            android:tag="@color/GreyGoose"
+            app:tint="@color/GreyGoose" />
 
     </androidx.appcompat.widget.LinearLayoutCompat>
 
     <androidx.appcompat.widget.LinearLayoutCompat
         android:id="@+id/ll_second_row"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
         android:gravity="center"
-        app:layout_constraintTop_toBottomOf="@id/ll_first_row"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
+        android:orientation="horizontal"
         app:layout_constraintBottom_toTopOf="@id/ll_third_row"
-        >
-
-        <ImageButton
-            android:id="@+id/ib_orange"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:contentDescription="@string/orange_color"
-            android:src="@drawable/color_circle"
-            app:tint="@color/Orange"
-            android:tag="@color/Orange"
-            />
-
-        <ImageButton
-            android:id="@+id/ib_blue"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:contentDescription="@string/blue_color"
-            android:src="@drawable/color_circle"
-            app:tint="@color/blue"
-            android:tag="@color/blue"
-            />
-
-        <ImageButton
-            android:id="@+id/ib_sky_blue"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:contentDescription="@string/sky_blue_color"
-            android:src="@drawable/color_circle"
-            app:tint="@color/LightSkyBlue"
-            android:tag="@color/LightSkyBlue"
-            />
-
-        <ImageButton
-            android:id="@+id/ib_dark_violet"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:contentDescription="@string/dark_violet_color"
-            android:src="@drawable/color_circle"
-            app:tint="@color/DarkViolet"
-            android:tag="@color/DarkViolet"
-            />
-
-        <ImageButton
-            android:id="@+id/ib_hot_pink"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:contentDescription="@string/hot_pink_color"
-            android:src="@drawable/color_circle"
-            app:tint="@color/HotPink"
-            android:tag="@color/HotPink"
-            />
-
-    </androidx.appcompat.widget.LinearLayoutCompat>
-
-    <androidx.appcompat.widget.LinearLayoutCompat
-        android:id="@+id/ll_third_row"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:gravity="center"
-        app:layout_constraintTop_toBottomOf="@id/ll_second_row"
-        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        >
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/ll_first_row">
+
+        <ImageButton
+            android:id="@+id/ib_dark_green"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:contentDescription="@string/dark_green_color"
+            android:src="@drawable/color_circle_rewarded"
+            android:tag="@color/DarkGreen"
+            app:tint="@color/DarkGreen" />
+
+        <ImageButton
+            android:id="@+id/ib_green"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:contentDescription="@string/green_color"
+            android:src="@drawable/color_circle_rewarded"
+            android:tag="@color/green"
+            app:tint="@color/green" />
 
         <ImageButton
             android:id="@+id/ib_green_yellow"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:contentDescription="@string/green_yellow_color"
-            android:src="@drawable/color_circle"
-            app:tint="@color/GreenYellow"
+            android:src="@drawable/color_circle_rewarded"
             android:tag="@color/GreenYellow"
-            />
+            app:tint="@color/GreenYellow" />
 
         <ImageButton
-            android:id="@+id/ib_blue"
+            android:id="@+id/ib_gold"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:contentDescription="@string/blue_color"
-            android:src="@drawable/color_circle"
-            app:tint="@color/blue"
-            android:tag="@color/blue"
-            />
+            android:contentDescription="@string/gold_color"
+            android:src="@drawable/color_circle_rewarded"
+            android:tag="@color/Gold"
+            app:tint="@color/Gold" />
 
         <ImageButton
-            android:id="@+id/ib_sky_blue"
+            android:id="@+id/ib_yellow"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:contentDescription="@string/sky_blue_color"
-            android:src="@drawable/color_circle"
-            app:tint="@color/LightSkyBlue"
-            android:tag="@color/LightSkyBlue"
-            />
+            android:contentDescription="@string/yellow_color"
+            android:src="@drawable/color_circle_rewarded"
+            android:tag="@color/yellow"
+            app:tint="@color/yellow" />
 
         <ImageButton
-            android:id="@+id/ib_dark_violet"
+            android:id="@+id/ib_light_yellow"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:contentDescription="@string/dark_violet_color"
-            android:src="@drawable/color_circle"
-            app:tint="@color/DarkViolet"
-            android:tag="@color/DarkViolet"
-            />
+            android:contentDescription="@string/light_yellow_color"
+            android:src="@drawable/color_circle_rewarded"
+            android:tag="@color/LightYellow"
+            app:tint="@color/LightYellow" />
+
+
+    </androidx.appcompat.widget.LinearLayoutCompat>
+
+    <androidx.appcompat.widget.LinearLayoutCompat
+        android:id="@+id/ll_third_row"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:orientation="horizontal"
+        app:layout_constraintBottom_toTopOf="@id/ll_fourth_row"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/ll_second_row">
+
+        <ImageButton
+            android:id="@+id/ib_red"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:contentDescription="@string/red_color"
+            android:src="@drawable/color_circle_rewarded"
+            android:tag="@color/red"
+            app:tint="@color/red" />
+
+        <ImageButton
+            android:id="@+id/ib_orange"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:contentDescription="@string/orange_color"
+            android:src="@drawable/color_circle_rewarded"
+            android:tag="@color/Orange"
+            app:tint="@color/Orange" />
 
         <ImageButton
             android:id="@+id/ib_hot_pink"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:contentDescription="@string/hot_pink_color"
-            android:src="@drawable/color_circle"
-            app:tint="@color/HotPink"
+            android:src="@drawable/color_circle_rewarded"
             android:tag="@color/HotPink"
-            />
+            app:tint="@color/HotPink" />
+
+        <ImageButton
+            android:id="@+id/ib_brown"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:contentDescription="@string/brown_color"
+            android:src="@drawable/color_circle_rewarded"
+            android:tag="@color/SaddleBrown"
+            app:tint="@color/SaddleBrown" />
+
+        <ImageButton
+            android:id="@+id/ib_salmon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:contentDescription="@string/salmon_color"
+            android:src="@drawable/color_circle_rewarded"
+            android:tag="@color/Salmon"
+            app:tint="@color/Salmon" />
+
+        <ImageButton
+            android:id="@+id/ib_peach"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:contentDescription="@string/peach_color"
+            android:src="@drawable/color_circle_rewarded"
+            android:tag="@color/PeachPuff"
+            app:tint="@color/PeachPuff" />
+
+
+    </androidx.appcompat.widget.LinearLayoutCompat>
+
+    <androidx.appcompat.widget.LinearLayoutCompat
+        android:id="@+id/ll_fourth_row"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:orientation="horizontal"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/ll_third_row"
+        app:layout_constraintBottom_toBottomOf="parent"
+        >
+
+        <ImageButton
+            android:id="@+id/ib_blue"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:contentDescription="@string/blue_color"
+            android:src="@drawable/color_circle_rewarded"
+            android:tag="@color/blue"
+            app:tint="@color/blue" />
+
+        <ImageButton
+            android:id="@+id/ib_sky_blue"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:contentDescription="@string/sky_blue_color"
+            android:src="@drawable/color_circle_rewarded"
+            android:tag="@color/LightSkyBlue"
+            app:tint="@color/LightSkyBlue" />
+
+        <ImageButton
+            android:id="@+id/ib_cyan"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:contentDescription="@string/cyan_color"
+            android:src="@drawable/color_circle_rewarded"
+            android:tag="@color/Cyan"
+            app:tint="@color/Cyan" />
+
+        <ImageButton
+            android:id="@+id/ib_dark_violet"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:contentDescription="@string/dark_violet_color"
+            android:src="@drawable/color_circle_rewarded"
+            android:tag="@color/DarkViolet"
+            app:tint="@color/DarkViolet" />
+
+        <ImageButton
+            android:id="@+id/ib_violet"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:contentDescription="@string/violet_color"
+            android:src="@drawable/color_circle_rewarded"
+            android:tag="@color/Violet"
+            app:tint="@color/Violet" />
+
+        <ImageButton
+            android:id="@+id/ib_magenta"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:contentDescription="@string/magenta_color"
+            android:src="@drawable/color_circle_rewarded"
+            android:tag="@color/Magenta"
+            app:tint="@color/Magenta" />
+
 
     </androidx.appcompat.widget.LinearLayoutCompat>
 

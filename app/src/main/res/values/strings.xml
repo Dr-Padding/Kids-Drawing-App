@@ -17,4 +17,18 @@
     <string name="dark_violet_color">dark_violet_color</string>
     <string name="hot_pink_color">hot_pink_color</string>
     <string name="green_yellow_color">green_yellow_color</string>
+    <string name="saddle_brown_color">saddle_brown_color</string>
+    <string name="cyan_color">cyan_color</string>
+    <string name="dark_green_color">dark_green_color</string>
+    <string name="brown_color">brown_color</string>
+    <string name="gold_color">gold_color</string>
+    <string name="peach_color">peach_color</string>
+    <string name="light_yellow_color">light_yellow_color</string>
+    <string name="salmon_color">salmon_color</string>
+    <string name="steel_grey_color">steel_grey_color</string>
+    <string name="violet_color">violet_color</string>
+    <string name="magenta_color">magenta_color</string>
+    <string name="grey_goose_color">grey_goose_color</string>
+    <string name="lemon_chiffon_color">lemon_chiffon_color</string>
+    <string name="antique_white_color">antique_white_color</string>
 </resources>

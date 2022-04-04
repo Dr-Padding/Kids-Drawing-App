@@ -379,7 +379,42 @@ class MainActivity : AppCompatActivity(), Adapter.MyOnClickListener {
                 colorPickerDialog.dismiss()
             }
 
+            ibAntiqueWhite.setOnClickListener {
+                binding.drawingView.onClickEraser(false)
+                val colorTag = it.tag.toString()
+                binding.drawingView.setColor(colorTag) //set color to brush
+                colorPickerDialog.dismiss()
+            }
+
+            ibLemonChiffon.setOnClickListener {
+                binding.drawingView.onClickEraser(false)
+                val colorTag = it.tag.toString()
+                binding.drawingView.setColor(colorTag) //set color to brush
+                colorPickerDialog.dismiss()
+            }
+
             ibBlack.setOnClickListener {
+                binding.drawingView.onClickEraser(false)
+                val colorTag = it.tag.toString()
+                binding.drawingView.setColor(colorTag) //set color to brush
+                colorPickerDialog.dismiss()
+            }
+
+            ibSteelGrey.setOnClickListener {
+                binding.drawingView.onClickEraser(false)
+                val colorTag = it.tag.toString()
+                binding.drawingView.setColor(colorTag) //set color to brush
+                colorPickerDialog.dismiss()
+            }
+
+            ibGreyGoose.setOnClickListener {
+                binding.drawingView.onClickEraser(false)
+                val colorTag = it.tag.toString()
+                binding.drawingView.setColor(colorTag) //set color to brush
+                colorPickerDialog.dismiss()
+            }
+
+            ibDarkGreen.setOnClickListener {
                 binding.drawingView.onClickEraser(false)
                 val colorTag = it.tag.toString()
                 binding.drawingView.setColor(colorTag) //set color to brush
@@ -393,7 +428,14 @@ class MainActivity : AppCompatActivity(), Adapter.MyOnClickListener {
                 colorPickerDialog.dismiss()
             }
 
-            ibRed.setOnClickListener {
+            ibGreenYellow.setOnClickListener {
+                binding.drawingView.onClickEraser(false)
+                val colorTag = it.tag.toString()
+                binding.drawingView.setColor(colorTag) //set color to brush
+                colorPickerDialog.dismiss()
+            }
+
+            ibGold.setOnClickListener {
                 binding.drawingView.onClickEraser(false)
                 val colorTag = it.tag.toString()
                 binding.drawingView.setColor(colorTag) //set color to brush
@@ -401,6 +443,97 @@ class MainActivity : AppCompatActivity(), Adapter.MyOnClickListener {
             }
 
             ibYellow.setOnClickListener {
+                binding.drawingView.onClickEraser(false)
+                val colorTag = it.tag.toString()
+                binding.drawingView.setColor(colorTag) //set color to brush
+                colorPickerDialog.dismiss()
+            }
+
+            ibLightYellow.setOnClickListener {
+                binding.drawingView.onClickEraser(false)
+                val colorTag = it.tag.toString()
+                binding.drawingView.setColor(colorTag) //set color to brush
+                colorPickerDialog.dismiss()
+            }
+
+            ibRed.setOnClickListener {
+                binding.drawingView.onClickEraser(false)
+                val colorTag = it.tag.toString()
+                binding.drawingView.setColor(colorTag) //set color to brush
+                colorPickerDialog.dismiss()
+            }
+
+            ibOrange.setOnClickListener {
+                binding.drawingView.onClickEraser(false)
+                val colorTag = it.tag.toString()
+                binding.drawingView.setColor(colorTag) //set color to brush
+                colorPickerDialog.dismiss()
+            }
+
+            ibHotPink.setOnClickListener {
+                binding.drawingView.onClickEraser(false)
+                val colorTag = it.tag.toString()
+                binding.drawingView.setColor(colorTag) //set color to brush
+                colorPickerDialog.dismiss()
+            }
+
+            ibBrown.setOnClickListener {
+                binding.drawingView.onClickEraser(false)
+                val colorTag = it.tag.toString()
+                binding.drawingView.setColor(colorTag) //set color to brush
+                colorPickerDialog.dismiss()
+            }
+
+            ibSalmon.setOnClickListener {
+                binding.drawingView.onClickEraser(false)
+                val colorTag = it.tag.toString()
+                binding.drawingView.setColor(colorTag) //set color to brush
+                colorPickerDialog.dismiss()
+            }
+
+            ibPeach.setOnClickListener {
+                binding.drawingView.onClickEraser(false)
+                val colorTag = it.tag.toString()
+                binding.drawingView.setColor(colorTag) //set color to brush
+                colorPickerDialog.dismiss()
+            }
+
+            ibBlue.setOnClickListener {
+                binding.drawingView.onClickEraser(false)
+                val colorTag = it.tag.toString()
+                binding.drawingView.setColor(colorTag) //set color to brush
+                colorPickerDialog.dismiss()
+            }
+
+            ibSkyBlue.setOnClickListener {
+                binding.drawingView.onClickEraser(false)
+                val colorTag = it.tag.toString()
+                binding.drawingView.setColor(colorTag) //set color to brush
+                colorPickerDialog.dismiss()
+            }
+
+            ibCyan.setOnClickListener {
+                binding.drawingView.onClickEraser(false)
+                val colorTag = it.tag.toString()
+                binding.drawingView.setColor(colorTag) //set color to brush
+                colorPickerDialog.dismiss()
+            }
+
+            ibDarkViolet.setOnClickListener {
+                binding.drawingView.onClickEraser(false)
+                val colorTag = it.tag.toString()
+                binding.drawingView.setColor(colorTag) //set color to brush
+                colorPickerDialog.dismiss()
+            }
+
+            ibViolet.setOnClickListener {
+                binding.drawingView.onClickEraser(false)
+                val colorTag = it.tag.toString()
+                binding.drawingView.setColor(colorTag) //set color to brush
+                colorPickerDialog.dismiss()
+            }
+
+            ibMagenta.setOnClickListener {
                 binding.drawingView.onClickEraser(false)
                 val colorTag = it.tag.toString()
                 binding.drawingView.setColor(colorTag) //set color to brush

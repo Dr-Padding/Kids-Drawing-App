@@ -6,8 +6,6 @@
     <color name="teal_200">#C7C9C6</color>
     <color name="teal_700">#FF018786</color>
 
-
-
     <color name="skin">#FFCC99</color>
     <color name="black">#FF000000</color>
     <color name="red">#ff0000</color>
@@ -20,10 +18,8 @@
     <color name="grey1">#E3E4E2</color>
     <color name="grey2">#C7C9C6</color>
 
-
     <color name="Ivory">#FFFFF0</color>
     <color name="LightYellow">#FFFFE0</color>
-    <color name="Yellow">#FFFF00</color>
     <color name="Snow">#FFFAFA</color>
     <color name="FloralWhite">#FFFAF0</color>
     <color name="LemonChiffon">#FFFACD</color>
@@ -40,7 +36,7 @@
     <color name="Gold">#FFD700</color>
     <color name="Pink">#FFC0CB</color>
     <color name="LightPink">#FFB6C1</color>
-    <color name="Orange">#FFA500</color>
+    <color name="Orange">#FF5000</color>
     <color name="LightSalmon">#FFA07A</color>
     <color name="DarkOrange">#FF8C00</color>
     <color name="Coral">#FF7F50</color>
@@ -159,5 +155,6 @@
     <color name="MediumBlue">#0000CD</color>
     <color name="DarkBlue">#00008B</color>
     <color name="Navy">#000080</color>
-
+    <color name="SteelGrey">#6F828A</color>
+    <color name="GreyGoose">#C9D3D7</color>
 </resources>
