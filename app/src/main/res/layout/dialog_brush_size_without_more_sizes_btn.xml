@@ -12,60 +12,32 @@
         android:id="@+id/ib_small_brush"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:contentDescription="image_small"
         android:src="@drawable/brush_4f"
         app:layout_constraintEnd_toStartOf="@id/ib_medium_brush"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toTopOf="@id/btnMoreSizes"
+        app:layout_constraintBottom_toBottomOf="parent"
         />
 
     <ImageButton
         android:id="@+id/ib_medium_brush"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:contentDescription="image_medium"
         android:src="@drawable/brush_10f"
         app:layout_constraintEnd_toStartOf="@id/ib_large_brush"
         app:layout_constraintStart_toEndOf="@id/ib_small_brush"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toTopOf="@id/btnMoreSizes"
+        app:layout_constraintBottom_toBottomOf="parent"
         />
 
     <ImageButton
         android:id="@+id/ib_large_brush"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:contentDescription="image_large"
         android:src="@drawable/brush_20f"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@id/ib_medium_brush"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toTopOf="@id/btnMoreSizes"
-        />
-
-    <Button
-        android:id="@+id/btnMoreSizes"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/more_sizes"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/ib_medium_brush"
-        app:layout_constraintBottom_toTopOf="@id/btnClearAll"
-        />
-
-    <Button
-        android:id="@+id/btnClearAll"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/clear_all"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/btnMoreSizes"
         app:layout_constraintBottom_toBottomOf="parent"
         />
-
 </androidx.constraintlayout.widget.ConstraintLayout>

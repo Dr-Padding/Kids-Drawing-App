@@ -16,23 +16,42 @@
         <entry key="app/src/main/res/drawable-v24/color_circle_with_tick.xml" value="0.235" />
         <entry key="app/src/main/res/drawable-v24/large.xml" value="0.14" />
         <entry key="app/src/main/res/drawable-v24/medium.xml" value="0.14" />
+        <entry key="app/src/main/res/drawable/background_drawing_view_layout.xml" value="0.1895" />
+        <entry key="app/src/main/res/drawable/brush_12f.xml" value="0.1895" />
+        <entry key="app/src/main/res/drawable/brush_14f.xml" value="0.1895" />
+        <entry key="app/src/main/res/drawable/brush_16f.xml" value="0.1895" />
+        <entry key="app/src/main/res/drawable/brush_18f.xml" value="0.1895" />
+        <entry key="app/src/main/res/drawable/brush_20f.xml" value="0.1895" />
+        <entry key="app/src/main/res/drawable/brush_22f.xml" value="0.1895" />
+        <entry key="app/src/main/res/drawable/brush_24f.xml" value="0.1895" />
+        <entry key="app/src/main/res/drawable/brush_26f.xml" value="0.1895" />
+        <entry key="app/src/main/res/drawable/brush_28f.xml" value="0.1895" />
+        <entry key="app/src/main/res/drawable/brush_2f.xml" value="0.1895" />
+        <entry key="app/src/main/res/drawable/brush_30f.xml" value="0.1895" />
+        <entry key="app/src/main/res/drawable/brush_6f.xml" value="0.1895" />
+        <entry key="app/src/main/res/drawable/brush_8f.xml" value="0.1895" />
         <entry key="app/src/main/res/drawable/color_circle.xml" value="0.219" />
         <entry key="app/src/main/res/drawable/color_circle_rewarded.xml" value="0.119" />
         <entry key="app/src/main/res/drawable/color_circle_with_tick.xml" value="0.235" />
         <entry key="app/src/main/res/drawable/color_selector.xml" value="0.1535" />
+        <entry key="app/src/main/res/drawable/ff.xml" value="0.1895" />
         <entry key="app/src/main/res/drawable/ic_brush.xml" value="0.14" />
         <entry key="app/src/main/res/drawable/ic_tick.xml" value="0.1425" />
+        <entry key="app/src/main/res/drawable/large.xml" value="0.1895" />
+        <entry key="app/src/main/res/drawable/medium.xml" value="0.1895" />
         <entry key="app/src/main/res/drawable/small.xml" value="0.14" />
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.16621376811594202" />
         <entry key="app/src/main/res/layout/bottom_sheet_fragment.xml" value="0.16621376811594202" />
         <entry key="app/src/main/res/layout/custom_toast.xml" value="0.25" />
         <entry key="app/src/main/res/layout/dialog_brush_size.xml" value="0.25181159420289856" />
+        <entry key="app/src/main/res/layout/dialog_brush_size_rewarded.xml" value="0.3355167333630548" />
+        <entry key="app/src/main/res/layout/dialog_brush_size_without_more_sizes_btn.xml" value="0.38518967865206677" />
         <entry key="app/src/main/res/layout/dialog_color_picker.xml" value="0.25181159420289856" />
         <entry key="app/src/main/res/layout/dialog_color_picker_rewarded.xml" value="0.25181159420289856" />
         <entry key="app/src/main/res/layout/dialog_color_picker_without_more_colors_btn.xml" value="0.375" />
         <entry key="app/src/main/res/layout/dialog_eraser_size.xml" value="0.25181159420289856" />
         <entry key="app/src/main/res/layout/gif_item.xml" value="0.23596014492753623" />
-        <entry key="app/src/main/res/layout/item_tool.xml" value="0.13652482269503546" />
+        <entry key="app/src/main/res/layout/item_tool.xml" value="0.27389054535128543" />
       </map>
     </option>
   </component>
