@@ -50,6 +50,8 @@
         <entry key="app/src/main/res/layout/dialog_color_picker_rewarded.xml" value="0.25181159420289856" />
         <entry key="app/src/main/res/layout/dialog_color_picker_without_more_colors_btn.xml" value="0.375" />
         <entry key="app/src/main/res/layout/dialog_eraser_size.xml" value="0.25181159420289856" />
+        <entry key="app/src/main/res/layout/dialog_eraser_size_with_more_sizes.xml" value="0.362815716249723" />
+        <entry key="app/src/main/res/layout/dialog_eraser_size_without_buttons.xml" value="0.3635639135388361" />
         <entry key="app/src/main/res/layout/gif_item.xml" value="0.23596014492753623" />
         <entry key="app/src/main/res/layout/item_tool.xml" value="0.27389054535128543" />
       </map>

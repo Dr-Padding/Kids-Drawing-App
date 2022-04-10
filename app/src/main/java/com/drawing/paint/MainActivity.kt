@@ -56,7 +56,9 @@ class MainActivity : AppCompatActivity(), Adapter.MyOnClickListener {
     var mCameraLaunched = false
     private val bottomSheetFragment = BottomSheetFragment()
     private var mRewardedAd: RewardedAd? = null
-    private var mRewardedAdShowed = false
+    private var mAdShowedForBrush = false
+    private var mAdShowedForColors = false
+    private var mAdShowedForEraser = false
     private var mIsLoading = false
 
 
@@ -111,7 +113,6 @@ class MainActivity : AppCompatActivity(), Adapter.MyOnClickListener {
         if (mRewardedAd == null && !mIsLoading) {
             loadRewardedAd()
         }
-
     }
 
     /*   internal fun getBitmapFromView(view: View): Bitmap {
@@ -224,7 +225,7 @@ class MainActivity : AppCompatActivity(), Adapter.MyOnClickListener {
             brushDialog.setContentView(dialogBindingBrushesInitial.root)
         }
 
-        if (!mRewardedAdShowed) {
+        if (!mAdShowedForBrush) {
             brushDialog.setContentView(dialogBindingWithMoreSizesBtn.root)
         } else {
             brushDialog.setContentView(dialogBindingBrushesRewarded.root)
@@ -232,22 +233,22 @@ class MainActivity : AppCompatActivity(), Adapter.MyOnClickListener {
 
         val getMoreSizes = dialogBindingWithMoreSizesBtn.btnMoreSizes
         getMoreSizes.setOnClickListener {
-            showRewardedVideo()
-            if (mRewardedAd != null) {
-                mRewardedAd?.show(
-                    this@MainActivity,
-                    OnUserEarnedRewardListener() {
-                        brushDialog.setContentView(dialogBindingBrushesRewarded.root)
-                        Log.d("TAG", "User earned the reward.")
-                        mRewardedAdShowed = true
+                showRewardedVideo()
+                if (mRewardedAd != null) {
+                    mRewardedAd?.show(
+                        this@MainActivity,
+                        OnUserEarnedRewardListener() {
+                            brushDialog.setContentView(dialogBindingBrushesRewarded.root)
+                            Log.d("TAG", "User earned the reward.")
+                            mAdShowedForBrush = true
 
 //                    fun onUserEarnedReward(rewardItem: RewardItem) {
 //                        var rewardAmount = rewardItem.amount
 //                        //addCoins(rewardAmount)
 //                    }
-                    }
-                )
-            }
+                        }
+                    )
+                }
         }
 
         dialogBindingBrushesInitial.apply {
@@ -447,7 +448,7 @@ class MainActivity : AppCompatActivity(), Adapter.MyOnClickListener {
             colorPickerDialog.setContentView(dialogBindingInitial.root)
         }
 
-        if (!mRewardedAdShowed) {
+        if (!mAdShowedForColors) {
             colorPickerDialog.setContentView(dialogBindingWithMoreColorsBtn.root)
         } else {
             colorPickerDialog.setContentView(dialogBindingRewarded.root)
@@ -455,22 +456,22 @@ class MainActivity : AppCompatActivity(), Adapter.MyOnClickListener {
 
         val getMoreColors = dialogBindingWithMoreColorsBtn.btnMoreColors
         getMoreColors.setOnClickListener {
-            showRewardedVideo()
-            if (mRewardedAd != null) {
-                mRewardedAd?.show(
-                    this@MainActivity,
-                    OnUserEarnedRewardListener() {
-                        colorPickerDialog.setContentView(dialogBindingRewarded.root)
-                        Log.d("TAG", "User earned the reward.")
-                        mRewardedAdShowed = true
+                showRewardedVideo()
+                if (mRewardedAd != null) {
+                    mRewardedAd?.show(
+                        this@MainActivity,
+                        OnUserEarnedRewardListener() {
+                            colorPickerDialog.setContentView(dialogBindingRewarded.root)
+                            Log.d("TAG", "User earned the reward.")
+                            mAdShowedForColors = true
 
 //                    fun onUserEarnedReward(rewardItem: RewardItem) {
 //                        var rewardAmount = rewardItem.amount
 //                        //addCoins(rewardAmount)
 //                    }
-                    }
-                )
-            }
+                        }
+                    )
+                }
         }
 
         dialogBindingInitial.apply {
@@ -935,6 +936,7 @@ class MainActivity : AppCompatActivity(), Adapter.MyOnClickListener {
                     // Don't forget to set the ad reference to null so you
                     // don't show the ad a second time.
                     mRewardedAd = null
+                    loadRewardedAd() //???????????
                 }
 
                 override fun onAdShowedFullScreenContent() {

@@ -13,5 +13,4 @@ object Constants {
         android.Manifest.permission.READ_EXTERNAL_STORAGE
     )
     val UPLOAD_PERMISSION = arrayOf(android.Manifest.permission.READ_EXTERNAL_STORAGE)
-
 }
