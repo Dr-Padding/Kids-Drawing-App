@@ -16,7 +16,9 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="parent">
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/ll_second_row_brush"
+        >
 
         <ImageButton
             android:id="@+id/ib_2f"
@@ -68,7 +70,9 @@
         app:layout_constraintTop_toBottomOf="@id/ll_first_row_brush"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="parent">
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/ll_third_row_brush"
+        >
 
         <ImageButton
             android:id="@+id/ib_12f"

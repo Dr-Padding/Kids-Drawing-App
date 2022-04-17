@@ -30,12 +30,14 @@
         <entry key="app/src/main/res/drawable/brush_30f.xml" value="0.1895" />
         <entry key="app/src/main/res/drawable/brush_6f.xml" value="0.1895" />
         <entry key="app/src/main/res/drawable/brush_8f.xml" value="0.1895" />
+        <entry key="app/src/main/res/drawable/brush_max.xml" value="0.167" />
         <entry key="app/src/main/res/drawable/color_circle.xml" value="0.219" />
         <entry key="app/src/main/res/drawable/color_circle_rewarded.xml" value="0.119" />
         <entry key="app/src/main/res/drawable/color_circle_with_tick.xml" value="0.235" />
         <entry key="app/src/main/res/drawable/color_selector.xml" value="0.1535" />
         <entry key="app/src/main/res/drawable/ff.xml" value="0.1895" />
         <entry key="app/src/main/res/drawable/ic_brush.xml" value="0.14" />
+        <entry key="app/src/main/res/drawable/ic_max_text.xml" value="0.167" />
         <entry key="app/src/main/res/drawable/ic_tick.xml" value="0.1425" />
         <entry key="app/src/main/res/drawable/large.xml" value="0.1895" />
         <entry key="app/src/main/res/drawable/medium.xml" value="0.1895" />
@@ -50,7 +52,9 @@
         <entry key="app/src/main/res/layout/dialog_color_picker_rewarded.xml" value="0.25181159420289856" />
         <entry key="app/src/main/res/layout/dialog_color_picker_without_more_colors_btn.xml" value="0.375" />
         <entry key="app/src/main/res/layout/dialog_eraser_size.xml" value="0.25181159420289856" />
-        <entry key="app/src/main/res/layout/dialog_eraser_size_with_more_sizes.xml" value="0.362815716249723" />
+        <entry key="app/src/main/res/layout/dialog_eraser_size_full.xml" value="0.3159458105114923" />
+        <entry key="app/src/main/res/layout/dialog_eraser_size_with_max_size.xml" value="0.25181159420289856" />
+        <entry key="app/src/main/res/layout/dialog_eraser_size_with_more_sizes.xml" value="0.429081585390348" />
         <entry key="app/src/main/res/layout/dialog_eraser_size_without_buttons.xml" value="0.3635639135388361" />
         <entry key="app/src/main/res/layout/gif_item.xml" value="0.23596014492753623" />
         <entry key="app/src/main/res/layout/item_tool.xml" value="0.27389054535128543" />

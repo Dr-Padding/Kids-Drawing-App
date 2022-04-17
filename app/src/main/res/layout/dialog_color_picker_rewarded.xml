@@ -8,12 +8,12 @@
     android:padding="8dp">
 
     <androidx.appcompat.widget.LinearLayoutCompat
-        android:id="@+id/ll_first_row"
+        android:id="@+id/ll_first_row_eraser"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:gravity="center"
         android:orientation="horizontal"
-        app:layout_constraintBottom_toTopOf="@id/ll_second_row"
+        app:layout_constraintBottom_toTopOf="@id/ll_second_row_eraser"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
@@ -75,15 +75,15 @@
     </androidx.appcompat.widget.LinearLayoutCompat>
 
     <androidx.appcompat.widget.LinearLayoutCompat
-        android:id="@+id/ll_second_row"
+        android:id="@+id/ll_second_row_eraser"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:gravity="center"
         android:orientation="horizontal"
-        app:layout_constraintBottom_toTopOf="@id/ll_third_row"
+        app:layout_constraintBottom_toTopOf="@id/ll_third_row_eraser"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/ll_first_row">
+        app:layout_constraintTop_toBottomOf="@id/ll_first_row_eraser">
 
         <ImageButton
             android:id="@+id/ib_dark_green"
@@ -143,7 +143,7 @@
     </androidx.appcompat.widget.LinearLayoutCompat>
 
     <androidx.appcompat.widget.LinearLayoutCompat
-        android:id="@+id/ll_third_row"
+        android:id="@+id/ll_third_row_eraser"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:gravity="center"
@@ -151,7 +151,7 @@
         app:layout_constraintBottom_toTopOf="@id/ll_fourth_row"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/ll_second_row">
+        app:layout_constraintTop_toBottomOf="@id/ll_second_row_eraser">
 
         <ImageButton
             android:id="@+id/ib_red"
@@ -218,7 +218,7 @@
         android:orientation="horizontal"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/ll_third_row"
+        app:layout_constraintTop_toBottomOf="@id/ll_third_row_eraser"
         app:layout_constraintBottom_toBottomOf="parent"
         >
 

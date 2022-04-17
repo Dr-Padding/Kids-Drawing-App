@@ -59,6 +59,7 @@ class MainActivity : AppCompatActivity(), Adapter.MyOnClickListener {
     private var mAdShowedForBrush = false
     private var mAdShowedForColors = false
     private var mAdShowedForEraser = false
+    private var mAdShowedForMaxSize = false
     private var mIsLoading = false
 
 
@@ -233,22 +234,22 @@ class MainActivity : AppCompatActivity(), Adapter.MyOnClickListener {
 
         val getMoreSizes = dialogBindingWithMoreSizesBtn.btnMoreSizes
         getMoreSizes.setOnClickListener {
-                showRewardedVideo()
-                if (mRewardedAd != null) {
-                    mRewardedAd?.show(
-                        this@MainActivity,
-                        OnUserEarnedRewardListener() {
-                            brushDialog.setContentView(dialogBindingBrushesRewarded.root)
-                            Log.d("TAG", "User earned the reward.")
-                            mAdShowedForBrush = true
+            showRewardedVideo()
+            if (mRewardedAd != null) {
+                mRewardedAd?.show(
+                    this@MainActivity,
+                    OnUserEarnedRewardListener() {
+                        brushDialog.setContentView(dialogBindingBrushesRewarded.root)
+                        Log.d("TAG", "User earned the reward.")
+                        mAdShowedForBrush = true
 
 //                    fun onUserEarnedReward(rewardItem: RewardItem) {
 //                        var rewardAmount = rewardItem.amount
 //                        //addCoins(rewardAmount)
 //                    }
-                        }
-                    )
-                }
+                    }
+                )
+            }
         }
 
         dialogBindingBrushesInitial.apply {
@@ -392,39 +393,338 @@ class MainActivity : AppCompatActivity(), Adapter.MyOnClickListener {
         val brushDialog = Dialog(this@MainActivity)
         brushDialog.setTitle(R.string.eraser_size)
 
-        val dialogBinding: DialogEraserSizeBinding = DialogEraserSizeBinding.inflate(layoutInflater)
-        brushDialog.setContentView(dialogBinding.root)
+        val dialogBindingEraserInitial: DialogEraserSizeWithoutButtonsBinding =
+            DialogEraserSizeWithoutButtonsBinding.inflate(layoutInflater)
+        brushDialog.setContentView(dialogBindingEraserInitial.root)
 
+        val dialogBindingEraserWithButtons: DialogEraserSizeBinding =
+            DialogEraserSizeBinding.inflate(layoutInflater)
 
-        val smallBtn = dialogBinding.ibSmallBrush
-        smallBtn.setOnClickListener {
-            binding.drawingView.onClickEraser(true)
-            binding.drawingView.setSizeForBrush(4.toFloat())
-            brushDialog.dismiss()
+        val dialogBindingEraserWithMoreSizesOnly: DialogEraserSizeWithMoreSizesBinding =
+            DialogEraserSizeWithMoreSizesBinding.inflate(layoutInflater)
+
+        val dialogBindingEraserWithMaxSizesOnly: DialogEraserSizeWithMaxSizeBinding =
+            DialogEraserSizeWithMaxSizeBinding.inflate(layoutInflater)
+
+        val dialogBindingEraserFull: DialogEraserSizeFullBinding =
+            DialogEraserSizeFullBinding.inflate(layoutInflater)
+
+        if (mRewardedAd != null) {
+            brushDialog.setContentView(dialogBindingEraserWithButtons.root)
+        } else {
+            brushDialog.setContentView(dialogBindingEraserInitial.root)
         }
 
-        val mediumBtn = dialogBinding.ibMediumBrush
-        mediumBtn.setOnClickListener {
-            binding.drawingView.onClickEraser(true)
-            binding.drawingView.setSizeForBrush(10.toFloat())
-            brushDialog.dismiss()
+        if (!mAdShowedForEraser && !mAdShowedForMaxSize) {
+            brushDialog.setContentView(dialogBindingEraserWithButtons.root)
+        } else if (!mAdShowedForEraser && mAdShowedForMaxSize) {
+            brushDialog.setContentView(dialogBindingEraserWithMaxSizesOnly.root)
+        } else if (mAdShowedForEraser && !mAdShowedForMaxSize) {
+            brushDialog.setContentView(dialogBindingEraserWithMoreSizesOnly.root)
+        } else {
+            brushDialog.setContentView(dialogBindingEraserFull.root)
         }
 
-        val largeBtn = dialogBinding.ibLargeBrush
-        largeBtn.setOnClickListener {
-            binding.drawingView.onClickEraser(true)
-            binding.drawingView.setSizeForBrush(20.toFloat())
-            brushDialog.dismiss()
+        dialogBindingEraserWithButtons.apply {
+
+            btnMoreSizes.setOnClickListener {
+                showRewardedVideo()
+                if (mRewardedAd != null) {
+                    mRewardedAd?.show(
+                        this@MainActivity,
+                        OnUserEarnedRewardListener() {
+                            if (!mAdShowedForMaxSize && !mAdShowedForEraser) {
+                                brushDialog.setContentView(dialogBindingEraserWithMoreSizesOnly.root)
+                                Log.d("TAG", "User earned the reward.")
+                                mAdShowedForEraser = true
+                            }
+
+//                    fun onUserEarnedReward(rewardItem: RewardItem) {
+//                        var rewardAmount = rewardItem.amount
+//                        //addCoins(rewardAmount)
+//                    }
+                        }
+                    )
+                }
+            }
+
+            btnClearAll.setOnClickListener {
+                showRewardedVideo()
+                if (mRewardedAd != null) {
+                    mRewardedAd?.show(
+                        this@MainActivity,
+                        OnUserEarnedRewardListener() {
+                            if (!mAdShowedForMaxSize && !mAdShowedForEraser) {
+                                brushDialog.setContentView(dialogBindingEraserWithMaxSizesOnly.root)
+                                Log.d("TAG", "User earned the reward.")
+                                mAdShowedForMaxSize = true
+                            }
+
+//                    fun onUserEarnedReward(rewardItem: RewardItem) {
+//                        var rewardAmount = rewardItem.amount
+//                        //addCoins(rewardAmount)
+//                    }
+                        }
+                    )
+                }
+            }
+        }
+
+        dialogBindingEraserWithMoreSizesOnly.apply {
+            btnClearAll.setOnClickListener {
+                showRewardedVideo()
+                if (mRewardedAd != null) {
+                    mRewardedAd?.show(
+                        this@MainActivity,
+                        OnUserEarnedRewardListener() {
+                            brushDialog.setContentView(dialogBindingEraserFull.root)
+                            Log.d("TAG", "User earned the reward.")
+                            mAdShowedForMaxSize = true
+
+
+//                    fun onUserEarnedReward(rewardItem: RewardItem) {
+//                        var rewardAmount = rewardItem.amount
+//                        //addCoins(rewardAmount)
+//                    }
+                        }
+                    )
+                }
+            }
+        }
+
+        dialogBindingEraserWithMaxSizesOnly.apply {
+            btnMoreSizes.setOnClickListener {
+                showRewardedVideo()
+                if (mRewardedAd != null) {
+                    mRewardedAd?.show(
+                        this@MainActivity,
+                        OnUserEarnedRewardListener() {
+                            brushDialog.setContentView(dialogBindingEraserFull.root)
+                            Log.d("TAG", "User earned the reward.")
+                            mAdShowedForEraser = true
+
+
+//                    fun onUserEarnedReward(rewardItem: RewardItem) {
+//                        var rewardAmount = rewardItem.amount
+//                        //addCoins(rewardAmount)
+//                    }
+                        }
+                    )
+                }
+            }
+        }
+
+        dialogBindingEraserInitial.apply {
+            ibSmallBrush.setOnClickListener {
+                binding.drawingView.onClickEraser(true)
+                binding.drawingView.setSizeForBrush(4.toFloat())
+                brushDialog.dismiss()
+            }
+
+
+            ibMediumBrush.setOnClickListener {
+                binding.drawingView.onClickEraser(true)
+                binding.drawingView.setSizeForBrush(10.toFloat())
+                brushDialog.dismiss()
+            }
+
+
+            ibLargeBrush.setOnClickListener {
+                binding.drawingView.onClickEraser(true)
+                binding.drawingView.setSizeForBrush(20.toFloat())
+                brushDialog.dismiss()
+            }
+        }
+
+        dialogBindingEraserWithButtons.apply {
+            ibSmallBrush.setOnClickListener {
+                binding.drawingView.onClickEraser(true)
+                binding.drawingView.setSizeForBrush(4.toFloat())
+                brushDialog.dismiss()
+            }
+
+
+            ibMediumBrush.setOnClickListener {
+                binding.drawingView.onClickEraser(true)
+                binding.drawingView.setSizeForBrush(10.toFloat())
+                brushDialog.dismiss()
+            }
+
+
+            ibLargeBrush.setOnClickListener {
+                binding.drawingView.onClickEraser(true)
+                binding.drawingView.setSizeForBrush(20.toFloat())
+                brushDialog.dismiss()
+            }
+        }
+
+        dialogBindingEraserWithMoreSizesOnly.apply {
+            ib2f.setOnClickListener {
+                binding.drawingView.onClickEraser(true)
+                binding.drawingView.setSizeForBrush(2.toFloat())
+                brushDialog.dismiss()
+            }
+
+
+            ib6f.setOnClickListener {
+                binding.drawingView.onClickEraser(true)
+                binding.drawingView.setSizeForBrush(6.toFloat())
+                brushDialog.dismiss()
+            }
+
+
+            ib10f.setOnClickListener {
+                binding.drawingView.onClickEraser(true)
+                binding.drawingView.setSizeForBrush(10.toFloat())
+                brushDialog.dismiss()
+            }
+
+
+            ib12f.setOnClickListener {
+                binding.drawingView.onClickEraser(true)
+                binding.drawingView.setSizeForBrush(12.toFloat())
+                brushDialog.dismiss()
+            }
+
+
+            ib16f.setOnClickListener {
+                binding.drawingView.onClickEraser(true)
+                binding.drawingView.setSizeForBrush(16.toFloat())
+                brushDialog.dismiss()
+            }
+
+
+            ib20f.setOnClickListener {
+                binding.drawingView.onClickEraser(true)
+                binding.drawingView.setSizeForBrush(20.toFloat())
+                brushDialog.dismiss()
+            }
+
+
+            ib22f.setOnClickListener {
+                binding.drawingView.onClickEraser(true)
+                binding.drawingView.setSizeForBrush(22.toFloat())
+                brushDialog.dismiss()
+            }
+
+
+            ib26f.setOnClickListener {
+                binding.drawingView.onClickEraser(true)
+                binding.drawingView.setSizeForBrush(26.toFloat())
+                brushDialog.dismiss()
+            }
+
+
+            ib30f.setOnClickListener {
+                binding.drawingView.onClickEraser(true)
+                binding.drawingView.setSizeForBrush(30.toFloat())
+                brushDialog.dismiss()
+            }
+
+        }
+
+
+        dialogBindingEraserWithMaxSizesOnly.apply {
+            ibSmallBrush.setOnClickListener {
+                binding.drawingView.onClickEraser(true)
+                binding.drawingView.setSizeForBrush(4.toFloat())
+                brushDialog.dismiss()
+            }
+
+
+            ibMediumBrush.setOnClickListener {
+                binding.drawingView.onClickEraser(true)
+                binding.drawingView.setSizeForBrush(10.toFloat())
+                brushDialog.dismiss()
+            }
+
+
+            ibLargeBrush.setOnClickListener {
+                binding.drawingView.onClickEraser(true)
+                binding.drawingView.setSizeForBrush(20.toFloat())
+                brushDialog.dismiss()
+            }
+
+
+            btnClearAll.setOnClickListener {
+                binding.drawingView.onClickEraser(true)
+                binding.drawingView.setSizeForBrush(999999.toFloat())
+                brushDialog.dismiss()
+            }
+        }
+
+        dialogBindingEraserFull.apply {
+            ib2f.setOnClickListener {
+                binding.drawingView.onClickEraser(true)
+                binding.drawingView.setSizeForBrush(2.toFloat())
+                brushDialog.dismiss()
+            }
+
+
+            ib6f.setOnClickListener {
+                binding.drawingView.onClickEraser(true)
+                binding.drawingView.setSizeForBrush(6.toFloat())
+                brushDialog.dismiss()
+            }
+
+
+            ib10f.setOnClickListener {
+                binding.drawingView.onClickEraser(true)
+                binding.drawingView.setSizeForBrush(10.toFloat())
+                brushDialog.dismiss()
+            }
+
+
+            ib12f.setOnClickListener {
+                binding.drawingView.onClickEraser(true)
+                binding.drawingView.setSizeForBrush(12.toFloat())
+                brushDialog.dismiss()
+            }
+
+
+            ib16f.setOnClickListener {
+                binding.drawingView.onClickEraser(true)
+                binding.drawingView.setSizeForBrush(16.toFloat())
+                brushDialog.dismiss()
+            }
+
+
+            ib20f.setOnClickListener {
+                binding.drawingView.onClickEraser(true)
+                binding.drawingView.setSizeForBrush(20.toFloat())
+                brushDialog.dismiss()
+            }
+
+
+            ib22f.setOnClickListener {
+                binding.drawingView.onClickEraser(true)
+                binding.drawingView.setSizeForBrush(22.toFloat())
+                brushDialog.dismiss()
+            }
+
+
+            ib26f.setOnClickListener {
+                binding.drawingView.onClickEraser(true)
+                binding.drawingView.setSizeForBrush(26.toFloat())
+                brushDialog.dismiss()
+            }
+
+
+            ib30f.setOnClickListener {
+                binding.drawingView.onClickEraser(true)
+                binding.drawingView.setSizeForBrush(30.toFloat())
+                brushDialog.dismiss()
+            }
+
+            btnClearAll.setOnClickListener {
+                binding.drawingView.onClickEraser(true)
+                binding.drawingView.setSizeForBrush(999999.toFloat())
+                brushDialog.dismiss()
+            }
+
         }
 
         brushDialog.show()
-
-        val clearAllBtn = dialogBinding.btnClearAll
-        clearAllBtn.setOnClickListener {
-            binding.drawingView.onClickEraser(true)
-            binding.drawingView.setSizeForBrush(999999.toFloat())
-            brushDialog.dismiss()
-        }
     }
 
 
@@ -456,22 +756,22 @@ class MainActivity : AppCompatActivity(), Adapter.MyOnClickListener {
 
         val getMoreColors = dialogBindingWithMoreColorsBtn.btnMoreColors
         getMoreColors.setOnClickListener {
-                showRewardedVideo()
-                if (mRewardedAd != null) {
-                    mRewardedAd?.show(
-                        this@MainActivity,
-                        OnUserEarnedRewardListener() {
-                            colorPickerDialog.setContentView(dialogBindingRewarded.root)
-                            Log.d("TAG", "User earned the reward.")
-                            mAdShowedForColors = true
+            showRewardedVideo()
+            if (mRewardedAd != null) {
+                mRewardedAd?.show(
+                    this@MainActivity,
+                    OnUserEarnedRewardListener() {
+                        colorPickerDialog.setContentView(dialogBindingRewarded.root)
+                        Log.d("TAG", "User earned the reward.")
+                        mAdShowedForColors = true
 
 //                    fun onUserEarnedReward(rewardItem: RewardItem) {
 //                        var rewardAmount = rewardItem.amount
 //                        //addCoins(rewardAmount)
 //                    }
-                        }
-                    )
-                }
+                    }
+                )
+            }
         }
 
         dialogBindingInitial.apply {
