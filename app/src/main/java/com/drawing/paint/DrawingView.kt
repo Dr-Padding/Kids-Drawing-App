@@ -13,6 +13,7 @@ class DrawingView(context: Context, attrs: AttributeSet): View(context, attrs) {
 
     private var drawPaint: Paint? = null
     private var mBrushSize: Float = 0.toFloat()
+    private var mEraserSize: Float = 0.toFloat()
     private var penSelected = true
     private var eraserSelected = false
     private var mBitmap: Bitmap? = null
@@ -54,6 +55,10 @@ class DrawingView(context: Context, attrs: AttributeSet): View(context, attrs) {
         } else {
             eraserOn = false
             drawPaint!!.color = drawPaint!!.color
+
+            //dr.
+            drawPaint!!.strokeWidth = mBrushSize
+
             drawPaint!!.xfermode = null
             eraserSelected = false
             penSelected = true
@@ -115,7 +120,7 @@ class DrawingView(context: Context, attrs: AttributeSet): View(context, attrs) {
 
                     if (drawPaint!!.strokeWidth >= 9999.toFloat()){
                         onClickEraser(false)
-                        setSizeForBrush(10.toFloat())
+//                        setSizeForBrush(10.toFloat())
                     }
                 }
                 MotionEvent.ACTION_CANCEL -> return false
@@ -146,6 +151,15 @@ class DrawingView(context: Context, attrs: AttributeSet): View(context, attrs) {
             resources.displayMetrics
         )
         drawPaint!!.strokeWidth = mBrushSize
+    }
+
+    fun setSizeForEraser(newSize: Float) {
+        mEraserSize = TypedValue.applyDimension(
+            TypedValue.COMPLEX_UNIT_DIP,
+            newSize,
+            resources.displayMetrics
+        )
+        drawPaint!!.strokeWidth = mEraserSize
     }
 
     fun setColor(newColor: String) {

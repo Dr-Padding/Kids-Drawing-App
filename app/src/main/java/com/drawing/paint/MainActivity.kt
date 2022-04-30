@@ -2,6 +2,7 @@ package com.drawing.paint
 
 
 import android.Manifest
+import android.app.Activity
 import android.app.Dialog
 import android.content.DialogInterface
 import android.content.Intent
@@ -14,6 +15,7 @@ import android.util.Log
 import android.view.View
 import android.widget.ImageButton
 import android.widget.Toast
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.camera.core.*
@@ -138,7 +140,10 @@ class MainActivity : AppCompatActivity(), Adapter.MyOnClickListener {
                 Intent.ACTION_PICK,
                 MediaStore.Images.Media.EXTERNAL_CONTENT_URI
             )
-            startActivityForResult(pickPhotoIntent, STORAGE_REQUEST_CODE)
+
+            //startActivityForResult(pickPhotoIntent, STORAGE_REQUEST_CODE)
+            resultLauncher.launch(pickPhotoIntent)
+
         } else {
             //Request the permission
             if (ActivityCompat.shouldShowRequestPermissionRationale(
@@ -517,21 +522,21 @@ class MainActivity : AppCompatActivity(), Adapter.MyOnClickListener {
         dialogBindingEraserInitial.apply {
             ibSmallBrush.setOnClickListener {
                 binding.drawingView.onClickEraser(true)
-                binding.drawingView.setSizeForBrush(4.toFloat())
+                binding.drawingView.setSizeForEraser(4.toFloat())
                 brushDialog.dismiss()
             }
 
 
             ibMediumBrush.setOnClickListener {
                 binding.drawingView.onClickEraser(true)
-                binding.drawingView.setSizeForBrush(10.toFloat())
+                binding.drawingView.setSizeForEraser(10.toFloat())
                 brushDialog.dismiss()
             }
 
 
             ibLargeBrush.setOnClickListener {
                 binding.drawingView.onClickEraser(true)
-                binding.drawingView.setSizeForBrush(20.toFloat())
+                binding.drawingView.setSizeForEraser(20.toFloat())
                 brushDialog.dismiss()
             }
         }
@@ -539,21 +544,21 @@ class MainActivity : AppCompatActivity(), Adapter.MyOnClickListener {
         dialogBindingEraserWithButtons.apply {
             ibSmallBrush.setOnClickListener {
                 binding.drawingView.onClickEraser(true)
-                binding.drawingView.setSizeForBrush(4.toFloat())
+                binding.drawingView.setSizeForEraser(4.toFloat())
                 brushDialog.dismiss()
             }
 
 
             ibMediumBrush.setOnClickListener {
                 binding.drawingView.onClickEraser(true)
-                binding.drawingView.setSizeForBrush(10.toFloat())
+                binding.drawingView.setSizeForEraser(10.toFloat())
                 brushDialog.dismiss()
             }
 
 
             ibLargeBrush.setOnClickListener {
                 binding.drawingView.onClickEraser(true)
-                binding.drawingView.setSizeForBrush(20.toFloat())
+                binding.drawingView.setSizeForEraser(20.toFloat())
                 brushDialog.dismiss()
             }
         }
@@ -561,63 +566,63 @@ class MainActivity : AppCompatActivity(), Adapter.MyOnClickListener {
         dialogBindingEraserWithMoreSizesOnly.apply {
             ib2f.setOnClickListener {
                 binding.drawingView.onClickEraser(true)
-                binding.drawingView.setSizeForBrush(2.toFloat())
+                binding.drawingView.setSizeForEraser(2.toFloat())
                 brushDialog.dismiss()
             }
 
 
             ib6f.setOnClickListener {
                 binding.drawingView.onClickEraser(true)
-                binding.drawingView.setSizeForBrush(6.toFloat())
+                binding.drawingView.setSizeForEraser(6.toFloat())
                 brushDialog.dismiss()
             }
 
 
             ib10f.setOnClickListener {
                 binding.drawingView.onClickEraser(true)
-                binding.drawingView.setSizeForBrush(10.toFloat())
+                binding.drawingView.setSizeForEraser(10.toFloat())
                 brushDialog.dismiss()
             }
 
 
             ib12f.setOnClickListener {
                 binding.drawingView.onClickEraser(true)
-                binding.drawingView.setSizeForBrush(12.toFloat())
+                binding.drawingView.setSizeForEraser(12.toFloat())
                 brushDialog.dismiss()
             }
 
 
             ib16f.setOnClickListener {
                 binding.drawingView.onClickEraser(true)
-                binding.drawingView.setSizeForBrush(16.toFloat())
+                binding.drawingView.setSizeForEraser(16.toFloat())
                 brushDialog.dismiss()
             }
 
 
             ib20f.setOnClickListener {
                 binding.drawingView.onClickEraser(true)
-                binding.drawingView.setSizeForBrush(20.toFloat())
+                binding.drawingView.setSizeForEraser(20.toFloat())
                 brushDialog.dismiss()
             }
 
 
             ib22f.setOnClickListener {
                 binding.drawingView.onClickEraser(true)
-                binding.drawingView.setSizeForBrush(22.toFloat())
+                binding.drawingView.setSizeForEraser(22.toFloat())
                 brushDialog.dismiss()
             }
 
 
             ib26f.setOnClickListener {
                 binding.drawingView.onClickEraser(true)
-                binding.drawingView.setSizeForBrush(26.toFloat())
+                binding.drawingView.setSizeForEraser(26.toFloat())
                 brushDialog.dismiss()
             }
 
 
             ib30f.setOnClickListener {
                 binding.drawingView.onClickEraser(true)
-                binding.drawingView.setSizeForBrush(30.toFloat())
+                binding.drawingView.setSizeForEraser(30.toFloat())
                 brushDialog.dismiss()
             }
 
@@ -627,28 +632,28 @@ class MainActivity : AppCompatActivity(), Adapter.MyOnClickListener {
         dialogBindingEraserWithMaxSizesOnly.apply {
             ibSmallBrush.setOnClickListener {
                 binding.drawingView.onClickEraser(true)
-                binding.drawingView.setSizeForBrush(4.toFloat())
+                binding.drawingView.setSizeForEraser(4.toFloat())
                 brushDialog.dismiss()
             }
 
 
             ibMediumBrush.setOnClickListener {
                 binding.drawingView.onClickEraser(true)
-                binding.drawingView.setSizeForBrush(10.toFloat())
+                binding.drawingView.setSizeForEraser(10.toFloat())
                 brushDialog.dismiss()
             }
 
 
             ibLargeBrush.setOnClickListener {
                 binding.drawingView.onClickEraser(true)
-                binding.drawingView.setSizeForBrush(20.toFloat())
+                binding.drawingView.setSizeForEraser(20.toFloat())
                 brushDialog.dismiss()
             }
 
 
             btnClearAll.setOnClickListener {
                 binding.drawingView.onClickEraser(true)
-                binding.drawingView.setSizeForBrush(999999.toFloat())
+                binding.drawingView.setSizeForEraser(999999.toFloat())
                 brushDialog.dismiss()
             }
         }
@@ -656,69 +661,69 @@ class MainActivity : AppCompatActivity(), Adapter.MyOnClickListener {
         dialogBindingEraserFull.apply {
             ib2f.setOnClickListener {
                 binding.drawingView.onClickEraser(true)
-                binding.drawingView.setSizeForBrush(2.toFloat())
+                binding.drawingView.setSizeForEraser(2.toFloat())
                 brushDialog.dismiss()
             }
 
 
             ib6f.setOnClickListener {
                 binding.drawingView.onClickEraser(true)
-                binding.drawingView.setSizeForBrush(6.toFloat())
+                binding.drawingView.setSizeForEraser(6.toFloat())
                 brushDialog.dismiss()
             }
 
 
             ib10f.setOnClickListener {
                 binding.drawingView.onClickEraser(true)
-                binding.drawingView.setSizeForBrush(10.toFloat())
+                binding.drawingView.setSizeForEraser(10.toFloat())
                 brushDialog.dismiss()
             }
 
 
             ib12f.setOnClickListener {
                 binding.drawingView.onClickEraser(true)
-                binding.drawingView.setSizeForBrush(12.toFloat())
+                binding.drawingView.setSizeForEraser(12.toFloat())
                 brushDialog.dismiss()
             }
 
 
             ib16f.setOnClickListener {
                 binding.drawingView.onClickEraser(true)
-                binding.drawingView.setSizeForBrush(16.toFloat())
+                binding.drawingView.setSizeForEraser(16.toFloat())
                 brushDialog.dismiss()
             }
 
 
             ib20f.setOnClickListener {
                 binding.drawingView.onClickEraser(true)
-                binding.drawingView.setSizeForBrush(20.toFloat())
+                binding.drawingView.setSizeForEraser(20.toFloat())
                 brushDialog.dismiss()
             }
 
 
             ib22f.setOnClickListener {
                 binding.drawingView.onClickEraser(true)
-                binding.drawingView.setSizeForBrush(22.toFloat())
+                binding.drawingView.setSizeForEraser(22.toFloat())
                 brushDialog.dismiss()
             }
 
 
             ib26f.setOnClickListener {
                 binding.drawingView.onClickEraser(true)
-                binding.drawingView.setSizeForBrush(26.toFloat())
+                binding.drawingView.setSizeForEraser(26.toFloat())
                 brushDialog.dismiss()
             }
 
 
             ib30f.setOnClickListener {
                 binding.drawingView.onClickEraser(true)
-                binding.drawingView.setSizeForBrush(30.toFloat())
+                binding.drawingView.setSizeForEraser(30.toFloat())
                 brushDialog.dismiss()
             }
 
             btnClearAll.setOnClickListener {
                 binding.drawingView.onClickEraser(true)
-                binding.drawingView.setSizeForBrush(999999.toFloat())
+                binding.drawingView.setSizeForEraser(999999.toFloat())
                 brushDialog.dismiss()
             }
 
@@ -1137,27 +1142,52 @@ class MainActivity : AppCompatActivity(), Adapter.MyOnClickListener {
     }
 
 
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-        if (resultCode == RESULT_OK) {
-            if (requestCode == STORAGE_REQUEST_CODE) {
-                try {
-                    if (data!!.data != null) {
-                        binding.ivBackground.visibility = View.VISIBLE
-                        binding.ivBackground.setImageURI(data.data)
-                    } else {
-                        Toast.makeText(
-                            this@MainActivity,
-                            "Oops! Error in parsing the image or its corrupted!", Toast.LENGTH_SHORT
-                        ).show()
-                    }
-                } catch (e: Exception) {
-                    e.printStackTrace()
-                }
+    private var resultLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+        if (result.resultCode == Activity.RESULT_OK) {
+            // There are no request codes
+            //val data: Intent? = result.data
 
+            try {
+                if (result!!.data != null) {
+                    binding.ivBackground.visibility = View.VISIBLE
+                    binding.ivBackground.setImageURI(result.data?.data)
+                } else {
+                    Toast.makeText(
+                        this@MainActivity,
+                        "Oops! Error in parsing the image or its corrupted!", Toast.LENGTH_SHORT
+                    ).show()
+                }
+            } catch (e: Exception) {
+                e.printStackTrace()
             }
+
+
+
         }
     }
+
+
+//    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+//        super.onActivityResult(requestCode, resultCode, data)
+//        if (resultCode == RESULT_OK) {
+//            if (requestCode == STORAGE_REQUEST_CODE) {
+//                try {
+//                    if (data!!.data != null) {
+//                        binding.ivBackground.visibility = View.VISIBLE
+//                        binding.ivBackground.setImageURI(data.data)
+//                    } else {
+//                        Toast.makeText(
+//                            this@MainActivity,
+//                            "Oops! Error in parsing the image or its corrupted!", Toast.LENGTH_SHORT
+//                        ).show()
+//                    }
+//                } catch (e: Exception) {
+//                    e.printStackTrace()
+//                }
+//
+//            }
+//        }
+//    }
 
 
     override fun onClick(position: Int) {
