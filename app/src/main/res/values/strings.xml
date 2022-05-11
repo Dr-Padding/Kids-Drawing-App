@@ -31,4 +31,5 @@
     <string name="grey_goose_color">grey_goose_color</string>
     <string name="lemon_chiffon_color">lemon_chiffon_color</string>
     <string name="antique_white_color">antique_white_color</string>
+    <string name="camera_image">Camera Image</string>
 </resources>

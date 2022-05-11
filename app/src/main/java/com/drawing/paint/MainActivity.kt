@@ -13,20 +13,17 @@ import android.os.Bundle
 import android.provider.MediaStore
 import android.util.Log
 import android.view.View
-import android.widget.ImageButton
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.camera.core.*
 import androidx.camera.lifecycle.ProcessCameraProvider
-import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.drawing.paint.Constants.STORAGE_PERMISSION_CODE
-import com.drawing.paint.Constants.STORAGE_REQUEST_CODE
 import com.drawing.paint.Constants.UPLOAD_PERMISSION
 import com.drawing.paint.Constants.tag
 import com.drawing.paint.adapters.Adapter
@@ -35,6 +32,7 @@ import com.drawing.paint.fragments.BottomSheetFragment
 import com.google.android.gms.ads.*
 import com.google.android.gms.ads.rewarded.RewardedAd
 import com.google.android.gms.ads.rewarded.RewardedAdLoadCallback
+import kotlinx.coroutines.*
 import java.io.File
 import java.util.*
 import java.util.concurrent.ExecutorService
@@ -67,14 +65,17 @@ class MainActivity : AppCompatActivity(), Adapter.MyOnClickListener {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        loadRewardedAd()
+
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
 
         MobileAds.initialize(this@MainActivity) {}
         val adRequestBanner = AdRequest.Builder().build()
         binding.avTopBanner.loadAd(adRequestBanner)
 
-        loadRewardedAd()
 
         val toolsList = mutableListOf(
             Tools(R.drawable.ic_camera_sign),
@@ -91,27 +92,18 @@ class MainActivity : AppCompatActivity(), Adapter.MyOnClickListener {
         )
 
         val adapter = Adapter(toolsList, this@MainActivity)
-        binding.rvToolsMenu.adapter = adapter
-        binding.rvToolsMenu.layoutManager =
-            LinearLayoutManager(this, RecyclerView.HORIZONTAL, false)
-
-        binding.drawingView.setSizeForBrush(10.toFloat())
-
-        binding.btnTakePhoto.visibility = View.INVISIBLE
-
-        binding.viewFinder.visibility = View.INVISIBLE
+        binding.apply {
+            rvToolsMenu.adapter = adapter
+            rvToolsMenu.layoutManager =
+                LinearLayoutManager(this@MainActivity, RecyclerView.HORIZONTAL, false)
+            drawingView.setSizeForBrush(10.toFloat())
+            ivBackground.visibility = View.VISIBLE
+            btnTakePhoto.visibility = View.INVISIBLE
+            viewFinder.visibility = View.INVISIBLE
+        }
 
         outputDirectory = getOutputDirectory()
         cameraExecutor = Executors.newSingleThreadExecutor()
-
-        binding.btnTakePhoto.setOnClickListener {
-            binding.btnTakePhoto.visibility = View.INVISIBLE
-            showProgressBar()
-            takePhoto()
-            cameraProvider.unbind(preview)
-            mCameraLaunched = false
-            binding.drawingView.visibility = View.VISIBLE
-        }
 
         if (mRewardedAd == null && !mIsLoading) {
             loadRewardedAd()
@@ -140,10 +132,7 @@ class MainActivity : AppCompatActivity(), Adapter.MyOnClickListener {
                 Intent.ACTION_PICK,
                 MediaStore.Images.Media.EXTERNAL_CONTENT_URI
             )
-
-            //startActivityForResult(pickPhotoIntent, STORAGE_REQUEST_CODE)
             resultLauncher.launch(pickPhotoIntent)
-
         } else {
             //Request the permission
             if (ActivityCompat.shouldShowRequestPermissionRationale(
@@ -166,9 +155,14 @@ class MainActivity : AppCompatActivity(), Adapter.MyOnClickListener {
         if (mCameraLaunched) {
             cameraProvider.unbind(preview)
             cameraExecutor.shutdownNow()
-            binding.viewFinder.visibility = View.INVISIBLE
-            binding.btnTakePhoto.visibility = View.INVISIBLE
-            binding.drawingView.visibility = View.VISIBLE
+            binding.apply {
+                viewFinder.visibility = View.INVISIBLE
+                btnTakePhoto.visibility = View.INVISIBLE
+                drawingView.visibility = View.VISIBLE
+                ivBackground.visibility = View.VISIBLE
+            }
+
+
             mCameraLaunched = false
         }
     }
@@ -198,7 +192,6 @@ class MainActivity : AppCompatActivity(), Adapter.MyOnClickListener {
                         }
                     }
                 }
-
             val builder: AlertDialog.Builder = AlertDialog.Builder(this)
             builder.setMessage("Do you want to delete the background?")
                 .setPositiveButton("Yes", dialogClickListener)
@@ -995,7 +988,6 @@ class MainActivity : AppCompatActivity(), Adapter.MyOnClickListener {
             }
 
         }
-
         colorPickerDialog.show()
     }
 
@@ -1024,22 +1016,15 @@ class MainActivity : AppCompatActivity(), Adapter.MyOnClickListener {
         imageCapture.takePicture(
             outputOption, ContextCompat.getMainExecutor(this@MainActivity),
             object : ImageCapture.OnImageSavedCallback {
-
                 override fun onImageSaved(outputFileResults: ImageCapture.OutputFileResults) {
                     val savedUri = Uri.fromFile(photoFile)
-                    binding.ivBackground.setImageURI(null)
                     binding.ivBackground.setImageURI(savedUri)
-                    //val msg = "Photo saved"
                     cameraExecutor.shutdownNow() // ?????????
                     binding.viewFinder.visibility = View.INVISIBLE
-                    //Toast.makeText(this@MainActivity, "$msg $savedUri", Toast.LENGTH_LONG).show()
-                    hideProgressBar()
                 }
-
                 override fun onError(exception: ImageCaptureException) {
                     Log.e(Constants.TAG, "onError: ${exception.message}", exception)
                 }
-
             }
         )
     }
@@ -1104,90 +1089,49 @@ class MainActivity : AppCompatActivity(), Adapter.MyOnClickListener {
     private fun startCamera() {
         val cameraProviderFuture = ProcessCameraProvider.getInstance(this@MainActivity)
         cameraProviderFuture.addListener({
-
             cameraProvider = cameraProviderFuture.get()
-
             preview = Preview.Builder().build().also { mPreview ->
                 mPreview.setSurfaceProvider(
                     binding.viewFinder.surfaceProvider
                 )
             }
-
             binding.btnTakePhoto.visibility = View.VISIBLE
-
             binding.viewFinder.visibility = View.VISIBLE
-
             binding.drawingView.visibility = View.INVISIBLE
-
             imageCapture = ImageCapture.Builder().build()
-
             cameraSelector = CameraSelector.DEFAULT_BACK_CAMERA
 
-
             try {
-
                 cameraProvider.unbindAll()
-
                 cameraProvider.bindToLifecycle(
                     this@MainActivity, cameraSelector, preview, imageCapture
                 )
-
             } catch (e: Exception) {
                 Log.d(Constants.TAG, "Start Camera Fail:", e)
             }
-
         }, ContextCompat.getMainExecutor(this@MainActivity))
 
+        binding.btnTakePhoto.setOnClickListener {
+            takePhoto()
+            binding.btnTakePhoto.visibility = View.INVISIBLE
+            cameraProvider.unbind(preview)
+            binding.drawingView.visibility = View.VISIBLE
+        }
         mCameraLaunched = true
     }
 
 
-    private var resultLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
-        if (result.resultCode == Activity.RESULT_OK) {
-            // There are no request codes
-            //val data: Intent? = result.data
-
+    private var resultLauncher =
+        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
             try {
                 if (result!!.data != null) {
                     binding.ivBackground.visibility = View.VISIBLE
                     binding.ivBackground.setImageURI(result.data?.data)
-                } else {
-                    Toast.makeText(
-                        this@MainActivity,
-                        "Oops! Error in parsing the image or its corrupted!", Toast.LENGTH_SHORT
-                    ).show()
                 }
             } catch (e: Exception) {
                 e.printStackTrace()
             }
-
-
-
         }
-    }
-
-
-//    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-//        super.onActivityResult(requestCode, resultCode, data)
-//        if (resultCode == RESULT_OK) {
-//            if (requestCode == STORAGE_REQUEST_CODE) {
-//                try {
-//                    if (data!!.data != null) {
-//                        binding.ivBackground.visibility = View.VISIBLE
-//                        binding.ivBackground.setImageURI(data.data)
-//                    } else {
-//                        Toast.makeText(
-//                            this@MainActivity,
-//                            "Oops! Error in parsing the image or its corrupted!", Toast.LENGTH_SHORT
-//                        ).show()
-//                    }
-//                } catch (e: Exception) {
-//                    e.printStackTrace()
-//                }
-//
-//            }
-//        }
-//    }
 
 
     override fun onClick(position: Int) {
@@ -1228,13 +1172,13 @@ class MainActivity : AppCompatActivity(), Adapter.MyOnClickListener {
     private fun loadRewardedAd() {
         if (mRewardedAd == null) {
             mIsLoading = true
-            var adRequest = AdRequest.Builder().build()
+            val adRequest = AdRequest.Builder().build()
 
             RewardedAd.load(
                 this@MainActivity, AD_UNIT_ID, adRequest,
                 object : RewardedAdLoadCallback() {
                     override fun onAdFailedToLoad(adError: LoadAdError) {
-                        Log.d(TAG, adError?.message)
+                        Log.d(TAG, adError.message)
                         mIsLoading = false
                         mRewardedAd = null
                     }
@@ -1255,16 +1199,14 @@ class MainActivity : AppCompatActivity(), Adapter.MyOnClickListener {
             mRewardedAd?.fullScreenContentCallback = object : FullScreenContentCallback() {
                 override fun onAdDismissedFullScreenContent() {
                     Log.d(TAG, "Ad was dismissed.")
-                    // Don't forget to set the ad reference to null so you
-                    // don't show the ad a second time.
+                    // Don't forget to set the ad reference to null so you don't show the ad a second time.
                     mRewardedAd = null
                     loadRewardedAd()
                 }
 
-                override fun onAdFailedToShowFullScreenContent(adError: AdError?) {
+                override fun onAdFailedToShowFullScreenContent(adError: AdError) {
                     Log.d(TAG, "Ad failed to show.")
-                    // Don't forget to set the ad reference to null so you
-                    // don't show the ad a second time.
+                    // Don't forget to set the ad reference to null so you don't show the ad a second time.
                     mRewardedAd = null
                     loadRewardedAd() //???????????
                 }
@@ -1272,6 +1214,8 @@ class MainActivity : AppCompatActivity(), Adapter.MyOnClickListener {
                 override fun onAdShowedFullScreenContent() {
                     Log.d(TAG, "Ad showed fullscreen content.")
                     // Called when ad is shown.
+                    mRewardedAd = null //???????????
+                    loadRewardedAd()   //???????????
                 }
             }
         }
@@ -1296,7 +1240,6 @@ class MainActivity : AppCompatActivity(), Adapter.MyOnClickListener {
         cameraExecutor.shutdown()
         mRewardedAd = null
     }
-
 }
 
 

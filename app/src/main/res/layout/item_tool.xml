@@ -15,7 +15,7 @@
             android:id="@+id/ib_tool"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:contentDescription="Camera Image"
+            android:contentDescription="@string/camera_image"
             android:scaleType="fitXY"
             android:src="@drawable/ic_camera_sign"
             />

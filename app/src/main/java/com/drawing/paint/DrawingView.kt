@@ -9,7 +9,7 @@ import android.view.MotionEvent
 import android.view.View
 
 
-class DrawingView(context: Context, attrs: AttributeSet): View(context, attrs) {
+class DrawingView(context: Context, attrs: AttributeSet) : View(context, attrs) {
 
     private var drawPaint: Paint? = null
     private var mBrushSize: Float = 0.toFloat()
@@ -26,11 +26,9 @@ class DrawingView(context: Context, attrs: AttributeSet): View(context, attrs) {
     private val bitmap = ArrayList<Bitmap>()
     private val undoBitmap = ArrayList<Bitmap>()
 
-
     init {
         setUpDrawing()
     }
-
 
     override fun onSizeChanged(w: Int, h: Int, oldw: Int, oldh: Int) {
         super.onSizeChanged(w, h, oldw, oldh)
@@ -55,10 +53,7 @@ class DrawingView(context: Context, attrs: AttributeSet): View(context, attrs) {
         } else {
             eraserOn = false
             drawPaint!!.color = drawPaint!!.color
-
-            //dr.
             drawPaint!!.strokeWidth = mBrushSize
-
             drawPaint!!.xfermode = null
             eraserSelected = false
             penSelected = true
@@ -88,7 +83,6 @@ class DrawingView(context: Context, attrs: AttributeSet): View(context, attrs) {
         }
     }
 
-
     override fun onTouchEvent(event: MotionEvent): Boolean {
         if (penSelected || eraserSelected) {
             val touchX = event.x
@@ -102,7 +96,6 @@ class DrawingView(context: Context, attrs: AttributeSet): View(context, attrs) {
                             mBitmap!!.isMutable
                         )
                     ) else allClear = false
-
                     drawPath.moveTo(touchX, touchY)
                 }
                 MotionEvent.ACTION_MOVE -> if (eraserOn) {
@@ -117,10 +110,8 @@ class DrawingView(context: Context, attrs: AttributeSet): View(context, attrs) {
                     drawPath.lineTo(touchX, touchY)
                     mCanvas!!.drawPath(drawPath, drawPaint!!)
                     drawPath.reset()
-
-                    if (drawPaint!!.strokeWidth >= 9999.toFloat()){
+                    if (drawPaint!!.strokeWidth >= 9999.toFloat()) {
                         onClickEraser(false)
-//                        setSizeForBrush(10.toFloat())
                     }
                 }
                 MotionEvent.ACTION_CANCEL -> return false
@@ -144,7 +135,7 @@ class DrawingView(context: Context, attrs: AttributeSet): View(context, attrs) {
         }
     }
 
-        fun setSizeForBrush(newSize: Float) {
+    fun setSizeForBrush(newSize: Float) {
         mBrushSize = TypedValue.applyDimension(
             TypedValue.COMPLEX_UNIT_DIP,
             newSize,
@@ -166,5 +157,4 @@ class DrawingView(context: Context, attrs: AttributeSet): View(context, attrs) {
         val color = Color.parseColor(newColor)
         drawPaint!!.color = color
     }
-
 }
