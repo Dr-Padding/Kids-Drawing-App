@@ -212,17 +212,14 @@ class MainActivity : AppCompatActivity(), Adapter.MyOnClickListener {
 
         val dialogBindingBrushesInitial: DialogBrushSizeWithoutMoreSizesBtnBinding =
             DialogBrushSizeWithoutMoreSizesBtnBinding.inflate(layoutInflater)
-        brushDialog.setContentView(dialogBindingBrushesInitial.root)
-
-
-        if (mRewardedAd != null) {
-            brushDialog.setContentView(dialogBindingWithMoreSizesBtn.root)
-        } else {
-            brushDialog.setContentView(dialogBindingBrushesInitial.root)
-        }
 
         if (!mAdShowedForBrush) {
-            brushDialog.setContentView(dialogBindingWithMoreSizesBtn.root)
+            if (mRewardedAd != null) {
+                brushDialog.setContentView(dialogBindingWithMoreSizesBtn.root)
+            } else {
+                brushDialog.setContentView(dialogBindingBrushesInitial.root)
+            }
+
         } else {
             brushDialog.setContentView(dialogBindingBrushesRewarded.root)
         }
@@ -390,7 +387,6 @@ class MainActivity : AppCompatActivity(), Adapter.MyOnClickListener {
 
         val dialogBindingEraserInitial: DialogEraserSizeWithoutButtonsBinding =
             DialogEraserSizeWithoutButtonsBinding.inflate(layoutInflater)
-        brushDialog.setContentView(dialogBindingEraserInitial.root)
 
         val dialogBindingEraserWithButtons: DialogEraserSizeBinding =
             DialogEraserSizeBinding.inflate(layoutInflater)
@@ -404,14 +400,13 @@ class MainActivity : AppCompatActivity(), Adapter.MyOnClickListener {
         val dialogBindingEraserFull: DialogEraserSizeFullBinding =
             DialogEraserSizeFullBinding.inflate(layoutInflater)
 
-        if (mRewardedAd != null) {
-            brushDialog.setContentView(dialogBindingEraserWithButtons.root)
-        } else {
-            brushDialog.setContentView(dialogBindingEraserInitial.root)
-        }
-
         if (!mAdShowedForEraser && !mAdShowedForMaxSize) {
-            brushDialog.setContentView(dialogBindingEraserWithButtons.root)
+            if (mRewardedAd != null) {
+                brushDialog.setContentView(dialogBindingEraserWithButtons.root)
+            } else {
+                brushDialog.setContentView(dialogBindingEraserInitial.root)
+            }
+
         } else if (!mAdShowedForEraser && mAdShowedForMaxSize) {
             brushDialog.setContentView(dialogBindingEraserWithMaxSizesOnly.root)
         } else if (mAdShowedForEraser && !mAdShowedForMaxSize) {
@@ -735,16 +730,13 @@ class MainActivity : AppCompatActivity(), Adapter.MyOnClickListener {
 
         val dialogBindingInitial: DialogColorPickerWithoutMoreColorsBtnBinding =
             DialogColorPickerWithoutMoreColorsBtnBinding.inflate(layoutInflater)
-        colorPickerDialog.setContentView(dialogBindingInitial.root)
-
-        if (mRewardedAd != null) {
-            colorPickerDialog.setContentView(dialogBindingWithMoreColorsBtn.root)
-        } else {
-            colorPickerDialog.setContentView(dialogBindingInitial.root)
-        }
 
         if (!mAdShowedForColors) {
-            colorPickerDialog.setContentView(dialogBindingWithMoreColorsBtn.root)
+            if (mRewardedAd != null) {
+                colorPickerDialog.setContentView(dialogBindingWithMoreColorsBtn.root)
+            } else {
+                colorPickerDialog.setContentView(dialogBindingInitial.root)
+            }
         } else {
             colorPickerDialog.setContentView(dialogBindingRewarded.root)
         }
