@@ -2,17 +2,20 @@ package com.drawing.paint
 
 
 import android.Manifest
-import android.app.Activity
 import android.app.Dialog
 import android.content.DialogInterface
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.graphics.Bitmap
+import android.graphics.Canvas
+import android.graphics.Color
 import android.icu.text.SimpleDateFormat
 import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
 import android.util.Log
 import android.view.View
+import android.widget.FrameLayout
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AlertDialog
@@ -21,6 +24,7 @@ import androidx.camera.core.*
 import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.drawing.paint.Constants.STORAGE_PERMISSION_CODE
@@ -33,7 +37,9 @@ import com.google.android.gms.ads.*
 import com.google.android.gms.ads.rewarded.RewardedAd
 import com.google.android.gms.ads.rewarded.RewardedAdLoadCallback
 import kotlinx.coroutines.*
+import java.io.ByteArrayOutputStream
 import java.io.File
+import java.io.FileOutputStream
 import java.util.*
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
@@ -97,9 +103,9 @@ class MainActivity : AppCompatActivity(), Adapter.MyOnClickListener {
             rvToolsMenu.layoutManager =
                 LinearLayoutManager(this@MainActivity, RecyclerView.HORIZONTAL, false)
             drawingView.setSizeForBrush(10.toFloat())
-            ivBackground.visibility = View.VISIBLE
+//            ivBackground.visibility = View.VISIBLE
             btnTakePhoto.visibility = View.INVISIBLE
-            viewFinder.visibility = View.INVISIBLE
+//            viewFinder.visibility = View.INVISIBLE
         }
 
         outputDirectory = getOutputDirectory()
@@ -109,15 +115,6 @@ class MainActivity : AppCompatActivity(), Adapter.MyOnClickListener {
             loadRewardedAd()
         }
     }
-
-    /*   internal fun getBitmapFromView(view: View): Bitmap {
-           val returnedBitmap = Bitmap.createBitmap(view.width,
-           view.height, Bitmap.Config.ARGB_8888)
-           val canvas = Canvas(returnedBitmap)
-
-           view.draw(canvas)
-           return returnedBitmap
-       }*/
 
 
     private fun uploadLaunch() {
@@ -1022,6 +1019,7 @@ class MainActivity : AppCompatActivity(), Adapter.MyOnClickListener {
                     cameraExecutor.shutdownNow() // ?????????
                     binding.viewFinder.visibility = View.INVISIBLE
                 }
+
                 override fun onError(exception: ImageCaptureException) {
                     Log.e(Constants.TAG, "onError: ${exception.message}", exception)
                 }
@@ -1045,6 +1043,13 @@ class MainActivity : AppCompatActivity(), Adapter.MyOnClickListener {
             ) == PackageManager.PERMISSION_GRANTED
         }
 
+    private fun isReadStorageAllowed(): Boolean {
+        val result = ContextCompat.checkSelfPermission(this,
+        Manifest.permission.READ_EXTERNAL_STORAGE)
+
+        return result == PackageManager.PERMISSION_GRANTED
+    }
+
 
     override fun onRequestPermissionsResult(
         requestCode: Int,
@@ -1059,10 +1064,6 @@ class MainActivity : AppCompatActivity(), Adapter.MyOnClickListener {
                     "Permission granted, now you can read the storage!",
                     Toast.LENGTH_SHORT
                 ).show()
-                val pickPhotoIntent = Intent(
-                    Intent.ACTION_PICK,
-                    MediaStore.Images.Media.EXTERNAL_CONTENT_URI
-                )
             } else {
                 Toast.makeText(
                     this@MainActivity,
@@ -1164,7 +1165,12 @@ class MainActivity : AppCompatActivity(), Adapter.MyOnClickListener {
                 bottomSheetFragment.show(supportFragmentManager, tag)
             }
             9 -> {
-
+                if (isReadStorageAllowed()) {
+                    lifecycleScope.launch {
+                        val flDrawingView: FrameLayout = findViewById(R.id.flBackgroundAndDrawingViewContainer)
+                        saveBitmapFile(getBitmapFromView(flDrawingView))
+                    }
+                }
             }
         }
     }
@@ -1221,6 +1227,67 @@ class MainActivity : AppCompatActivity(), Adapter.MyOnClickListener {
         }
     }
 
+    private fun getBitmapFromView(view: View): Bitmap {
+        val returnedBitmap = Bitmap.createBitmap(
+            view.width,
+            view.height, Bitmap.Config.ARGB_8888
+        )
+        val canvas = Canvas(returnedBitmap)
+        val bgDrawable = view.background
+        if (bgDrawable != null) {
+            bgDrawable.draw(canvas)
+        } else {
+            canvas.drawColor(Color.WHITE)
+        }
+        view.draw(canvas)
+        return returnedBitmap
+    }
+
+    private suspend fun saveBitmapFile(mBitmap: Bitmap?): String {
+        var result = ""
+        withContext(Dispatchers.IO) {
+            if (mBitmap != null) {
+                try {
+                    val bytes = ByteArrayOutputStream()
+                    mBitmap.compress(Bitmap.CompressFormat.PNG, 90, bytes)
+
+                    val f = File(
+                        externalCacheDir?.absoluteFile.toString()
+                                + File.separator + "HandyPaints_" + System.currentTimeMillis() / 1000 + ".png"
+                    )
+
+                    val fo = FileOutputStream(f)
+                    fo.write(bytes.toByteArray())
+                    fo.close()
+
+                    result = f.absolutePath
+
+                    runOnUiThread {
+                        if (result.isNotEmpty()) {
+                            Toast.makeText(
+                                this@MainActivity,
+                                "File successfully saved: $result",
+                                Toast.LENGTH_SHORT
+                            ).show()
+                        } else {
+                            Toast.makeText(
+                                this@MainActivity,
+                                "Something went wrong while saving the file.",
+                                Toast.LENGTH_SHORT
+                            ).show()
+                        }
+                    }
+                }
+                catch (e: Exception) {
+                    result = ""
+                    e.printStackTrace()
+                }
+            }
+        }
+        return result
+    }
+
+
     override fun onBackPressed() {
         if (mCameraLaunched) {
             cameraProvider.unbind(preview)
@@ -1233,7 +1300,6 @@ class MainActivity : AppCompatActivity(), Adapter.MyOnClickListener {
             super.onBackPressed()
         }
     }
-
 
     override fun onDestroy() {
         super.onDestroy()
