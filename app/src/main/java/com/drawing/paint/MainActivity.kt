@@ -38,6 +38,8 @@ import com.drawing.paint.adapters.Adapter
 import com.drawing.paint.databinding.*
 import com.drawing.paint.fragments.BottomSheetFragment
 import com.google.android.gms.ads.*
+import com.google.android.gms.ads.interstitial.InterstitialAd
+import com.google.android.gms.ads.interstitial.InterstitialAdLoadCallback
 import com.google.android.gms.ads.rewarded.RewardedAd
 import com.google.android.gms.ads.rewarded.RewardedAdLoadCallback
 import kotlinx.coroutines.Dispatchers
@@ -52,7 +54,8 @@ import java.util.concurrent.Executors
 
 
 //Bismillahi-r-Rahmani-r-Rahim
-const val AD_UNIT_ID = "ca-app-pub-3940256099942544/5224354917"
+const val REWARDED_AD_UNIT_ID = "ca-app-pub-3940256099942544/5224354917"
+const val INTERSTITIAL_AD_UNIT_ID = "ca-app-pub-3940256099942544/1033173712"
 const val TAG = "MainActivity"
 
 
@@ -68,17 +71,20 @@ class MainActivity : AppCompatActivity(), Adapter.MyOnClickListener {
     var mCameraLaunched = false
     private val bottomSheetFragment = BottomSheetFragment()
     private var mRewardedAd: RewardedAd? = null
+    private var mInterstitialAd: InterstitialAd? = null
     private var mAdShowedForBrush = false
     private var mAdShowedForColors = false
     private var mAdShowedForEraser = false
     private var mAdShowedForMaxSize = false
     private var mIsLoading = false
+    private var mAdIsLoading: Boolean = false
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         loadRewardedAd()
+        loadInterstitialAd()
 
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
@@ -117,6 +123,11 @@ class MainActivity : AppCompatActivity(), Adapter.MyOnClickListener {
 
         if (mRewardedAd == null && !mIsLoading) {
             loadRewardedAd()
+        }
+
+        if (!mAdIsLoading && mInterstitialAd == null) {
+            mAdIsLoading = true
+            loadInterstitialAd()
         }
     }
 
@@ -1023,15 +1034,6 @@ class MainActivity : AppCompatActivity(), Adapter.MyOnClickListener {
         )
     }
 
-    private fun hideProgressBar() {
-        binding.ProgressBar.visibility = View.INVISIBLE
-    }
-
-    private fun showProgressBar() {
-        binding.ProgressBar.visibility = View.VISIBLE
-    }
-
-
     private fun cameraPermissionGranted(): Boolean =
         Constants.CAMERA_PERMISSION.all {
             ContextCompat.checkSelfPermission(
@@ -1161,12 +1163,7 @@ class MainActivity : AppCompatActivity(), Adapter.MyOnClickListener {
                 bottomSheetFragment.show(supportFragmentManager, tag)
             }
             9 -> {
-                if (isReadStorageAllowed()) {
-                    lifecycleScope.launch {
-                        val flDrawingView: FrameLayout = findViewById(R.id.flBackgroundAndDrawingViewContainer)
-                        saveBitmapFile(getBitmapFromView(flDrawingView))
-                    }
-                }
+                showInterstitial()
             }
         }
     }
@@ -1177,7 +1174,7 @@ class MainActivity : AppCompatActivity(), Adapter.MyOnClickListener {
             val adRequest = AdRequest.Builder().build()
 
             RewardedAd.load(
-                this@MainActivity, AD_UNIT_ID, adRequest,
+                this@MainActivity, REWARDED_AD_UNIT_ID, adRequest,
                 object : RewardedAdLoadCallback() {
                     override fun onAdFailedToLoad(adError: LoadAdError) {
                         Log.d(TAG, adError.message)
@@ -1222,6 +1219,70 @@ class MainActivity : AppCompatActivity(), Adapter.MyOnClickListener {
             }
         }
     }
+
+    private fun loadInterstitialAd() {
+        var adRequest = AdRequest.Builder().build()
+
+        InterstitialAd.load(
+            this, INTERSTITIAL_AD_UNIT_ID, adRequest,
+            object : InterstitialAdLoadCallback() {
+                override fun onAdFailedToLoad(adError: LoadAdError) {
+                    Log.d(TAG, adError?.message)
+                    mInterstitialAd = null
+                    mAdIsLoading = false
+                    val error = "domain: ${adError.domain}, code: ${adError.code}, " +
+                            "message: ${adError.message}"
+                }
+
+                override fun onAdLoaded(interstitialAd: InterstitialAd) {
+                    Log.d(TAG, "Ad was loaded.")
+                    mInterstitialAd = interstitialAd
+                    mAdIsLoading = false
+                }
+            }
+        )
+    }
+
+
+    private fun showInterstitial() {
+        if (mInterstitialAd != null) {
+            mInterstitialAd?.fullScreenContentCallback = object : FullScreenContentCallback() {
+                override fun onAdDismissedFullScreenContent() {
+                    Log.d(TAG, "Ad was dismissed.")
+                    // Don't forget to set the ad reference to null so you
+                    // don't show the ad a second time.
+                    mInterstitialAd = null
+                    loadInterstitialAd()
+                }
+
+                override fun onAdFailedToShowFullScreenContent(adError: AdError?) {
+                    Log.d(TAG, "Ad failed to show.")
+                    // Don't forget to set the ad reference to null so you
+                    // don't show the ad a second time.
+                    mInterstitialAd = null
+                    loadInterstitialAd() //?????????
+                }
+
+                override fun onAdShowedFullScreenContent() {
+                    Log.d(TAG, "Ad showed fullscreen content.")
+                    // Called when ad is showed.
+                    if (isReadStorageAllowed()) {
+                        lifecycleScope.launch {
+                            val flDrawingView: FrameLayout = findViewById(R.id.flBackgroundAndDrawingViewContainer)
+                            saveBitmapFile(getBitmapFromView(flDrawingView))
+                        }
+                    }
+                    mInterstitialAd = null //?????????
+                    loadInterstitialAd() //?????????
+                }
+            }
+            mInterstitialAd?.show(this)
+        } else {
+            Toast.makeText(this, "Ad wasn't loaded.", Toast.LENGTH_SHORT).show()
+            loadInterstitialAd() //?????????
+        }
+    }
+
 
     private fun getBitmapFromView(view: View): Bitmap {
         val returnedBitmap = Bitmap.createBitmap(
