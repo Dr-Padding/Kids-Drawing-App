@@ -12,6 +12,7 @@ import android.graphics.Color
 import android.icu.text.SimpleDateFormat
 import android.net.Uri
 import android.os.Bundle
+import android.os.Environment
 import android.provider.MediaStore
 import android.util.Log
 import android.view.View
@@ -20,7 +21,10 @@ import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
-import androidx.camera.core.*
+import androidx.camera.core.CameraSelector
+import androidx.camera.core.ImageCapture
+import androidx.camera.core.ImageCaptureException
+import androidx.camera.core.Preview
 import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
@@ -36,7 +40,9 @@ import com.drawing.paint.fragments.BottomSheetFragment
 import com.google.android.gms.ads.*
 import com.google.android.gms.ads.rewarded.RewardedAd
 import com.google.android.gms.ads.rewarded.RewardedAdLoadCallback
-import kotlinx.coroutines.*
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import java.io.ByteArrayOutputStream
 import java.io.File
 import java.io.FileOutputStream
@@ -103,9 +109,7 @@ class MainActivity : AppCompatActivity(), Adapter.MyOnClickListener {
             rvToolsMenu.layoutManager =
                 LinearLayoutManager(this@MainActivity, RecyclerView.HORIZONTAL, false)
             drawingView.setSizeForBrush(10.toFloat())
-//            ivBackground.visibility = View.VISIBLE
             btnTakePhoto.visibility = View.INVISIBLE
-//            viewFinder.visibility = View.INVISIBLE
         }
 
         outputDirectory = getOutputDirectory()
@@ -1243,8 +1247,13 @@ class MainActivity : AppCompatActivity(), Adapter.MyOnClickListener {
                     val bytes = ByteArrayOutputStream()
                     mBitmap.compress(Bitmap.CompressFormat.PNG, 90, bytes)
 
+//                    val f = File(
+//                        externalCacheDir?.absoluteFile.toString()
+//                                + File.separator + "HandyPaints_" + System.currentTimeMillis() / 1000 + ".png"
+//                    )
+
                     val f = File(
-                        externalCacheDir?.absoluteFile.toString()
+                        Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES).toString()
                                 + File.separator + "HandyPaints_" + System.currentTimeMillis() / 1000 + ".png"
                     )
 
@@ -1278,7 +1287,6 @@ class MainActivity : AppCompatActivity(), Adapter.MyOnClickListener {
         }
         return result
     }
-
 
     override fun onBackPressed() {
         if (mCameraLaunched) {

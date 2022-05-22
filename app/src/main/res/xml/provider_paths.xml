@@ -9,5 +9,7 @@
     
     <external-path
         name="captured"
-        path="Android/data/com.drawing.paint/files" />
+        path="/files/Pictures" />
 </paths>
+
+    <!--        path="Android/data/com.drawing.paint/files/Pictures" />-->
