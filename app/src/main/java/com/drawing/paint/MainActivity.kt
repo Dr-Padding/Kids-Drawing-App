@@ -82,19 +82,16 @@ class MainActivity : AppCompatActivity(), Adapter.MyOnClickListener {
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-
+        MobileAds.initialize(this@MainActivity) {}
         loadRewardedAd()
         loadInterstitialAd()
-
+        setTheme(R.style.Theme_KidsDrawingApp)
+        super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-
-        MobileAds.initialize(this@MainActivity) {}
         val adRequestBanner = AdRequest.Builder().build()
         binding.avTopBanner.loadAd(adRequestBanner)
-
 
         val toolsList = mutableListOf(
             Tools(R.drawable.ic_camera_sign),
@@ -1408,8 +1405,7 @@ class MainActivity : AppCompatActivity(), Adapter.MyOnClickListener {
     }
 
     private fun shareImage(result: String) {
-        MediaScannerConnection.scanFile(this@MainActivity, arrayOf(result), null) {
-            path, uri ->
+        MediaScannerConnection.scanFile(this@MainActivity, arrayOf(result), null) { path, uri ->
             val shareIntent = Intent()
             shareIntent.apply {
                 action = Intent.ACTION_SEND
