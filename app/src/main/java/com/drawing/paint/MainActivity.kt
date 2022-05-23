@@ -1042,8 +1042,10 @@ class MainActivity : AppCompatActivity(), Adapter.MyOnClickListener {
         }
 
     private fun isReadStorageAllowed(): Boolean {
-        val result = ContextCompat.checkSelfPermission(this,
-        Manifest.permission.READ_EXTERNAL_STORAGE)
+        val result = ContextCompat.checkSelfPermission(
+            this,
+            Manifest.permission.READ_EXTERNAL_STORAGE
+        )
 
         return result == PackageManager.PERMISSION_GRANTED
     }
@@ -1249,6 +1251,15 @@ class MainActivity : AppCompatActivity(), Adapter.MyOnClickListener {
             mInterstitialAd?.fullScreenContentCallback = object : FullScreenContentCallback() {
                 override fun onAdDismissedFullScreenContent() {
                     Log.d(TAG, "Ad was dismissed.")
+
+                    if (isReadStorageAllowed()) {
+                        lifecycleScope.launch {
+                            val flDrawingView: FrameLayout =
+                                findViewById(R.id.flBackgroundAndDrawingViewContainer)
+                            saveBitmapFile(getBitmapFromView(flDrawingView))
+                        }
+                    }
+
                     // Don't forget to set the ad reference to null so you
                     // don't show the ad a second time.
                     mInterstitialAd = null
@@ -1266,12 +1277,6 @@ class MainActivity : AppCompatActivity(), Adapter.MyOnClickListener {
                 override fun onAdShowedFullScreenContent() {
                     Log.d(TAG, "Ad showed fullscreen content.")
                     // Called when ad is showed.
-                    if (isReadStorageAllowed()) {
-                        lifecycleScope.launch {
-                            val flDrawingView: FrameLayout = findViewById(R.id.flBackgroundAndDrawingViewContainer)
-                            saveBitmapFile(getBitmapFromView(flDrawingView))
-                        }
-                    }
                     mInterstitialAd = null //?????????
                     loadInterstitialAd() //?????????
                 }
@@ -1314,7 +1319,8 @@ class MainActivity : AppCompatActivity(), Adapter.MyOnClickListener {
 //                    )
 
                     val f = File(
-                        Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES).toString()
+                        Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES)
+                            .toString()
                                 + File.separator + "HandyPaints_" + System.currentTimeMillis() / 1000 + ".png"
                     )
 
@@ -1339,8 +1345,7 @@ class MainActivity : AppCompatActivity(), Adapter.MyOnClickListener {
                             ).show()
                         }
                     }
-                }
-                catch (e: Exception) {
+                } catch (e: Exception) {
                     result = ""
                     e.printStackTrace()
                 }
