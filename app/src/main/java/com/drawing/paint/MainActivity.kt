@@ -10,6 +10,7 @@ import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.graphics.Color
 import android.icu.text.SimpleDateFormat
+import android.media.MediaScannerConnection
 import android.net.Uri
 import android.os.Bundle
 import android.os.Environment
@@ -1167,6 +1168,15 @@ class MainActivity : AppCompatActivity(), Adapter.MyOnClickListener {
             9 -> {
                 showInterstitial()
             }
+            10 -> {
+                if (isReadStorageAllowed()) {
+                    lifecycleScope.launch {
+                        val flDrawingView: FrameLayout =
+                            findViewById(R.id.flBackgroundAndDrawingViewContainer)
+                        saveBitmapFileToShare(getBitmapFromView(flDrawingView))
+                    }
+                }
+            }
         }
     }
 
@@ -1223,7 +1233,7 @@ class MainActivity : AppCompatActivity(), Adapter.MyOnClickListener {
     }
 
     private fun loadInterstitialAd() {
-        var adRequest = AdRequest.Builder().build()
+        val adRequest = AdRequest.Builder().build()
 
         InterstitialAd.load(
             this, INTERSTITIAL_AD_UNIT_ID, adRequest,
@@ -1232,8 +1242,6 @@ class MainActivity : AppCompatActivity(), Adapter.MyOnClickListener {
                     Log.d(TAG, adError?.message)
                     mInterstitialAd = null
                     mAdIsLoading = false
-                    val error = "domain: ${adError.domain}, code: ${adError.code}, " +
-                            "message: ${adError.message}"
                 }
 
                 override fun onAdLoaded(interstitialAd: InterstitialAd) {
@@ -1283,7 +1291,13 @@ class MainActivity : AppCompatActivity(), Adapter.MyOnClickListener {
             }
             mInterstitialAd?.show(this)
         } else {
-            Toast.makeText(this, "Ad wasn't loaded.", Toast.LENGTH_SHORT).show()
+            if (isReadStorageAllowed()) {
+                lifecycleScope.launch {
+                    val flDrawingView: FrameLayout =
+                        findViewById(R.id.flBackgroundAndDrawingViewContainer)
+                    saveBitmapFile(getBitmapFromView(flDrawingView))
+                }
+            }
             loadInterstitialAd() //?????????
         }
     }
@@ -1311,7 +1325,7 @@ class MainActivity : AppCompatActivity(), Adapter.MyOnClickListener {
             if (mBitmap != null) {
                 try {
                     val bytes = ByteArrayOutputStream()
-                    mBitmap.compress(Bitmap.CompressFormat.PNG, 90, bytes)
+                    mBitmap.compress(Bitmap.CompressFormat.PNG, 100, bytes)
 
 //                    val f = File(
 //                        externalCacheDir?.absoluteFile.toString()
@@ -1352,6 +1366,58 @@ class MainActivity : AppCompatActivity(), Adapter.MyOnClickListener {
             }
         }
         return result
+    }
+
+    private suspend fun saveBitmapFileToShare(mBitmap: Bitmap?): String {
+        var result = ""
+        withContext(Dispatchers.IO) {
+            if (mBitmap != null) {
+                try {
+                    val bytes = ByteArrayOutputStream()
+                    mBitmap.compress(Bitmap.CompressFormat.PNG, 100, bytes)
+                    val f = File(
+                        Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES)
+                            .toString()
+                                + File.separator + "HandyPaints_" + System.currentTimeMillis() / 1000 + ".png"
+                    )
+
+                    val fo = FileOutputStream(f)
+                    fo.write(bytes.toByteArray())
+                    fo.close()
+
+                    result = f.absolutePath
+
+                    runOnUiThread {
+                        if (result.isNotEmpty()) {
+                            shareImage(result)
+                        } else {
+                            Toast.makeText(
+                                this@MainActivity,
+                                "Something went wrong while sharing the file.",
+                                Toast.LENGTH_SHORT
+                            ).show()
+                        }
+                    }
+                } catch (e: Exception) {
+                    result = ""
+                    e.printStackTrace()
+                }
+            }
+        }
+        return result
+    }
+
+    private fun shareImage(result: String) {
+        MediaScannerConnection.scanFile(this@MainActivity, arrayOf(result), null) {
+            path, uri ->
+            val shareIntent = Intent()
+            shareIntent.apply {
+                action = Intent.ACTION_SEND
+                putExtra(Intent.EXTRA_STREAM, uri)
+                type = "image/png"
+                startActivity(Intent.createChooser(shareIntent, "Share"))
+            }
+        }
     }
 
     override fun onBackPressed() {
