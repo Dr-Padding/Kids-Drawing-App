@@ -119,13 +119,14 @@ class MainActivity : AppCompatActivity(), Adapter.MyOnClickListener {
         outputDirectory = getOutputDirectory()
         cameraExecutor = Executors.newSingleThreadExecutor()
 
-        if (mRewardedAd == null && !mIsLoading) {
+        while (mRewardedAd == null && !mIsLoading) {
             loadRewardedAd()
+            mIsLoading = true
         }
 
-        if (!mAdIsLoading && mInterstitialAd == null) {
-            mAdIsLoading = true
+        while (!mAdIsLoading && mInterstitialAd == null) {
             loadInterstitialAd()
+            mAdIsLoading = true
         }
     }
 
@@ -1179,7 +1180,6 @@ class MainActivity : AppCompatActivity(), Adapter.MyOnClickListener {
 
     private fun loadRewardedAd() {
         if (mRewardedAd == null) {
-            mIsLoading = true
             val adRequest = AdRequest.Builder().build()
 
             RewardedAd.load(
