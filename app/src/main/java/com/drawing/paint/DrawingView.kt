@@ -4,9 +4,12 @@ package com.drawing.paint
 import android.content.Context
 import android.graphics.*
 import android.util.AttributeSet
+import android.util.Base64
+import android.util.Log
 import android.util.TypedValue
 import android.view.MotionEvent
 import android.view.View
+import java.io.ByteArrayOutputStream
 
 
 class DrawingView(context: Context, attrs: AttributeSet) : View(context, attrs) {
@@ -40,8 +43,19 @@ class DrawingView(context: Context, attrs: AttributeSet) : View(context, attrs) 
 
     override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
+//        canvas.drawBitmap(mBitmap!!, 0f, 0f, mBitmapPaint)
         canvas.drawBitmap(mBitmap!!, 0f, 0f, mBitmapPaint)
         canvas.drawPath(drawPath, drawPaint!!)
+
+        for (i in bitmap) {
+            canvas.drawBitmap(i, 0f, 0f, mBitmapPaint)
+            canvas.drawPath(drawPath, drawPaint!!)
+        }
+
+
+
+
+
     }
 
     fun onClickEraser(isEraserOn: Boolean) {
@@ -157,4 +171,55 @@ class DrawingView(context: Context, attrs: AttributeSet) : View(context, attrs) 
         val color = Color.parseColor(newColor)
         drawPaint!!.color = color
     }
+
+
+    fun saveConvertedBitmapToArrayListOfStrings() : ArrayList<String> {
+        val encodedStringArray = ArrayList<String>()
+
+        for (i in bitmap) {
+             var convertedString = convertBitmapToBase64(i)
+            if (convertedString != null) {
+                encodedStringArray.add(convertedString)
+            }
+        }
+        return encodedStringArray
+    }
+
+    private fun convertBitmapToBase64(bm: Bitmap): String? {
+        val baos = ByteArrayOutputStream()
+        bm.compress(Bitmap.CompressFormat.PNG, 100, baos)
+        val b = baos.toByteArray()
+        return Base64.encodeToString(b, Base64.DEFAULT)
+    }
+
+     fun saveEncodedStringsToArrayListOfBitmap(encodedStringArray : ArrayList<String>)  {
+        val decodedBitmapArray = ArrayList<Bitmap>()
+
+        for (i in encodedStringArray) {
+            var revertedBitmap = revertBase64toBitmap(i)
+            if (revertedBitmap != null) {
+                decodedBitmapArray.add(revertedBitmap)
+            }
+        }
+         if (bitmap.isEmpty()) {
+             for (i in decodedBitmapArray) {
+                 bitmap.add(i)
+                 Log.d("bbb", bitmap.toString())
+             }
+         }
+//         return bitmap
+     }
+
+    private fun revertBase64toBitmap(string : String) : Bitmap? {
+        return string.toBitmap()
+    }
+
+    // extension function to decode base64 string to bitmap
+    private fun String.toBitmap():Bitmap? {
+        Base64.decode(this, Base64.DEFAULT).apply {
+            return BitmapFactory.decodeByteArray(this, 0, size)
+        }
+    }
+
+
 }

@@ -3,8 +3,8 @@ package com.drawing.paint
 
 import android.Manifest
 import android.app.Dialog
-import android.content.DialogInterface
 import android.content.Intent
+import android.content.SharedPreferences
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.graphics.Canvas
@@ -52,6 +52,7 @@ import java.io.FileOutputStream
 import java.util.*
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
+import kotlin.collections.ArrayList
 
 
 //Bismillahi-r-Rahmani-r-Rahim
@@ -79,7 +80,6 @@ class MainActivity : AppCompatActivity(), Adapter.MyOnClickListener {
     private var mAdShowedForMaxSize = false
     private var mIsLoading = false
     private var mAdIsLoading: Boolean = false
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
         MobileAds.initialize(this@MainActivity) {}
@@ -128,8 +128,55 @@ class MainActivity : AppCompatActivity(), Adapter.MyOnClickListener {
             loadInterstitialAd()
             mAdIsLoading = true
         }
+
+        val builder = AlertDialog.Builder(this@MainActivity)
+        builder.setMessage("Want to restore your last drawing?")
+            .setCancelable(false)
+            .setPositiveButton("Yes") { _, _ ->
+
+                val sharedPreferences = getSharedPreferences("myPref", MODE_PRIVATE)
+
+                val size: Int = sharedPreferences.getInt("array_size", 0)
+                val encodedStringArray = ArrayList<String>(size)
+                for (i in 0 until size) {
+                   val encodedString = sharedPreferences.getString("array_$i", null)
+                    if (encodedString != null) {
+                        encodedStringArray.add(encodedString)
+                        Log.d("sss", encodedStringArray.toString())
+                    }
+                }
+
+                binding.drawingView.saveEncodedStringsToArrayListOfBitmap(encodedStringArray)
+
+
+
+            }
+            .setNegativeButton("No") { dialog, _ ->
+                // Dismiss the dialog
+                dialog.dismiss()
+            }
+        val alert = builder.create()
+        alert.show()
+
     }
 
+    override fun onPause() {
+        super.onPause()
+
+        val sharedPref: SharedPreferences = getSharedPreferences("myPref", MODE_PRIVATE)
+        val editor: SharedPreferences.Editor = sharedPref.edit()
+
+        val encodedStringArray = binding.drawingView.saveConvertedBitmapToArrayListOfStrings()
+        editor.apply {
+            putInt("array_size", encodedStringArray.size)
+            for (i in 0 until encodedStringArray.size) {
+                putString("array_$i", encodedStringArray.get(i))
+            }
+            apply()
+        }
+
+
+    }
 
     private fun uploadLaunch() {
         //check if permission is granted
@@ -172,8 +219,6 @@ class MainActivity : AppCompatActivity(), Adapter.MyOnClickListener {
                 drawingView.visibility = View.VISIBLE
                 ivBackground.visibility = View.VISIBLE
             }
-
-
             mCameraLaunched = false
         }
     }
@@ -193,20 +238,18 @@ class MainActivity : AppCompatActivity(), Adapter.MyOnClickListener {
 
     private fun onClickBin() {
         if (binding.ivBackground.drawable != null) {
-            val dialogClickListener =
-                DialogInterface.OnClickListener { _, which ->
-                    when (which) {
-                        DialogInterface.BUTTON_POSITIVE -> {
-                            binding.ivBackground.setImageURI(null)
-                        }
-                        DialogInterface.BUTTON_NEGATIVE -> {
-                        }
+                val builder = AlertDialog.Builder(this@MainActivity)
+                builder.setMessage("Do you want to delete the background?")
+                    .setCancelable(false)
+                    .setPositiveButton("Yes") { _, _ ->
+                        binding.ivBackground.setImageURI(null)
                     }
-                }
-            val builder: AlertDialog.Builder = AlertDialog.Builder(this)
-            builder.setMessage("Do you want to delete the background?")
-                .setPositiveButton("Yes", dialogClickListener)
-                .setNegativeButton("No", dialogClickListener).show()
+                    .setNegativeButton("No") { dialog, _ ->
+                        // Dismiss the dialog
+                        dialog.dismiss()
+                    }
+                val alert = builder.create()
+                alert.show()
         } else {
             Toast.makeText(this@MainActivity, "No background", Toast.LENGTH_SHORT).show()
         }
@@ -1236,7 +1279,7 @@ class MainActivity : AppCompatActivity(), Adapter.MyOnClickListener {
             this, INTERSTITIAL_AD_UNIT_ID, adRequest,
             object : InterstitialAdLoadCallback() {
                 override fun onAdFailedToLoad(adError: LoadAdError) {
-                    Log.d(TAG, adError?.message)
+                    Log.d(TAG, adError.message)
                     mInterstitialAd = null
                     mAdIsLoading = false
                 }
@@ -1271,7 +1314,7 @@ class MainActivity : AppCompatActivity(), Adapter.MyOnClickListener {
                     loadInterstitialAd()
                 }
 
-                override fun onAdFailedToShowFullScreenContent(adError: AdError?) {
+                override fun onAdFailedToShowFullScreenContent(adError: AdError) {
                     Log.d(TAG, "Ad failed to show.")
                     // Don't forget to set the ad reference to null so you
                     // don't show the ad a second time.
