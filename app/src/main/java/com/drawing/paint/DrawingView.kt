@@ -2,6 +2,7 @@ package com.drawing.paint
 
 
 import android.content.Context
+import android.content.SharedPreferences
 import android.graphics.*
 import android.util.AttributeSet
 import android.util.Base64
@@ -29,6 +30,13 @@ class DrawingView(context: Context, attrs: AttributeSet) : View(context, attrs) 
     private val bitmap = ArrayList<Bitmap>()
     private val undoBitmap = ArrayList<Bitmap>()
 
+//    private val editor: SharedPreferences.Editor by lazy {
+//        context.getSharedPreferences(
+//            "sharedPref",
+//            Context.MODE_PRIVATE
+//        ).edit()
+//    }
+
     init {
         setUpDrawing()
     }
@@ -43,16 +51,12 @@ class DrawingView(context: Context, attrs: AttributeSet) : View(context, attrs) 
 
     override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
-//        canvas.drawBitmap(mBitmap!!, 0f, 0f, mBitmapPaint)
         canvas.drawBitmap(mBitmap!!, 0f, 0f, mBitmapPaint)
         canvas.drawPath(drawPath, drawPaint!!)
 
-        for (i in bitmap) {
-            canvas.drawBitmap(i, 0f, 0f, mBitmapPaint)
-            canvas.drawPath(drawPath, drawPaint!!)
-        }
-
-
+//        for (i in bitmap) {
+//            canvas.drawBitmap(i, 0f , 0f, drawPaint)
+//        }
 
 
 
@@ -77,6 +81,7 @@ class DrawingView(context: Context, attrs: AttributeSet) : View(context, attrs) 
     fun onClickUndo() {
         if (newAdded) {
             bitmap.add(mBitmap!!.copy(mBitmap!!.config, mBitmap!!.isMutable))
+//            Log.d("bbb", bitmap.size.toString())
             newAdded = false
         }
         if (bitmap.size > 1) {
@@ -110,6 +115,7 @@ class DrawingView(context: Context, attrs: AttributeSet) : View(context, attrs) 
                             mBitmap!!.isMutable
                         )
                     ) else allClear = false
+                    Log.d("bbb", bitmap.size.toString())
                     drawPath.moveTo(touchX, touchY)
                 }
                 MotionEvent.ACTION_MOVE -> if (eraserOn) {
@@ -180,6 +186,7 @@ class DrawingView(context: Context, attrs: AttributeSet) : View(context, attrs) 
              var convertedString = convertBitmapToBase64(i)
             if (convertedString != null) {
                 encodedStringArray.add(convertedString)
+                Log.d("eee", encodedStringArray.size.toString())
             }
         }
         return encodedStringArray
@@ -192,7 +199,7 @@ class DrawingView(context: Context, attrs: AttributeSet) : View(context, attrs) 
         return Base64.encodeToString(b, Base64.DEFAULT)
     }
 
-     fun saveEncodedStringsToArrayListOfBitmap(encodedStringArray : ArrayList<String>)  {
+     fun saveEncodedStringsToArrayListOfBitmap(encodedStringArray : ArrayList<String>) : ArrayList<Bitmap> {
         val decodedBitmapArray = ArrayList<Bitmap>()
 
         for (i in encodedStringArray) {
@@ -204,10 +211,15 @@ class DrawingView(context: Context, attrs: AttributeSet) : View(context, attrs) 
          if (bitmap.isEmpty()) {
              for (i in decodedBitmapArray) {
                  bitmap.add(i)
-                 Log.d("bbb", bitmap.toString())
+
              }
          }
-//         return bitmap
+
+         for (i in bitmap) {
+            mCanvas!!.drawBitmap(i, 0f , 0f, drawPaint)
+        }
+
+         return bitmap
      }
 
     private fun revertBase64toBitmap(string : String) : Bitmap? {

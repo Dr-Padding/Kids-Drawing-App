@@ -134,7 +134,7 @@ class MainActivity : AppCompatActivity(), Adapter.MyOnClickListener {
             .setCancelable(false)
             .setPositiveButton("Yes") { _, _ ->
 
-                val sharedPreferences = getSharedPreferences("myPref", MODE_PRIVATE)
+                val sharedPreferences = getSharedPreferences("sharedPref", MODE_PRIVATE)
 
                 val size: Int = sharedPreferences.getInt("array_size", 0)
                 val encodedStringArray = ArrayList<String>(size)
@@ -142,7 +142,7 @@ class MainActivity : AppCompatActivity(), Adapter.MyOnClickListener {
                    val encodedString = sharedPreferences.getString("array_$i", null)
                     if (encodedString != null) {
                         encodedStringArray.add(encodedString)
-                        Log.d("sss", encodedStringArray.toString())
+                        Log.d("sss", encodedStringArray.size.toString())
                     }
                 }
 
@@ -163,7 +163,7 @@ class MainActivity : AppCompatActivity(), Adapter.MyOnClickListener {
     override fun onPause() {
         super.onPause()
 
-        val sharedPref: SharedPreferences = getSharedPreferences("myPref", MODE_PRIVATE)
+        val sharedPref: SharedPreferences = getSharedPreferences("sharedPref", MODE_PRIVATE)
         val editor: SharedPreferences.Editor = sharedPref.edit()
 
         val encodedStringArray = binding.drawingView.saveConvertedBitmapToArrayListOfStrings()
