@@ -15,6 +15,7 @@ import android.net.Uri
 import android.os.Bundle
 import android.os.Environment
 import android.provider.MediaStore
+import android.util.Base64
 import android.util.Log
 import android.view.View
 import android.widget.FrameLayout
@@ -52,7 +53,7 @@ import java.io.FileOutputStream
 import java.util.*
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
-import kotlin.collections.ArrayList
+import kotlin.properties.Delegates
 
 
 //Bismillahi-r-Rahmani-r-Rahim
@@ -80,6 +81,8 @@ class MainActivity : AppCompatActivity(), Adapter.MyOnClickListener {
     private var mAdShowedForMaxSize = false
     private var mIsLoading = false
     private var mAdIsLoading: Boolean = false
+
+    private var isEmptyScreen: Boolean = true
 
     override fun onCreate(savedInstanceState: Bundle?) {
         MobileAds.initialize(this@MainActivity) {}
@@ -129,53 +132,59 @@ class MainActivity : AppCompatActivity(), Adapter.MyOnClickListener {
             mAdIsLoading = true
         }
 
-        val builder = AlertDialog.Builder(this@MainActivity)
-        builder.setMessage("Want to restore your last drawing?")
-            .setCancelable(false)
-            .setPositiveButton("Yes") { _, _ ->
+        val sharedPreferences = getSharedPreferences("sharedPref", MODE_PRIVATE)
+        val convertedString = sharedPreferences.getString("lastDrawing", null)
+        val revertedBitmap = convertedString?.let {
+            binding.drawingView.revertBase64toBitmap(
+                it
+            )
+        }
+        val emptyBitmap = Bitmap.createBitmap(
+            revertedBitmap!!.width,
+            revertedBitmap.height,
+            revertedBitmap.config
+        )
 
-                val sharedPreferences = getSharedPreferences("sharedPref", MODE_PRIVATE)
-
-                val size: Int = sharedPreferences.getInt("array_size", 0)
-                val encodedStringArray = ArrayList<String>(size)
-                for (i in 0 until size) {
-                   val encodedString = sharedPreferences.getString("array_$i", null)
-                    if (encodedString != null) {
-                        encodedStringArray.add(encodedString)
-                        Log.d("sss", encodedStringArray.size.toString())
+        if (!revertedBitmap.sameAs(emptyBitmap)) {
+            val builder = AlertDialog.Builder(this@MainActivity)
+            builder.setMessage("Want to restore your last drawing?")
+                .setCancelable(false)
+                .setPositiveButton("Yes") { _, _ ->
+                    if (revertedBitmap != null) {
+                        binding.drawingView.restoreLastDrawing(revertedBitmap)
                     }
                 }
-
-                binding.drawingView.saveEncodedStringsToArrayListOfBitmap(encodedStringArray)
-
-
-
-            }
-            .setNegativeButton("No") { dialog, _ ->
-                // Dismiss the dialog
-                dialog.dismiss()
-            }
-        val alert = builder.create()
-        alert.show()
-
+                .setNegativeButton("No") { dialog, _ ->
+//                isEmptyScreen = true
+                    // Dismiss the dialog
+                    dialog.dismiss()
+                }
+            val alert = builder.create()
+            alert.show()
+        }
     }
 
     override fun onPause() {
         super.onPause()
-
         val sharedPref: SharedPreferences = getSharedPreferences("sharedPref", MODE_PRIVATE)
         val editor: SharedPreferences.Editor = sharedPref.edit()
-
-        val encodedStringArray = binding.drawingView.saveConvertedBitmapToArrayListOfStrings()
+        val drawingView: DrawingView =
+            findViewById(R.id.drawing_view)
+        val bitmapToString = getBitmapFromDrawingView(drawingView)
+        val convertedString = convertBitmapToBase64(bitmapToString)
         editor.apply {
-            putInt("array_size", encodedStringArray.size)
-            for (i in 0 until encodedStringArray.size) {
-                putString("array_$i", encodedStringArray.get(i))
+            if (convertedString != null) {
+                putString("lastDrawing", convertedString)
             }
             apply()
         }
+    }
 
-
+    fun convertBitmapToBase64(bm: Bitmap): String? {
+        val baos = ByteArrayOutputStream()
+        bm.compress(Bitmap.CompressFormat.PNG, 100, baos)
+        val b = baos.toByteArray()
+        return Base64.encodeToString(b, Base64.DEFAULT)
     }
 
     private fun uploadLaunch() {
@@ -238,18 +247,18 @@ class MainActivity : AppCompatActivity(), Adapter.MyOnClickListener {
 
     private fun onClickBin() {
         if (binding.ivBackground.drawable != null) {
-                val builder = AlertDialog.Builder(this@MainActivity)
-                builder.setMessage("Do you want to delete the background?")
-                    .setCancelable(false)
-                    .setPositiveButton("Yes") { _, _ ->
-                        binding.ivBackground.setImageURI(null)
-                    }
-                    .setNegativeButton("No") { dialog, _ ->
-                        // Dismiss the dialog
-                        dialog.dismiss()
-                    }
-                val alert = builder.create()
-                alert.show()
+            val builder = AlertDialog.Builder(this@MainActivity)
+            builder.setMessage("Do you want to delete the background?")
+                .setCancelable(false)
+                .setPositiveButton("Yes") { _, _ ->
+                    binding.ivBackground.setImageURI(null)
+                }
+                .setNegativeButton("No") { dialog, _ ->
+                    // Dismiss the dialog
+                    dialog.dismiss()
+                }
+            val alert = builder.create()
+            alert.show()
         } else {
             Toast.makeText(this@MainActivity, "No background", Toast.LENGTH_SHORT).show()
         }
@@ -1355,6 +1364,16 @@ class MainActivity : AppCompatActivity(), Adapter.MyOnClickListener {
         } else {
             canvas.drawColor(Color.WHITE)
         }
+        view.draw(canvas)
+        return returnedBitmap
+    }
+
+    private fun getBitmapFromDrawingView(view: View): Bitmap {
+        val returnedBitmap = Bitmap.createBitmap(
+            view.width,
+            view.height, Bitmap.Config.ARGB_8888
+        )
+        val canvas = Canvas(returnedBitmap)
         view.draw(canvas)
         return returnedBitmap
     }
