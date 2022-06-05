@@ -3,6 +3,7 @@ package com.drawing.paint
 
 import android.Manifest
 import android.app.Dialog
+import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
 import android.content.pm.PackageManager
@@ -11,7 +12,10 @@ import android.graphics.Canvas
 import android.graphics.Color
 import android.icu.text.SimpleDateFormat
 import android.media.MediaScannerConnection
+import android.net.ConnectivityManager
+import android.net.NetworkCapabilities
 import android.net.Uri
+import android.os.Build
 import android.os.Bundle
 import android.os.Environment
 import android.provider.MediaStore
@@ -82,12 +86,19 @@ class MainActivity : AppCompatActivity(), Adapter.MyOnClickListener {
     private var mIsLoading = false
     private var mAdIsLoading: Boolean = false
 
-    private var isEmptyScreen: Boolean = true
-
     override fun onCreate(savedInstanceState: Bundle?) {
         MobileAds.initialize(this@MainActivity) {}
-        loadRewardedAd()
-        loadInterstitialAd()
+        if (checkForInternet(this@MainActivity)) {
+            loadRewardedAd()
+            loadInterstitialAd()
+        } else {
+            Toast.makeText(
+                this@MainActivity,
+                "To access more colors make sure you have an internet connection!",
+                Toast.LENGTH_LONG
+            ).show()
+        }
+
         setTheme(R.style.Theme_KidsDrawingApp)
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
@@ -122,15 +133,15 @@ class MainActivity : AppCompatActivity(), Adapter.MyOnClickListener {
         outputDirectory = getOutputDirectory()
         cameraExecutor = Executors.newSingleThreadExecutor()
 
-        while (mRewardedAd == null && !mIsLoading) {
-            loadRewardedAd()
-            mIsLoading = true
-        }
+            while (mRewardedAd == null && !mIsLoading) {
+                loadRewardedAd()
+                mIsLoading = true
+            }
 
-        while (!mAdIsLoading && mInterstitialAd == null) {
-            loadInterstitialAd()
-            mAdIsLoading = true
-        }
+            while (!mAdIsLoading && mInterstitialAd == null) {
+                loadInterstitialAd()
+                mAdIsLoading = true
+            }
 
         val sharedPreferences = getSharedPreferences("sharedPref", MODE_PRIVATE)
         val convertedString = sharedPreferences.getString("lastDrawing", null)
@@ -150,12 +161,9 @@ class MainActivity : AppCompatActivity(), Adapter.MyOnClickListener {
             builder.setMessage("Want to restore your last drawing?")
                 .setCancelable(false)
                 .setPositiveButton("Yes") { _, _ ->
-                    if (revertedBitmap != null) {
-                        binding.drawingView.restoreLastDrawing(revertedBitmap)
-                    }
+                    binding.drawingView.restoreLastDrawing(revertedBitmap)
                 }
                 .setNegativeButton("No") { dialog, _ ->
-//                isEmptyScreen = true
                     // Dismiss the dialog
                     dialog.dismiss()
                 }
@@ -180,7 +188,7 @@ class MainActivity : AppCompatActivity(), Adapter.MyOnClickListener {
         }
     }
 
-    fun convertBitmapToBase64(bm: Bitmap): String? {
+    private fun convertBitmapToBase64(bm: Bitmap): String? {
         val baos = ByteArrayOutputStream()
         bm.compress(Bitmap.CompressFormat.PNG, 100, baos)
         val b = baos.toByteArray()
@@ -1496,6 +1504,47 @@ class MainActivity : AppCompatActivity(), Adapter.MyOnClickListener {
         cameraExecutor.shutdown()
         mRewardedAd = null
     }
+
+    private fun checkForInternet(context: Context): Boolean {
+
+        // register activity with the connectivity manager service
+        val connectivityManager =
+            context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+
+        // if the android version is equal to M
+        // or greater we need to use the
+        // NetworkCapabilities to check what type of
+        // network has the internet connection
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+
+            // Returns a Network object corresponding to
+            // the currently active default data network.
+            val network = connectivityManager.activeNetwork ?: return false
+
+            // Representation of the capabilities of an active network.
+            val activeNetwork = connectivityManager.getNetworkCapabilities(network) ?: return false
+
+            return when {
+                // Indicates this network uses a Wi-Fi transport,
+                // or WiFi has network connectivity
+                activeNetwork.hasTransport(NetworkCapabilities.TRANSPORT_WIFI) -> true
+
+                // Indicates this network uses a Cellular transport. or
+                // Cellular has network connectivity
+                activeNetwork.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR) -> true
+
+                // else return false
+                else -> false
+            }
+        } else {
+            // if the android version is below M
+            @Suppress("DEPRECATION") val networkInfo =
+                connectivityManager.activeNetworkInfo ?: return false
+            @Suppress("DEPRECATION")
+            return networkInfo.isConnected
+        }
+    }
+
 }
 
 
