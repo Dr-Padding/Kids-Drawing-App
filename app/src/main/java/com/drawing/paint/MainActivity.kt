@@ -3,9 +3,7 @@ package com.drawing.paint
 
 import android.Manifest
 import android.app.Dialog
-import android.content.Context
-import android.content.Intent
-import android.content.SharedPreferences
+import android.content.*
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.graphics.Canvas
@@ -85,19 +83,12 @@ class MainActivity : AppCompatActivity(), Adapter.MyOnClickListener {
     private var mAdShowedForMaxSize = false
     private var mIsLoading = false
     private var mAdIsLoading: Boolean = false
+    private var broadcastReceiver: BroadcastReceiver? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         MobileAds.initialize(this@MainActivity) {}
-        if (checkForInternet(this@MainActivity)) {
             loadRewardedAd()
             loadInterstitialAd()
-        } else {
-            Toast.makeText(
-                this@MainActivity,
-                "To access more colors make sure you have an internet connection!",
-                Toast.LENGTH_LONG
-            ).show()
-        }
 
         setTheme(R.style.Theme_KidsDrawingApp)
         super.onCreate(savedInstanceState)
@@ -170,6 +161,9 @@ class MainActivity : AppCompatActivity(), Adapter.MyOnClickListener {
             val alert = builder.create()
             alert.show()
         }
+
+        broadcastReceiver = NetworkChangeReceiver()
+        internetStatus()
     }
 
     override fun onPause() {
@@ -186,6 +180,9 @@ class MainActivity : AppCompatActivity(), Adapter.MyOnClickListener {
             }
             apply()
         }
+
+        unregisterReceiver(broadcastReceiver)
+
     }
 
     private fun convertBitmapToBase64(bm: Bitmap): String? {
@@ -1505,46 +1502,9 @@ class MainActivity : AppCompatActivity(), Adapter.MyOnClickListener {
         mRewardedAd = null
     }
 
-    private fun checkForInternet(context: Context): Boolean {
-
-        // register activity with the connectivity manager service
-        val connectivityManager =
-            context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
-
-        // if the android version is equal to M
-        // or greater we need to use the
-        // NetworkCapabilities to check what type of
-        // network has the internet connection
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-
-            // Returns a Network object corresponding to
-            // the currently active default data network.
-            val network = connectivityManager.activeNetwork ?: return false
-
-            // Representation of the capabilities of an active network.
-            val activeNetwork = connectivityManager.getNetworkCapabilities(network) ?: return false
-
-            return when {
-                // Indicates this network uses a Wi-Fi transport,
-                // or WiFi has network connectivity
-                activeNetwork.hasTransport(NetworkCapabilities.TRANSPORT_WIFI) -> true
-
-                // Indicates this network uses a Cellular transport. or
-                // Cellular has network connectivity
-                activeNetwork.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR) -> true
-
-                // else return false
-                else -> false
-            }
-        } else {
-            // if the android version is below M
-            @Suppress("DEPRECATION") val networkInfo =
-                connectivityManager.activeNetworkInfo ?: return false
-            @Suppress("DEPRECATION")
-            return networkInfo.isConnected
-        }
+    private fun internetStatus() {
+        registerReceiver(broadcastReceiver, IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION))
     }
-
 }
 
 
