@@ -11,9 +11,7 @@ import android.graphics.Color
 import android.icu.text.SimpleDateFormat
 import android.media.MediaScannerConnection
 import android.net.ConnectivityManager
-import android.net.NetworkCapabilities
 import android.net.Uri
-import android.os.Build
 import android.os.Bundle
 import android.os.Environment
 import android.provider.MediaStore
@@ -55,7 +53,6 @@ import java.io.FileOutputStream
 import java.util.*
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
-import kotlin.properties.Delegates
 
 
 //Bismillahi-r-Rahmani-r-Rahim
@@ -83,13 +80,10 @@ class MainActivity : AppCompatActivity(), Adapter.MyOnClickListener {
     private var mAdShowedForMaxSize = false
     private var mIsLoading = false
     private var mAdIsLoading: Boolean = false
-    private var broadcastReceiver: BroadcastReceiver? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         MobileAds.initialize(this@MainActivity) {}
-            loadRewardedAd()
-            loadInterstitialAd()
-
+        checkConnection()
         setTheme(R.style.Theme_KidsDrawingApp)
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
@@ -124,15 +118,15 @@ class MainActivity : AppCompatActivity(), Adapter.MyOnClickListener {
         outputDirectory = getOutputDirectory()
         cameraExecutor = Executors.newSingleThreadExecutor()
 
-            while (mRewardedAd == null && !mIsLoading) {
-                loadRewardedAd()
-                mIsLoading = true
-            }
+        while (mRewardedAd == null && !mIsLoading) {
+            loadRewardedAd()
+            mIsLoading = true
+        }
 
-            while (!mAdIsLoading && mInterstitialAd == null) {
-                loadInterstitialAd()
-                mAdIsLoading = true
-            }
+        while (!mAdIsLoading && mInterstitialAd == null) {
+            loadInterstitialAd()
+            mAdIsLoading = true
+        }
 
         val sharedPreferences = getSharedPreferences("sharedPref", MODE_PRIVATE)
         val convertedString = sharedPreferences.getString("lastDrawing", null)
@@ -161,9 +155,6 @@ class MainActivity : AppCompatActivity(), Adapter.MyOnClickListener {
             val alert = builder.create()
             alert.show()
         }
-
-        broadcastReceiver = NetworkChangeReceiver()
-        internetStatus()
     }
 
     override fun onPause() {
@@ -180,9 +171,6 @@ class MainActivity : AppCompatActivity(), Adapter.MyOnClickListener {
             }
             apply()
         }
-
-        unregisterReceiver(broadcastReceiver)
-
     }
 
     private fun convertBitmapToBase64(bm: Bitmap): String? {
@@ -1099,7 +1087,7 @@ class MainActivity : AppCompatActivity(), Adapter.MyOnClickListener {
 
     private fun isReadStorageAllowed(): Boolean {
         val result = ContextCompat.checkSelfPermission(
-            this,
+            this@MainActivity,
             Manifest.permission.READ_EXTERNAL_STORAGE
         )
 
@@ -1287,24 +1275,26 @@ class MainActivity : AppCompatActivity(), Adapter.MyOnClickListener {
     }
 
     private fun loadInterstitialAd() {
-        val adRequest = AdRequest.Builder().build()
+        if (mInterstitialAd == null) {
+            val adRequest = AdRequest.Builder().build()
 
-        InterstitialAd.load(
-            this, INTERSTITIAL_AD_UNIT_ID, adRequest,
-            object : InterstitialAdLoadCallback() {
-                override fun onAdFailedToLoad(adError: LoadAdError) {
-                    Log.d(TAG, adError.message)
-                    mInterstitialAd = null
-                    mAdIsLoading = false
-                }
+            InterstitialAd.load(
+                this, INTERSTITIAL_AD_UNIT_ID, adRequest,
+                object : InterstitialAdLoadCallback() {
+                    override fun onAdFailedToLoad(adError: LoadAdError) {
+                        Log.d(TAG, adError.message)
+                        mInterstitialAd = null
+                        mAdIsLoading = false
+                    }
 
-                override fun onAdLoaded(interstitialAd: InterstitialAd) {
-                    Log.d(TAG, "Ad was loaded.")
-                    mInterstitialAd = interstitialAd
-                    mAdIsLoading = false
+                    override fun onAdLoaded(interstitialAd: InterstitialAd) {
+                        Log.d(TAG, "Ad was loaded.")
+                        mInterstitialAd = interstitialAd
+                        mAdIsLoading = false
+                    }
                 }
-            }
-        )
+            )
+        }
     }
 
 
@@ -1390,12 +1380,6 @@ class MainActivity : AppCompatActivity(), Adapter.MyOnClickListener {
                 try {
                     val bytes = ByteArrayOutputStream()
                     mBitmap.compress(Bitmap.CompressFormat.PNG, 100, bytes)
-
-//                    val f = File(
-//                        externalCacheDir?.absoluteFile.toString()
-//                                + File.separator + "HandyPaints_" + System.currentTimeMillis() / 1000 + ".png"
-//                    )
-
                     val f = File(
                         Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES)
                             .toString()
@@ -1502,9 +1486,37 @@ class MainActivity : AppCompatActivity(), Adapter.MyOnClickListener {
         mRewardedAd = null
     }
 
-    private fun internetStatus() {
-        registerReceiver(broadcastReceiver, IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION))
+    private fun checkConnection() {
+        val connectivity = CheckConnectivity(application)
+        connectivity.observe(this@MainActivity) { isConnected ->
+            if (isConnected) {
+                loadRewardedAd()
+                loadInterstitialAd()
+            } else {
+                Toast.makeText(
+                    this@MainActivity,
+                    "To access more colors, brushes and erasers, connect to the Internet!",
+                    Toast.LENGTH_LONG
+                )
+                    .show()
+            }
+        }
     }
+
+    private fun isConnected(): Boolean {
+        var connected = false
+        try {
+            val cm =
+                applicationContext.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+            val nInfo = cm.activeNetwork
+            connected = nInfo != null
+            return connected
+        } catch (e: Exception) {
+            Log.e("Connectivity Exception", e.message!!)
+        }
+        return connected
+    }
+
 }
 
 
