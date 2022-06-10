@@ -157,6 +157,18 @@ class MainActivity : AppCompatActivity(), Adapter.MyOnClickListener {
         }
     }
 
+    override fun onStart() {
+        super.onStart()
+        if (!isConnected()) {
+            Toast.makeText(
+                this@MainActivity,
+                "To access more colors, brushes and erasers, connect to the Internet!",
+                Toast.LENGTH_LONG
+            )
+                .show()
+        }
+    }
+
     override fun onPause() {
         super.onPause()
         val sharedPref: SharedPreferences = getSharedPreferences("sharedPref", MODE_PRIVATE)
