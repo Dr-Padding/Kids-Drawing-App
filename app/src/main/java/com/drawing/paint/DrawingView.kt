@@ -161,12 +161,12 @@ class DrawingView(context: Context, attrs: AttributeSet) : View(context, attrs) 
         drawPaint!!.color = color
     }
 
-    fun revertBase64toBitmap(string: String): Bitmap? {
+    fun revertBase64toBitmap(string: String): Bitmap {
         return string.toBitmap()
     }
 
     // extension function to decode base64 string to bitmap
-    private fun String.toBitmap(): Bitmap? {
+    private fun String.toBitmap(): Bitmap {
         Base64.decode(this, Base64.DEFAULT).apply {
             return BitmapFactory.decodeByteArray(this, 0, size)
         }

@@ -7,17 +7,18 @@ import com.drawing.paint.Tools
 import com.drawing.paint.databinding.ItemToolBinding
 
 
+class Adapter(val tools: List<Tools>, val listener: MyOnClickListener) :
+    RecyclerView.Adapter<Adapter.ToolsViewHolder>() {
 
-class Adapter(val tools: List<Tools>, val listener: MyOnClickListener): RecyclerView.Adapter<Adapter.ToolsViewHolder>() {
-
-    inner class ToolsViewHolder(val binding: ItemToolBinding): RecyclerView.ViewHolder(binding.root){
+    inner class ToolsViewHolder(val binding: ItemToolBinding) :
+        RecyclerView.ViewHolder(binding.root) {
         init {
-            itemView.setOnClickListener{
-                val position: Int = adapterPosition
+            itemView.setOnClickListener {
+                val position: Int = bindingAdapterPosition
                 listener.onClick(position)
-                }
             }
         }
+    }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ToolsViewHolder {
         val binding = ItemToolBinding
@@ -27,7 +28,7 @@ class Adapter(val tools: List<Tools>, val listener: MyOnClickListener): Recycler
 
     override fun onBindViewHolder(holder: ToolsViewHolder, position: Int) {
         holder.apply {
-             binding.ibTool.setImageResource(tools[position].image )
+            binding.ibTool.setImageResource(tools[position].image)
         }
     }
 
@@ -35,7 +36,7 @@ class Adapter(val tools: List<Tools>, val listener: MyOnClickListener): Recycler
         return tools.size
     }
 
-    interface MyOnClickListener{
+    interface MyOnClickListener {
         fun onClick(position: Int)
     }
 

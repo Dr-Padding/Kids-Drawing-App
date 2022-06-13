@@ -17,7 +17,7 @@ class CheckConnectivity(private val connectivityManager: ConnectivityManager) :
     )
 
     private val networkCallback = @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
-    object: ConnectivityManager.NetworkCallback(){
+    object : ConnectivityManager.NetworkCallback() {
 
         override fun onAvailable(network: Network) {
             super.onAvailable(network)
@@ -33,8 +33,8 @@ class CheckConnectivity(private val connectivityManager: ConnectivityManager) :
     @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
     override fun onActive() {
         super.onActive()
-        val builder= NetworkRequest.Builder()
-        connectivityManager.registerNetworkCallback(builder.build(),networkCallback)
+        val builder = NetworkRequest.Builder()
+        connectivityManager.registerNetworkCallback(builder.build(), networkCallback)
     }
 
     @RequiresApi(Build.VERSION_CODES.LOLLIPOP)

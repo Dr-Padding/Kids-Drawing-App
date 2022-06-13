@@ -33,6 +33,8 @@ import androidx.core.content.ContextCompat
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.drawing.paint.Constants.DOWNLOAD_PERMISSION_CODE
+import com.drawing.paint.Constants.SHARE_PERMISSION_CODE
 import com.drawing.paint.Constants.STORAGE_PERMISSION_CODE
 import com.drawing.paint.Constants.UPLOAD_PERMISSION
 import com.drawing.paint.Constants.tag
@@ -135,25 +137,29 @@ class MainActivity : AppCompatActivity(), Adapter.MyOnClickListener {
                 it
             )
         }
-        val emptyBitmap = Bitmap.createBitmap(
-            revertedBitmap!!.width,
-            revertedBitmap.height,
-            revertedBitmap.config
-        )
+        val emptyBitmap = revertedBitmap?.width?.let {
+            Bitmap.createBitmap(
+                it,
+                revertedBitmap.height,
+                revertedBitmap.config
+            )
+        }
 
-        if (!revertedBitmap.sameAs(emptyBitmap)) {
-            val builder = AlertDialog.Builder(this@MainActivity)
-            builder.setMessage("Want to restore your last drawing?")
-                .setCancelable(false)
-                .setPositiveButton("Yes") { _, _ ->
-                    binding.drawingView.restoreLastDrawing(revertedBitmap)
-                }
-                .setNegativeButton("No") { dialog, _ ->
-                    // Dismiss the dialog
-                    dialog.dismiss()
-                }
-            val alert = builder.create()
-            alert.show()
+        if (revertedBitmap != null) {
+            if (!revertedBitmap.sameAs(emptyBitmap)) {
+                val builder = AlertDialog.Builder(this@MainActivity)
+                builder.setMessage("Want to restore your last drawing?")
+                    .setCancelable(false)
+                    .setPositiveButton("Yes") { _, _ ->
+                        binding.drawingView.restoreLastDrawing(revertedBitmap)
+                    }
+                    .setNegativeButton("No") { dialog, _ ->
+                        // Dismiss the dialog
+                        dialog.dismiss()
+                    }
+                val alert = builder.create()
+                alert.show()
+            }
         }
     }
 
@@ -1102,7 +1108,6 @@ class MainActivity : AppCompatActivity(), Adapter.MyOnClickListener {
             this@MainActivity,
             Manifest.permission.READ_EXTERNAL_STORAGE
         )
-
         return result == PackageManager.PERMISSION_GRANTED
     }
 
@@ -1115,15 +1120,11 @@ class MainActivity : AppCompatActivity(), Adapter.MyOnClickListener {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         if (requestCode == STORAGE_PERMISSION_CODE) {
             if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                Toast.makeText(
-                    this@MainActivity,
-                    "Permission granted, now you can read the storage!",
-                    Toast.LENGTH_SHORT
-                ).show()
+                uploadLaunch()
             } else {
                 Toast.makeText(
                     this@MainActivity,
-                    "Oops, you just denied permission for the storage! You can also allow it from settings!",
+                    "Oops, you denied permission for the storage! Please allow it from settings!",
                     Toast.LENGTH_LONG
                 ).show()
             }
@@ -1134,10 +1135,38 @@ class MainActivity : AppCompatActivity(), Adapter.MyOnClickListener {
             } else {
                 Toast.makeText(
                     this@MainActivity,
-                    "Oops, you just denied permission for the storage! You can also allow it from settings!",
+                    "Oops, you denied permission for the storage! Please allow it from settings!",
                     Toast.LENGTH_LONG
                 ).show()
                 finish()
+            }
+        }
+
+        if (requestCode == DOWNLOAD_PERMISSION_CODE) {
+            if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                showInterstitial()
+            } else {
+                Toast.makeText(
+                    this@MainActivity,
+                    "Oops, you denied permission for the storage! Please allow it from settings!",
+                    Toast.LENGTH_LONG
+                ).show()
+            }
+        }
+
+        if (requestCode == SHARE_PERMISSION_CODE) {
+            if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                lifecycleScope.launch {
+                    val flDrawingView: FrameLayout =
+                        findViewById(R.id.flBackgroundAndDrawingViewContainer)
+                    saveBitmapFileToShare(getBitmapFromView(flDrawingView))
+                }
+            } else {
+                Toast.makeText(
+                    this@MainActivity,
+                    "Oops, you denied permission for the storage! Please allow it from settings!",
+                    Toast.LENGTH_LONG
+                ).show()
             }
         }
     }
@@ -1221,7 +1250,14 @@ class MainActivity : AppCompatActivity(), Adapter.MyOnClickListener {
                 bottomSheetFragment.show(supportFragmentManager, tag)
             }
             9 -> {
-                showInterstitial()
+                if (isReadStorageAllowed()) {
+                    showInterstitial()
+                } else {
+                    ActivityCompat.requestPermissions(
+                        this@MainActivity,
+                        UPLOAD_PERMISSION, DOWNLOAD_PERMISSION_CODE
+                    )
+                }
             }
             10 -> {
                 if (isReadStorageAllowed()) {
@@ -1230,6 +1266,11 @@ class MainActivity : AppCompatActivity(), Adapter.MyOnClickListener {
                             findViewById(R.id.flBackgroundAndDrawingViewContainer)
                         saveBitmapFileToShare(getBitmapFromView(flDrawingView))
                     }
+                } else {
+                    ActivityCompat.requestPermissions(
+                        this@MainActivity,
+                        UPLOAD_PERMISSION, SHARE_PERMISSION_CODE
+                    )
                 }
             }
         }
@@ -1315,15 +1356,6 @@ class MainActivity : AppCompatActivity(), Adapter.MyOnClickListener {
             mInterstitialAd?.fullScreenContentCallback = object : FullScreenContentCallback() {
                 override fun onAdDismissedFullScreenContent() {
                     Log.d(TAG, "Ad was dismissed.")
-
-                    if (isReadStorageAllowed()) {
-                        lifecycleScope.launch {
-                            val flDrawingView: FrameLayout =
-                                findViewById(R.id.flBackgroundAndDrawingViewContainer)
-                            saveBitmapFile(getBitmapFromView(flDrawingView))
-                        }
-                    }
-
                     // Don't forget to set the ad reference to null so you
                     // don't show the ad a second time.
                     mInterstitialAd = null
@@ -1341,6 +1373,13 @@ class MainActivity : AppCompatActivity(), Adapter.MyOnClickListener {
                 override fun onAdShowedFullScreenContent() {
                     Log.d(TAG, "Ad showed fullscreen content.")
                     // Called when ad is showed.
+
+                    lifecycleScope.launch {
+                        val flDrawingView: FrameLayout =
+                            findViewById(R.id.flBackgroundAndDrawingViewContainer)
+                        saveBitmapFile(getBitmapFromView(flDrawingView))
+                    }
+
                     mInterstitialAd = null //?????????
                     loadInterstitialAd() //?????????
                 }
