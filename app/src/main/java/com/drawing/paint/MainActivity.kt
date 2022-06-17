@@ -81,10 +81,12 @@ class MainActivity : AppCompatActivity(), Adapter.MyOnClickListener {
     private var mAdShowedForEraser = false
     private var mAdShowedForMaxSize = false
     private var mIsLoading = false
-    private var mAdIsLoading: Boolean = false
+    private var mAdIsLoading = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         MobileAds.initialize(this@MainActivity) {}
+        loadRewardedAd()
+        loadInterstitialAd()
         checkConnection()
         setTheme(R.style.Theme_KidsDrawingApp)
         super.onCreate(savedInstanceState)
@@ -120,12 +122,12 @@ class MainActivity : AppCompatActivity(), Adapter.MyOnClickListener {
         outputDirectory = getOutputDirectory()
         cameraExecutor = Executors.newSingleThreadExecutor()
 
-        while (mRewardedAd == null && !mIsLoading) {
+        if (mRewardedAd == null && !mIsLoading) {
             loadRewardedAd()
             mIsLoading = true
         }
 
-        while (!mAdIsLoading && mInterstitialAd == null) {
+        if (!mAdIsLoading && mInterstitialAd == null) {
             loadInterstitialAd()
             mAdIsLoading = true
         }
@@ -164,6 +166,8 @@ class MainActivity : AppCompatActivity(), Adapter.MyOnClickListener {
     }
 
     override fun onStart() {
+        loadRewardedAd()
+        loadInterstitialAd()
         super.onStart()
         if (!isConnected()) {
             Toast.makeText(
@@ -173,6 +177,12 @@ class MainActivity : AppCompatActivity(), Adapter.MyOnClickListener {
             )
                 .show()
         }
+    }
+
+    override fun onRestart() {
+        super.onRestart()
+        loadRewardedAd()
+        loadInterstitialAd()
     }
 
     override fun onPause() {
@@ -1224,32 +1234,52 @@ class MainActivity : AppCompatActivity(), Adapter.MyOnClickListener {
         when (position) {
             0 -> {
                 cameraLaunch()
+                loadRewardedAd()
+                loadInterstitialAd()
             }
             1 -> {
                 uploadLaunch()
+                loadRewardedAd()
+                loadInterstitialAd()
             }
             2 -> {
+                loadRewardedAd()
+                loadInterstitialAd()
                 brushSizeChooseDialog()
             }
             3 -> {
+                loadRewardedAd()
+                loadInterstitialAd()
                 colorPicker()
             }
             4 -> {
                 binding.drawingView.onClickUndo()
+                loadRewardedAd()
+                loadInterstitialAd()
             }
             5 -> {
                 binding.drawingView.onClickRedo()
+                loadRewardedAd()
+                loadInterstitialAd()
             }
             6 -> {
+                loadRewardedAd()
+                loadInterstitialAd()
                 eraserSizeChooseDialog()
             }
             7 -> {
                 onClickBin()
+                loadRewardedAd()
+                loadInterstitialAd()
             }
             8 -> {
                 bottomSheetFragment.show(supportFragmentManager, tag)
+                loadRewardedAd()
+                loadInterstitialAd()
             }
             9 -> {
+                loadRewardedAd()
+                loadInterstitialAd()
                 if (isReadStorageAllowed()) {
                     showInterstitial()
                 } else {
@@ -1260,6 +1290,8 @@ class MainActivity : AppCompatActivity(), Adapter.MyOnClickListener {
                 }
             }
             10 -> {
+                loadRewardedAd()
+                loadInterstitialAd()
                 if (isReadStorageAllowed()) {
                     lifecycleScope.launch {
                         val flDrawingView: FrameLayout =
