@@ -72,6 +72,8 @@
         <entry key="app/src/main/res/layout/dialog_eraser_size_without_buttons.xml" value="0.3635639135388361" />
         <entry key="app/src/main/res/layout/gif_item.xml" value="0.23596014492753623" />
         <entry key="app/src/main/res/layout/item_tool.xml" value="0.27389054535128543" />
+        <entry key="app/src/main/res/mipmap-anydpi-v26/ic_launcher.xml" value="0.123" />
+        <entry key="app/src/main/res/mipmap-anydpi-v26/ic_launcher_round.xml" value="0.123" />
       </map>
     </option>
   </component>
