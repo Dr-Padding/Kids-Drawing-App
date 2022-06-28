@@ -56,6 +56,7 @@
         <entry key="app/src/main/res/drawable/large.xml" value="0.1895" />
         <entry key="app/src/main/res/drawable/medium.xml" value="0.1895" />
         <entry key="app/src/main/res/drawable/small.xml" value="0.14" />
+        <entry key="app/src/main/res/drawable/splash_background.xml" value="0.1905" />
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.25059029399484833" />
         <entry key="app/src/main/res/layout/bottom_sheet_fragment.xml" value="0.16621376811594202" />
         <entry key="app/src/main/res/layout/custom_toast.xml" value="0.25" />
