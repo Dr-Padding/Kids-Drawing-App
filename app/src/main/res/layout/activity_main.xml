@@ -40,6 +40,7 @@
         android:backgroundTint="@color/grey1"
         android:contentDescription="Take Photo Button"
         android:src="@drawable/ic_camera_snap"
+        android:theme="@style/Theme.KidsDrawingApp"
         app:borderWidth="4dp"
         app:fabSize="auto"
         app:layout_constraintBottom_toTopOf="@id/rv_tools_menu"

@@ -30,6 +30,7 @@ import androidx.camera.core.Preview
 import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -71,7 +72,7 @@ class MainActivity : AppCompatActivity(), Adapter.MyOnClickListener {
     private lateinit var cameraExecutor: ExecutorService
     lateinit var cameraSelector: CameraSelector
     private lateinit var preview: Preview
-    lateinit var cameraProvider: ProcessCameraProvider
+    private lateinit var cameraProvider: ProcessCameraProvider
     var mCameraLaunched = false
     private val bottomSheetFragment = BottomSheetFragment()
     private var mRewardedAd: RewardedAd? = null
@@ -83,14 +84,16 @@ class MainActivity : AppCompatActivity(), Adapter.MyOnClickListener {
     private var mIsLoading = false
     private var mAdIsLoading = false
 
+
     override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
         MobileAds.initialize(this@MainActivity) {}
         loadRewardedAd()
         loadInterstitialAd()
         checkConnection()
-        setTheme(R.style.Theme_KidsDrawingApp)
-        super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
+        installSplashScreen()
         setContentView(binding.root)
 
         val adRequestBanner = AdRequest.Builder().build()
@@ -1319,6 +1322,7 @@ class MainActivity : AppCompatActivity(), Adapter.MyOnClickListener {
                         Log.d(TAG, adError.message)
                         mIsLoading = false
                         mRewardedAd = null
+                        loadRewardedAd()
                     }
 
                     override fun onAdLoaded(rewardedAd: RewardedAd) {
@@ -1370,6 +1374,7 @@ class MainActivity : AppCompatActivity(), Adapter.MyOnClickListener {
                         Log.d(TAG, adError.message)
                         mInterstitialAd = null
                         mAdIsLoading = false
+                        loadInterstitialAd()
                     }
 
                     override fun onAdLoaded(interstitialAd: InterstitialAd) {
@@ -1550,25 +1555,6 @@ class MainActivity : AppCompatActivity(), Adapter.MyOnClickListener {
         }
     }
 
-    override fun onBackPressed() {
-        if (mCameraLaunched) {
-            cameraProvider.unbind(preview)
-            cameraExecutor.shutdownNow()
-            binding.viewFinder.visibility = View.INVISIBLE
-            binding.btnTakePhoto.visibility = View.INVISIBLE
-            binding.drawingView.visibility = View.VISIBLE
-            mCameraLaunched = false
-        } else {
-            super.onBackPressed()
-        }
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        cameraExecutor.shutdown()
-        mRewardedAd = null
-    }
-
     private fun checkConnection() {
         val connectivity = CheckConnectivity(application)
         connectivity.observe(this@MainActivity) { isConnected ->
@@ -1598,6 +1584,25 @@ class MainActivity : AppCompatActivity(), Adapter.MyOnClickListener {
             Log.e("Connectivity Exception", e.message!!)
         }
         return connected
+    }
+
+    override fun onBackPressed() {
+        if (mCameraLaunched) {
+            cameraProvider.unbind(preview)
+            cameraExecutor.shutdownNow()
+            binding.viewFinder.visibility = View.INVISIBLE
+            binding.btnTakePhoto.visibility = View.INVISIBLE
+            binding.drawingView.visibility = View.VISIBLE
+            mCameraLaunched = false
+        } else {
+            super.onBackPressed()
+        }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        cameraExecutor.shutdown()
+        mRewardedAd = null
     }
 
 }
