@@ -3,41 +3,51 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:padding="8dp"
     android:gravity="center"
     android:orientation="vertical"
-    >
+    android:padding="8dp">
 
     <ImageButton
         android:id="@+id/ib_small_brush"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:src="@drawable/brush_4f"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@id/ib_medium_brush"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
-        />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <ImageButton
         android:id="@+id/ib_medium_brush"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:src="@drawable/brush_10f"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@id/ib_large_brush"
         app:layout_constraintStart_toEndOf="@id/ib_small_brush"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
-        />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <ImageButton
         android:id="@+id/ib_large_brush"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:src="@drawable/brush_20f"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@id/ib_medium_brush"
-        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ProgressBar
+        android:id="@+id/progress_bar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="6dp"
+        android:visibility="visible"
+        android:indeterminateTint="@color/grey"
+        app:layout_constraintEnd_toEndOf="@id/ib_medium_brush"
+        app:layout_constraintStart_toStartOf="@id/ib_medium_brush"
+        app:layout_constraintTop_toBottomOf="@id/ib_medium_brush"
         app:layout_constraintBottom_toBottomOf="parent"
         />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

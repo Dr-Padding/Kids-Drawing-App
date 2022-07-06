@@ -47,6 +47,10 @@ import com.google.android.gms.ads.interstitial.InterstitialAd
 import com.google.android.gms.ads.interstitial.InterstitialAdLoadCallback
 import com.google.android.gms.ads.rewarded.RewardedAd
 import com.google.android.gms.ads.rewarded.RewardedAdLoadCallback
+import com.google.android.play.core.review.ReviewInfo
+import com.google.android.play.core.review.ReviewManager
+import com.google.android.play.core.review.ReviewManagerFactory
+import com.google.android.play.core.review.testing.FakeReviewManager
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -83,6 +87,8 @@ class MainActivity : AppCompatActivity(), Adapter.MyOnClickListener {
     private var mAdShowedForMaxSize = false
     private var mIsLoading = false
     private var mAdIsLoading = false
+    lateinit var manager: ReviewManager
+    private lateinit var reviewInfo: ReviewInfo
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -110,6 +116,7 @@ class MainActivity : AppCompatActivity(), Adapter.MyOnClickListener {
             Tools(R.drawable.ic_bin),
             Tools(R.drawable.ic_play),
             Tools(R.drawable.ic_save),
+            Tools(R.drawable.ic_share),
             Tools(R.drawable.ic_share)
         )
 
@@ -166,6 +173,11 @@ class MainActivity : AppCompatActivity(), Adapter.MyOnClickListener {
                 alert.show()
             }
         }
+
+        activateReviewInfo()
+
+
+
     }
 
     override fun onStart() {
@@ -1308,6 +1320,9 @@ class MainActivity : AppCompatActivity(), Adapter.MyOnClickListener {
                     )
                 }
             }
+            11 -> {
+                startReviewFlow()
+            }
         }
     }
 
@@ -1575,8 +1590,7 @@ class MainActivity : AppCompatActivity(), Adapter.MyOnClickListener {
     private fun isConnected(): Boolean {
         var connected = false
         try {
-            val cm =
-                applicationContext.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+            val cm = applicationContext.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
             val nInfo = cm.activeNetwork
             connected = nInfo != null
             return connected
@@ -1584,6 +1598,31 @@ class MainActivity : AppCompatActivity(), Adapter.MyOnClickListener {
             Log.e("Connectivity Exception", e.message!!)
         }
         return connected
+    }
+
+    private fun activateReviewInfo() {
+        manager = ReviewManagerFactory.create(this@MainActivity)
+//        val manager = FakeReviewManager(this@MainActivity)
+        val request = manager.requestReviewFlow()
+        request.addOnCompleteListener { task ->
+            if (task.isSuccessful) {
+                // We got the ReviewInfo object
+                reviewInfo = task.result
+            } else {
+                // There was some problem, log or handle the error code.
+//                @ReviewErrorCode val reviewErrorCode = (task.exception as TaskException).errorCode
+            }
+        }
+    }
+
+    private fun startReviewFlow() {
+        val flow = manager.launchReviewFlow(this@MainActivity, reviewInfo)
+        flow.addOnCompleteListener { _ ->
+            // The flow has finished. The API does not indicate whether the user
+            // reviewed or not, or even whether the review dialog was shown. Thus, no
+            // matter the result, we continue our app flow.
+
+        }
     }
 
     override fun onBackPressed() {
