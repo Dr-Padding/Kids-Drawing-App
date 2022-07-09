@@ -35,4 +35,5 @@
     <string name="want_to_try">Something you definitely want to try 😊</string>
     <string name="nickname">Developer: Dr. Padding</string>
     <string name="contacts">Contact me for cooperation</string>
+    <string name="privacy_policy"><a href="https://docs.google.com/document/d/149-SLbhZfnSTibJ115gaFnsM_GFQAnG_/edit">Privacy policy</a></string>
 </resources>

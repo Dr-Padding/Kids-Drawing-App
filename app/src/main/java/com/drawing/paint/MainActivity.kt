@@ -1604,13 +1604,16 @@ class MainActivity : AppCompatActivity(), Adapter.MyOnClickListener {
     }
 
     private fun activateReviewInfo() {
-        manager = ReviewManagerFactory.create(this@MainActivity)
-//        manager = FakeReviewManager(this@MainActivity)
+//        manager = ReviewManagerFactory.create(this@MainActivity)
+        manager = FakeReviewManager(this@MainActivity)
         val request = manager.requestReviewFlow()
         request.addOnCompleteListener { task ->
             if (task.isSuccessful) {
                 // We got the ReviewInfo object
                 reviewInfo = task.result
+
+                Log.d("aaaaaaaaaaaaaaaaa", reviewInfo.toString())
+
             } else {
                 // There was some problem, log or handle the error code.
 //                @ReviewErrorCode val reviewErrorCode = (task.exception as TaskException).errorCode
