@@ -42,6 +42,7 @@ import com.drawing.paint.Constants.tag
 import com.drawing.paint.adapters.Adapter
 import com.drawing.paint.databinding.*
 import com.drawing.paint.fragments.BottomSheetFragment
+import com.drawing.paint.fragments.PrivacyPolicyBottomSheetFragment
 import com.google.android.gms.ads.*
 import com.google.android.gms.ads.interstitial.InterstitialAd
 import com.google.android.gms.ads.interstitial.InterstitialAdLoadCallback
@@ -79,6 +80,7 @@ class MainActivity : AppCompatActivity(), Adapter.MyOnClickListener {
     private lateinit var cameraProvider: ProcessCameraProvider
     var mCameraLaunched = false
     private val bottomSheetFragment = BottomSheetFragment()
+    private val privacyPolicyBottomSheetFragment = PrivacyPolicyBottomSheetFragment()
     private var mRewardedAd: RewardedAd? = null
     private var mInterstitialAd: InterstitialAd? = null
     private var mAdShowedForBrush = false
@@ -117,7 +119,8 @@ class MainActivity : AppCompatActivity(), Adapter.MyOnClickListener {
             Tools(R.drawable.ic_play),
             Tools(R.drawable.ic_save),
             Tools(R.drawable.ic_share),
-            Tools(R.drawable.ic_share)
+            Tools(R.drawable.ic_star),
+            Tools(R.drawable.ic_dr)
         )
 
         val adapter = Adapter(toolsList, this@MainActivity)
@@ -175,9 +178,6 @@ class MainActivity : AppCompatActivity(), Adapter.MyOnClickListener {
         }
 
         activateReviewInfo()
-
-
-
     }
 
     override fun onStart() {
@@ -1323,6 +1323,9 @@ class MainActivity : AppCompatActivity(), Adapter.MyOnClickListener {
             11 -> {
                 startReviewFlow()
             }
+            12 -> {
+                privacyPolicyBottomSheetFragment.show(supportFragmentManager, tag)
+            }
         }
     }
 
@@ -1602,7 +1605,7 @@ class MainActivity : AppCompatActivity(), Adapter.MyOnClickListener {
 
     private fun activateReviewInfo() {
         manager = ReviewManagerFactory.create(this@MainActivity)
-//        val manager = FakeReviewManager(this@MainActivity)
+//        manager = FakeReviewManager(this@MainActivity)
         val request = manager.requestReviewFlow()
         request.addOnCompleteListener { task ->
             if (task.isSuccessful) {

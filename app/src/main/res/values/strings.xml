@@ -32,4 +32,7 @@
     <string name="lemon_chiffon_color">lemon_chiffon_color</string>
     <string name="antique_white_color">antique_white_color</string>
     <string name="camera_image">Camera Image</string>
+    <string name="want_to_try">Something you definitely want to try 😊</string>
+    <string name="nickname">Developer: Dr. Padding</string>
+    <string name="contacts">Contact me for cooperation</string>
 </resources>
