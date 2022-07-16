@@ -5,12 +5,11 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.text.method.LinkMovementMethod
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
-import com.drawing.paint.Constants
+import com.drawing.paint.MainActivity
 import com.drawing.paint.R
 import com.drawing.paint.databinding.PrivacyPolicyBottomSheetFragmentBinding
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
@@ -46,10 +45,19 @@ class PrivacyPolicyBottomSheetFragment: BottomSheetDialogFragment() {
             tvPrivacyPolicy.movementMethod = LinkMovementMethod.getInstance()
         }
     }
+
+    override fun onStart() {
+        super.onStart()
+        (activity as MainActivity).isFragmentShown = true
+    }
+
+    override fun onPause() {
+        super.onPause()
+        (activity as MainActivity).isFragmentShown = false
+    }
     
     override fun onDestroy() {
         super.onDestroy()
         binding = null
     }
-
 }

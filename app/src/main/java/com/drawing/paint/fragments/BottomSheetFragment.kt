@@ -5,6 +5,8 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.Fragment
+import com.drawing.paint.MainActivity
 import com.drawing.paint.R
 import com.drawing.paint.adapters.ViewPagerAdapter
 import com.drawing.paint.databinding.BottomSheetFragmentBinding
@@ -29,7 +31,7 @@ class BottomSheetFragment: BottomSheetDialogFragment() {
 
 
         var gifsList = mutableListOf(
-            R.drawable.img1,
+            R.drawable.gif_1,
             R.drawable.img2,
             R.drawable.img3
         )
@@ -37,6 +39,16 @@ class BottomSheetFragment: BottomSheetDialogFragment() {
         val adapter = ViewPagerAdapter(gifsList)
         binding!!.pager.adapter = adapter
 
+    }
+
+    override fun onStart() {
+        super.onStart()
+        (activity as MainActivity).isFragmentShown = true
+    }
+
+    override fun onPause() {
+        super.onPause()
+        (activity as MainActivity).isFragmentShown = false
     }
 
 

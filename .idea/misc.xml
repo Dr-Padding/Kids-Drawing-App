@@ -42,7 +42,7 @@
         <entry key="app/src/main/res/drawable/ic_camera_sign.xml" value="0.1905" />
         <entry key="app/src/main/res/drawable/ic_camera_snap.xml" value="0.1905" />
         <entry key="app/src/main/res/drawable/ic_dr.xml" value="0.1185" />
-        <entry key="app/src/main/res/drawable/ic_dr_padding_black_logo.xml" value="0.18988189697265628" />
+        <entry key="app/src/main/res/drawable/ic_dr_padding_black_logo.xml" value="0.25" />
         <entry key="app/src/main/res/drawable/ic_eraser.xml" value="0.1905" />
         <entry key="app/src/main/res/drawable/ic_flip_camera.xml" value="0.1905" />
         <entry key="app/src/main/res/drawable/ic_launcher_background.xml" value="0.1905" />
@@ -76,7 +76,7 @@
         <entry key="app/src/main/res/layout/dialog_eraser_size_without_buttons.xml" value="0.3635639135388361" />
         <entry key="app/src/main/res/layout/gif_item.xml" value="0.23596014492753623" />
         <entry key="app/src/main/res/layout/item_tool.xml" value="0.27389054535128543" />
-        <entry key="app/src/main/res/layout/privacy_policy_bottom_sheet_fragment.xml" value="0.28072916666666664" />
+        <entry key="app/src/main/res/layout/privacy_policy_bottom_sheet_fragment.xml" value="0.25" />
         <entry key="app/src/main/res/mipmap-anydpi-v26/ic_launcher.xml" value="0.123" />
         <entry key="app/src/main/res/mipmap-anydpi-v26/ic_launcher_round.xml" value="0.123" />
       </map>

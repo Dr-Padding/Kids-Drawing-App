@@ -31,6 +31,9 @@ import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentManager
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -50,7 +53,6 @@ import com.google.android.gms.ads.rewarded.RewardedAd
 import com.google.android.gms.ads.rewarded.RewardedAdLoadCallback
 import com.google.android.play.core.review.ReviewInfo
 import com.google.android.play.core.review.ReviewManager
-import com.google.android.play.core.review.ReviewManagerFactory
 import com.google.android.play.core.review.testing.FakeReviewManager
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -79,8 +81,7 @@ class MainActivity : AppCompatActivity(), Adapter.MyOnClickListener {
     private lateinit var preview: Preview
     private lateinit var cameraProvider: ProcessCameraProvider
     var mCameraLaunched = false
-    private val bottomSheetFragment = BottomSheetFragment()
-    private val privacyPolicyBottomSheetFragment = PrivacyPolicyBottomSheetFragment()
+    var isFragmentShown = false
     private var mRewardedAd: RewardedAd? = null
     private var mInterstitialAd: InterstitialAd? = null
     private var mAdShowedForBrush = false
@@ -91,11 +92,10 @@ class MainActivity : AppCompatActivity(), Adapter.MyOnClickListener {
     private var mAdIsLoading = false
     lateinit var manager: ReviewManager
     private lateinit var reviewInfo: ReviewInfo
-
+    var liveData = MutableLiveData<Boolean>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
         MobileAds.initialize(this@MainActivity) {}
         loadRewardedAd()
         loadInterstitialAd()
@@ -178,6 +178,10 @@ class MainActivity : AppCompatActivity(), Adapter.MyOnClickListener {
         }
 
         activateReviewInfo()
+
+
+
+
     }
 
     override fun onStart() {
@@ -312,16 +316,18 @@ class MainActivity : AppCompatActivity(), Adapter.MyOnClickListener {
         val dialogBindingWithMoreSizesBtn: DialogBrushSizeBinding =
             DialogBrushSizeBinding.inflate(layoutInflater)
 
-        val dialogBindingBrushesInitial: DialogBrushSizeWithoutMoreSizesBtnBinding =
-            DialogBrushSizeWithoutMoreSizesBtnBinding.inflate(layoutInflater)
+        brushDialog.setContentView(dialogBindingWithMoreSizesBtn.root)
 
         if (!mAdShowedForBrush) {
-            if (mRewardedAd != null) {
-                brushDialog.setContentView(dialogBindingWithMoreSizesBtn.root)
-            } else {
-                brushDialog.setContentView(dialogBindingBrushesInitial.root)
+            liveData.observe(this@MainActivity) {
+                if (it == false) {
+                    dialogBindingWithMoreSizesBtn.btnMoreSizes.visibility = View.VISIBLE
+                    dialogBindingWithMoreSizesBtn.progressBar.visibility = View.INVISIBLE
+                } else {
+                    dialogBindingWithMoreSizesBtn.btnMoreSizes.visibility = View.INVISIBLE
+                    dialogBindingWithMoreSizesBtn.progressBar.visibility = View.VISIBLE
+                }
             }
-
         } else {
             brushDialog.setContentView(dialogBindingBrushesRewarded.root)
         }
@@ -343,26 +349,6 @@ class MainActivity : AppCompatActivity(), Adapter.MyOnClickListener {
 //                    }
                     }
                 )
-            }
-        }
-
-        dialogBindingBrushesInitial.apply {
-            ibSmallBrush.setOnClickListener {
-                binding.drawingView.onClickEraser(false)
-                binding.drawingView.setSizeForBrush(4.toFloat())
-                brushDialog.dismiss()
-            }
-
-            ibMediumBrush.setOnClickListener {
-                binding.drawingView.onClickEraser(false)
-                binding.drawingView.setSizeForBrush(10.toFloat())
-                brushDialog.dismiss()
-            }
-
-            ibLargeBrush.setOnClickListener {
-                binding.drawingView.onClickEraser(false)
-                binding.drawingView.setSizeForBrush(20.toFloat())
-                brushDialog.dismiss()
             }
         }
 
@@ -487,9 +473,6 @@ class MainActivity : AppCompatActivity(), Adapter.MyOnClickListener {
         val brushDialog = Dialog(this@MainActivity)
         brushDialog.setTitle(R.string.eraser_size)
 
-        val dialogBindingEraserInitial: DialogEraserSizeWithoutButtonsBinding =
-            DialogEraserSizeWithoutButtonsBinding.inflate(layoutInflater)
-
         val dialogBindingEraserWithButtons: DialogEraserSizeBinding =
             DialogEraserSizeBinding.inflate(layoutInflater)
 
@@ -502,13 +485,21 @@ class MainActivity : AppCompatActivity(), Adapter.MyOnClickListener {
         val dialogBindingEraserFull: DialogEraserSizeFullBinding =
             DialogEraserSizeFullBinding.inflate(layoutInflater)
 
-        if (!mAdShowedForEraser && !mAdShowedForMaxSize) {
-            if (mRewardedAd != null) {
-                brushDialog.setContentView(dialogBindingEraserWithButtons.root)
-            } else {
-                brushDialog.setContentView(dialogBindingEraserInitial.root)
-            }
+        brushDialog.setContentView(dialogBindingEraserWithButtons.root)
 
+        if (!mAdShowedForEraser && !mAdShowedForMaxSize) {
+
+            liveData.observe(this@MainActivity) {
+                if (it == false) {
+                    dialogBindingEraserWithButtons.btnMoreSizes.visibility = View.VISIBLE
+                    dialogBindingEraserWithButtons.btnClearAll.visibility = View.VISIBLE
+                    dialogBindingEraserWithButtons.progressBar.visibility = View.INVISIBLE
+                } else {
+                    dialogBindingEraserWithButtons.btnMoreSizes.visibility = View.INVISIBLE
+                    dialogBindingEraserWithButtons.btnClearAll.visibility = View.INVISIBLE
+                    dialogBindingEraserWithButtons.progressBar.visibility = View.VISIBLE
+                }
+            }
         } else if (!mAdShowedForEraser && mAdShowedForMaxSize) {
             brushDialog.setContentView(dialogBindingEraserWithMaxSizesOnly.root)
         } else if (mAdShowedForEraser && !mAdShowedForMaxSize) {
@@ -603,28 +594,6 @@ class MainActivity : AppCompatActivity(), Adapter.MyOnClickListener {
                         }
                     )
                 }
-            }
-        }
-
-        dialogBindingEraserInitial.apply {
-            ibSmallBrush.setOnClickListener {
-                binding.drawingView.onClickEraser(true)
-                binding.drawingView.setSizeForEraser(4.toFloat())
-                brushDialog.dismiss()
-            }
-
-
-            ibMediumBrush.setOnClickListener {
-                binding.drawingView.onClickEraser(true)
-                binding.drawingView.setSizeForEraser(10.toFloat())
-                brushDialog.dismiss()
-            }
-
-
-            ibLargeBrush.setOnClickListener {
-                binding.drawingView.onClickEraser(true)
-                binding.drawingView.setSizeForEraser(20.toFloat())
-                brushDialog.dismiss()
             }
         }
 
@@ -830,14 +799,18 @@ class MainActivity : AppCompatActivity(), Adapter.MyOnClickListener {
         val dialogBindingWithMoreColorsBtn: DialogColorPickerBinding =
             DialogColorPickerBinding.inflate(layoutInflater)
 
-        val dialogBindingInitial: DialogColorPickerWithoutMoreColorsBtnBinding =
-            DialogColorPickerWithoutMoreColorsBtnBinding.inflate(layoutInflater)
+        colorPickerDialog.setContentView(dialogBindingWithMoreColorsBtn.root)
 
         if (!mAdShowedForColors) {
-            if (mRewardedAd != null) {
-                colorPickerDialog.setContentView(dialogBindingWithMoreColorsBtn.root)
-            } else {
-                colorPickerDialog.setContentView(dialogBindingInitial.root)
+
+            liveData.observe(this@MainActivity) {
+                if (it == false) {
+                    dialogBindingWithMoreColorsBtn.btnMoreColors.visibility = View.VISIBLE
+                    dialogBindingWithMoreColorsBtn.progressBar.visibility = View.INVISIBLE
+                } else {
+                    dialogBindingWithMoreColorsBtn.btnMoreColors.visibility = View.INVISIBLE
+                    dialogBindingWithMoreColorsBtn.progressBar.visibility = View.VISIBLE
+                }
             }
         } else {
             colorPickerDialog.setContentView(dialogBindingRewarded.root)
@@ -860,29 +833,6 @@ class MainActivity : AppCompatActivity(), Adapter.MyOnClickListener {
 //                    }
                     }
                 )
-            }
-        }
-
-        dialogBindingInitial.apply {
-            ibWhite.setOnClickListener {
-                binding.drawingView.onClickEraser(false)
-                val colorTag = it.tag.toString()
-                binding.drawingView.setColor(colorTag) //set color to brush
-                colorPickerDialog.dismiss()
-            }
-
-            ibBlack.setOnClickListener {
-                binding.drawingView.onClickEraser(false)
-                val colorTag = it.tag.toString()
-                binding.drawingView.setColor(colorTag) //set color to brush
-                colorPickerDialog.dismiss()
-            }
-
-            ibGreen.setOnClickListener {
-                binding.drawingView.onClickEraser(false)
-                val colorTag = it.tag.toString()
-                binding.drawingView.setColor(colorTag) //set color to brush
-                colorPickerDialog.dismiss()
             }
         }
 
@@ -1288,7 +1238,10 @@ class MainActivity : AppCompatActivity(), Adapter.MyOnClickListener {
                 loadInterstitialAd()
             }
             8 -> {
-                bottomSheetFragment.show(supportFragmentManager, tag)
+                val bottomSheetFragment = BottomSheetFragment()
+                if(!isFragmentShown) {
+                    bottomSheetFragment.show(supportFragmentManager, tag)
+                }
                 loadRewardedAd()
                 loadInterstitialAd()
             }
@@ -1324,7 +1277,10 @@ class MainActivity : AppCompatActivity(), Adapter.MyOnClickListener {
                 startReviewFlow()
             }
             12 -> {
-                privacyPolicyBottomSheetFragment.show(supportFragmentManager, tag)
+                val privacyPolicyBottomSheetFragment = PrivacyPolicyBottomSheetFragment()
+                if(!isFragmentShown) {
+                    privacyPolicyBottomSheetFragment.show(supportFragmentManager, tag)
+                }
             }
         }
     }
@@ -1347,6 +1303,7 @@ class MainActivity : AppCompatActivity(), Adapter.MyOnClickListener {
                         Log.d(TAG, "Ad was loaded.")
                         mRewardedAd = rewardedAd
                         mIsLoading = false
+                        liveData.postValue(mIsLoading)
                     }
                 }
             )
@@ -1451,7 +1408,6 @@ class MainActivity : AppCompatActivity(), Adapter.MyOnClickListener {
             loadInterstitialAd() //?????????
         }
     }
-
 
     private fun getBitmapFromView(view: View): Bitmap {
         val returnedBitmap = Bitmap.createBitmap(
@@ -1649,7 +1605,9 @@ class MainActivity : AppCompatActivity(), Adapter.MyOnClickListener {
         cameraExecutor.shutdown()
         mRewardedAd = null
     }
-
 }
+
+
+
 
 

@@ -38,7 +38,7 @@
         android:layout_height="wrap_content"
         android:layout_margin="16dp"
         android:backgroundTint="@color/grey1"
-        android:contentDescription="Take Photo Button"
+        android:contentDescription="@string/take_photo"
         android:src="@drawable/ic_camera_snap"
         android:theme="@style/Theme.KidsDrawingApp"
         app:borderWidth="4dp"
@@ -90,7 +90,6 @@
             app:layout_constraintTop_toBottomOf="parent" />
 
     </FrameLayout>
-
 
 </androidx.constraintlayout.widget.ConstraintLayout>
 
