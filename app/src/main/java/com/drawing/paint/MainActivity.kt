@@ -1604,6 +1604,8 @@ class MainActivity : AppCompatActivity(), Adapter.MyOnClickListener {
         super.onDestroy()
         cameraExecutor.shutdown()
         mRewardedAd = null
+        mInterstitialAd = null
+        imageCapture = null
     }
 }
 
