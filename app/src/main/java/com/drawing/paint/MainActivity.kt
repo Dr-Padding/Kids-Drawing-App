@@ -1606,6 +1606,7 @@ class MainActivity : AppCompatActivity(), Adapter.MyOnClickListener {
         mRewardedAd = null
         mInterstitialAd = null
         imageCapture = null
+        Thread.currentThread().interrupt()
     }
 }
 
