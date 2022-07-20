@@ -169,7 +169,6 @@ class MainActivity : AppCompatActivity(), Adapter.MyOnClickListener {
                         binding.drawingView.restoreLastDrawing(revertedBitmap)
                     }
                     .setNegativeButton("No") { dialog, _ ->
-                        // Dismiss the dialog
                         dialog.dismiss()
                     }
                 val alert = builder.create()
@@ -177,17 +176,6 @@ class MainActivity : AppCompatActivity(), Adapter.MyOnClickListener {
             }
         }
 
-        activateReviewInfo()
-
-
-
-
-    }
-
-    override fun onStart() {
-        loadRewardedAd()
-        loadInterstitialAd()
-        super.onStart()
         if (!isConnected()) {
             Toast.makeText(
                 this@MainActivity,
@@ -196,12 +184,23 @@ class MainActivity : AppCompatActivity(), Adapter.MyOnClickListener {
             )
                 .show()
         }
+
+        activateReviewInfo()
+
     }
 
     override fun onRestart() {
         super.onRestart()
         loadRewardedAd()
         loadInterstitialAd()
+        if (!isConnected()) {
+            Toast.makeText(
+                this@MainActivity,
+                "To access more colors, brushes and erasers, connect to the Internet!",
+                Toast.LENGTH_LONG
+            )
+                .show()
+        }
     }
 
     override fun onPause() {
@@ -258,7 +257,6 @@ class MainActivity : AppCompatActivity(), Adapter.MyOnClickListener {
                 UPLOAD_PERMISSION, STORAGE_PERMISSION_CODE
             )
         }
-
         if (mCameraLaunched) {
             cameraProvider.unbind(preview)
             cameraExecutor.shutdownNow()
@@ -294,7 +292,6 @@ class MainActivity : AppCompatActivity(), Adapter.MyOnClickListener {
                     binding.ivBackground.setImageURI(null)
                 }
                 .setNegativeButton("No") { dialog, _ ->
-                    // Dismiss the dialog
                     dialog.dismiss()
                 }
             val alert = builder.create()
@@ -337,18 +334,11 @@ class MainActivity : AppCompatActivity(), Adapter.MyOnClickListener {
             showRewardedVideo()
             if (mRewardedAd != null) {
                 mRewardedAd?.show(
-                    this@MainActivity,
-                    OnUserEarnedRewardListener() {
-                        brushDialog.setContentView(dialogBindingBrushesRewarded.root)
-                        Log.d("TAG", "User earned the reward.")
-                        mAdShowedForBrush = true
-
-//                    fun onUserEarnedReward(rewardItem: RewardItem) {
-//                        var rewardAmount = rewardItem.amount
-//                        //addCoins(rewardAmount)
-//                    }
-                    }
-                )
+                    this@MainActivity
+                ) {
+                    brushDialog.setContentView(dialogBindingBrushesRewarded.root)
+                    mAdShowedForBrush = true
+                }
             }
         }
 
@@ -514,20 +504,13 @@ class MainActivity : AppCompatActivity(), Adapter.MyOnClickListener {
                 showRewardedVideo()
                 if (mRewardedAd != null) {
                     mRewardedAd?.show(
-                        this@MainActivity,
-                        OnUserEarnedRewardListener() {
-                            if (!mAdShowedForMaxSize && !mAdShowedForEraser) {
-                                brushDialog.setContentView(dialogBindingEraserWithMoreSizesOnly.root)
-                                Log.d("TAG", "User earned the reward.")
-                                mAdShowedForEraser = true
-                            }
-
-//                    fun onUserEarnedReward(rewardItem: RewardItem) {
-//                        var rewardAmount = rewardItem.amount
-//                        //addCoins(rewardAmount)
-//                    }
+                        this@MainActivity
+                    ) {
+                        if (!mAdShowedForMaxSize && !mAdShowedForEraser) {
+                            brushDialog.setContentView(dialogBindingEraserWithMoreSizesOnly.root)
+                            mAdShowedForEraser = true
                         }
-                    )
+                    }
                 }
             }
 
@@ -535,20 +518,13 @@ class MainActivity : AppCompatActivity(), Adapter.MyOnClickListener {
                 showRewardedVideo()
                 if (mRewardedAd != null) {
                     mRewardedAd?.show(
-                        this@MainActivity,
-                        OnUserEarnedRewardListener() {
-                            if (!mAdShowedForMaxSize && !mAdShowedForEraser) {
-                                brushDialog.setContentView(dialogBindingEraserWithMaxSizesOnly.root)
-                                Log.d("TAG", "User earned the reward.")
-                                mAdShowedForMaxSize = true
-                            }
-
-//                    fun onUserEarnedReward(rewardItem: RewardItem) {
-//                        var rewardAmount = rewardItem.amount
-//                        //addCoins(rewardAmount)
-//                    }
+                        this@MainActivity
+                    ) {
+                        if (!mAdShowedForMaxSize && !mAdShowedForEraser) {
+                            brushDialog.setContentView(dialogBindingEraserWithMaxSizesOnly.root)
+                            mAdShowedForMaxSize = true
                         }
-                    )
+                    }
                 }
             }
         }
@@ -558,19 +534,11 @@ class MainActivity : AppCompatActivity(), Adapter.MyOnClickListener {
                 showRewardedVideo()
                 if (mRewardedAd != null) {
                     mRewardedAd?.show(
-                        this@MainActivity,
-                        OnUserEarnedRewardListener() {
-                            brushDialog.setContentView(dialogBindingEraserFull.root)
-                            Log.d("TAG", "User earned the reward.")
-                            mAdShowedForMaxSize = true
-
-
-//                    fun onUserEarnedReward(rewardItem: RewardItem) {
-//                        var rewardAmount = rewardItem.amount
-//                        //addCoins(rewardAmount)
-//                    }
-                        }
-                    )
+                        this@MainActivity
+                    ) {
+                        brushDialog.setContentView(dialogBindingEraserFull.root)
+                        mAdShowedForMaxSize = true
+                    }
                 }
             }
         }
@@ -580,19 +548,11 @@ class MainActivity : AppCompatActivity(), Adapter.MyOnClickListener {
                 showRewardedVideo()
                 if (mRewardedAd != null) {
                     mRewardedAd?.show(
-                        this@MainActivity,
-                        OnUserEarnedRewardListener() {
-                            brushDialog.setContentView(dialogBindingEraserFull.root)
-                            Log.d("TAG", "User earned the reward.")
-                            mAdShowedForEraser = true
-
-
-//                    fun onUserEarnedReward(rewardItem: RewardItem) {
-//                        var rewardAmount = rewardItem.amount
-//                        //addCoins(rewardAmount)
-//                    }
-                        }
-                    )
+                        this@MainActivity
+                    ) {
+                        brushDialog.setContentView(dialogBindingEraserFull.root)
+                        mAdShowedForEraser = true
+                    }
                 }
             }
         }
@@ -684,7 +644,6 @@ class MainActivity : AppCompatActivity(), Adapter.MyOnClickListener {
 
         }
 
-
         dialogBindingEraserWithMaxSizesOnly.apply {
             ibSmallBrush.setOnClickListener {
                 binding.drawingView.onClickEraser(true)
@@ -699,13 +658,11 @@ class MainActivity : AppCompatActivity(), Adapter.MyOnClickListener {
                 brushDialog.dismiss()
             }
 
-
             ibLargeBrush.setOnClickListener {
                 binding.drawingView.onClickEraser(true)
                 binding.drawingView.setSizeForEraser(20.toFloat())
                 brushDialog.dismiss()
             }
-
 
             btnClearAll.setOnClickListener {
                 binding.drawingView.onClickEraser(true)
@@ -721,13 +678,11 @@ class MainActivity : AppCompatActivity(), Adapter.MyOnClickListener {
                 brushDialog.dismiss()
             }
 
-
             ib6f.setOnClickListener {
                 binding.drawingView.onClickEraser(true)
                 binding.drawingView.setSizeForEraser(6.toFloat())
                 brushDialog.dismiss()
             }
-
 
             ib10f.setOnClickListener {
                 binding.drawingView.onClickEraser(true)
@@ -735,13 +690,11 @@ class MainActivity : AppCompatActivity(), Adapter.MyOnClickListener {
                 brushDialog.dismiss()
             }
 
-
             ib12f.setOnClickListener {
                 binding.drawingView.onClickEraser(true)
                 binding.drawingView.setSizeForEraser(12.toFloat())
                 brushDialog.dismiss()
             }
-
 
             ib16f.setOnClickListener {
                 binding.drawingView.onClickEraser(true)
@@ -749,13 +702,11 @@ class MainActivity : AppCompatActivity(), Adapter.MyOnClickListener {
                 brushDialog.dismiss()
             }
 
-
             ib20f.setOnClickListener {
                 binding.drawingView.onClickEraser(true)
                 binding.drawingView.setSizeForEraser(20.toFloat())
                 brushDialog.dismiss()
             }
-
 
             ib22f.setOnClickListener {
                 binding.drawingView.onClickEraser(true)
@@ -763,13 +714,11 @@ class MainActivity : AppCompatActivity(), Adapter.MyOnClickListener {
                 brushDialog.dismiss()
             }
 
-
             ib26f.setOnClickListener {
                 binding.drawingView.onClickEraser(true)
                 binding.drawingView.setSizeForEraser(26.toFloat())
                 brushDialog.dismiss()
             }
-
 
             ib30f.setOnClickListener {
                 binding.drawingView.onClickEraser(true)
@@ -784,7 +733,6 @@ class MainActivity : AppCompatActivity(), Adapter.MyOnClickListener {
             }
 
         }
-
         brushDialog.show()
     }
 
@@ -821,18 +769,11 @@ class MainActivity : AppCompatActivity(), Adapter.MyOnClickListener {
             showRewardedVideo()
             if (mRewardedAd != null) {
                 mRewardedAd?.show(
-                    this@MainActivity,
-                    OnUserEarnedRewardListener() {
-                        colorPickerDialog.setContentView(dialogBindingRewarded.root)
-                        Log.d("TAG", "User earned the reward.")
-                        mAdShowedForColors = true
-
-//                    fun onUserEarnedReward(rewardItem: RewardItem) {
-//                        var rewardAmount = rewardItem.amount
-//                        //addCoins(rewardAmount)
-//                    }
-                    }
-                )
+                    this@MainActivity
+                ) {
+                    colorPickerDialog.setContentView(dialogBindingRewarded.root)
+                    mAdShowedForColors = true
+                }
             }
         }
 
@@ -1060,10 +1001,9 @@ class MainActivity : AppCompatActivity(), Adapter.MyOnClickListener {
                 override fun onImageSaved(outputFileResults: ImageCapture.OutputFileResults) {
                     val savedUri = Uri.fromFile(photoFile)
                     binding.ivBackground.setImageURI(savedUri)
-                    cameraExecutor.shutdownNow() // ?????????
+                    cameraExecutor.shutdownNow() // ??
                     binding.viewFinder.visibility = View.INVISIBLE
                 }
-
                 override fun onError(exception: ImageCaptureException) {
                     Log.e(Constants.TAG, "onError: ${exception.message}", exception)
                 }
@@ -1085,7 +1025,6 @@ class MainActivity : AppCompatActivity(), Adapter.MyOnClickListener {
         )
         return result == PackageManager.PERMISSION_GRANTED
     }
-
 
     override fun onRequestPermissionsResult(
         requestCode: Int,
@@ -1181,7 +1120,6 @@ class MainActivity : AppCompatActivity(), Adapter.MyOnClickListener {
         mCameraLaunched = true
     }
 
-
     private var resultLauncher =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
             try {
@@ -1193,7 +1131,6 @@ class MainActivity : AppCompatActivity(), Adapter.MyOnClickListener {
                 e.printStackTrace()
             }
         }
-
 
     override fun onClick(position: Int) {
         when (position) {
@@ -1288,7 +1225,6 @@ class MainActivity : AppCompatActivity(), Adapter.MyOnClickListener {
     private fun loadRewardedAd() {
         if (mRewardedAd == null) {
             val adRequest = AdRequest.Builder().build()
-
             RewardedAd.load(
                 this@MainActivity, REWARDED_AD_UNIT_ID, adRequest,
                 object : RewardedAdLoadCallback() {
@@ -1300,7 +1236,6 @@ class MainActivity : AppCompatActivity(), Adapter.MyOnClickListener {
                     }
 
                     override fun onAdLoaded(rewardedAd: RewardedAd) {
-                        Log.d(TAG, "Ad was loaded.")
                         mRewardedAd = rewardedAd
                         mIsLoading = false
                         liveData.postValue(mIsLoading)
@@ -1315,24 +1250,21 @@ class MainActivity : AppCompatActivity(), Adapter.MyOnClickListener {
         if (mRewardedAd != null) {
             mRewardedAd?.fullScreenContentCallback = object : FullScreenContentCallback() {
                 override fun onAdDismissedFullScreenContent() {
-                    Log.d(TAG, "Ad was dismissed.")
                     // Don't forget to set the ad reference to null so you don't show the ad a second time.
                     mRewardedAd = null
                     loadRewardedAd()
                 }
 
                 override fun onAdFailedToShowFullScreenContent(adError: AdError) {
-                    Log.d(TAG, "Ad failed to show.")
                     // Don't forget to set the ad reference to null so you don't show the ad a second time.
                     mRewardedAd = null
-                    loadRewardedAd() //???????????
+                    loadRewardedAd() //??
                 }
 
                 override fun onAdShowedFullScreenContent() {
-                    Log.d(TAG, "Ad showed fullscreen content.")
                     // Called when ad is shown.
-                    mRewardedAd = null //???????????
-                    loadRewardedAd()   //???????????
+                    mRewardedAd = null //??
+                    loadRewardedAd()   //??
                 }
             }
         }
@@ -1341,7 +1273,6 @@ class MainActivity : AppCompatActivity(), Adapter.MyOnClickListener {
     private fun loadInterstitialAd() {
         if (mInterstitialAd == null) {
             val adRequest = AdRequest.Builder().build()
-
             InterstitialAd.load(
                 this, INTERSTITIAL_AD_UNIT_ID, adRequest,
                 object : InterstitialAdLoadCallback() {
@@ -1351,9 +1282,7 @@ class MainActivity : AppCompatActivity(), Adapter.MyOnClickListener {
                         mAdIsLoading = false
                         loadInterstitialAd()
                     }
-
                     override fun onAdLoaded(interstitialAd: InterstitialAd) {
-                        Log.d(TAG, "Ad was loaded.")
                         mInterstitialAd = interstitialAd
                         mAdIsLoading = false
                     }
@@ -1367,33 +1296,23 @@ class MainActivity : AppCompatActivity(), Adapter.MyOnClickListener {
         if (mInterstitialAd != null) {
             mInterstitialAd?.fullScreenContentCallback = object : FullScreenContentCallback() {
                 override fun onAdDismissedFullScreenContent() {
-                    Log.d(TAG, "Ad was dismissed.")
-                    // Don't forget to set the ad reference to null so you
-                    // don't show the ad a second time.
                     mInterstitialAd = null
                     loadInterstitialAd()
                 }
 
                 override fun onAdFailedToShowFullScreenContent(adError: AdError) {
-                    Log.d(TAG, "Ad failed to show.")
-                    // Don't forget to set the ad reference to null so you
-                    // don't show the ad a second time.
                     mInterstitialAd = null
-                    loadInterstitialAd() //?????????
+                    loadInterstitialAd() //??
                 }
 
                 override fun onAdShowedFullScreenContent() {
-                    Log.d(TAG, "Ad showed fullscreen content.")
-                    // Called when ad is showed.
-
                     lifecycleScope.launch {
                         val flDrawingView: FrameLayout =
                             findViewById(R.id.flBackgroundAndDrawingViewContainer)
                         saveBitmapFile(getBitmapFromView(flDrawingView))
                     }
-
-                    mInterstitialAd = null //?????????
-                    loadInterstitialAd() //?????????
+                    mInterstitialAd = null //??
+                    loadInterstitialAd() //??
                 }
             }
             mInterstitialAd?.show(this)
@@ -1405,7 +1324,7 @@ class MainActivity : AppCompatActivity(), Adapter.MyOnClickListener {
                     saveBitmapFile(getBitmapFromView(flDrawingView))
                 }
             }
-            loadInterstitialAd() //?????????
+            loadInterstitialAd() //??
         }
     }
 
