@@ -33,7 +33,9 @@ class BottomSheetFragment: BottomSheetDialogFragment() {
         var gifsList = mutableListOf(
             R.drawable.gif_1,
             R.drawable.gif_2,
-            R.drawable.gif_3
+            R.drawable.gif_3,
+            R.drawable.gif_4,
+            R.drawable.gif_5
         )
 
         val adapter = ViewPagerAdapter(gifsList)
