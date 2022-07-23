@@ -1,10 +1,19 @@
 package com.drawing.paint.adapters
 
 
+import android.R
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.annotation.Nullable
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.bumptech.glide.load.DataSource
+import com.bumptech.glide.load.engine.DiskCacheStrategy
+import com.bumptech.glide.load.engine.GlideException
+import com.bumptech.glide.load.resource.gif.GifDrawable
+import com.bumptech.glide.request.RequestListener
+import com.bumptech.glide.request.RequestOptions
+import com.bumptech.glide.request.target.Target
 import com.drawing.paint.databinding.GifItemBinding
 
 
@@ -21,7 +30,31 @@ class ViewPagerAdapter(val gifs: List<Int>) :
 
     override fun onBindViewHolder(holder: ViewPagerViewHolder, position: Int) {
         holder.apply {
-            Glide.with(itemView).load(gifs[position]).into(binding.ivGif)
+            Glide.with(itemView)
+                .asGif()
+                .load(gifs[position])
+                .apply(RequestOptions.diskCacheStrategyOf(DiskCacheStrategy.NONE))
+                .listener(object : RequestListener<GifDrawable> {
+                    override fun onLoadFailed(
+                        e: GlideException?,
+                        model: Any?,
+                        target: Target<GifDrawable>?,
+                        isFirstResource: Boolean
+                    ): Boolean {
+                        return false
+                    }
+                    override fun onResourceReady(
+                        resource: GifDrawable?,
+                        model: Any?,
+                        target: Target<GifDrawable>?,
+                        dataSource: DataSource?,
+                        isFirstResource: Boolean
+                    ): Boolean {
+                        resource?.setLoopCount(1)
+                        return false
+                    }
+                })
+                .into(binding.ivGif)
         }
     }
 

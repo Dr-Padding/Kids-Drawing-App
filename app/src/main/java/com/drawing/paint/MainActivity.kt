@@ -14,6 +14,7 @@ import android.net.ConnectivityManager
 import android.net.Uri
 import android.os.Bundle
 import android.os.Environment
+import android.os.Handler
 import android.provider.MediaStore
 import android.util.Base64
 import android.util.Log
@@ -31,8 +32,6 @@ import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
-import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -53,7 +52,7 @@ import com.google.android.gms.ads.rewarded.RewardedAd
 import com.google.android.gms.ads.rewarded.RewardedAdLoadCallback
 import com.google.android.play.core.review.ReviewInfo
 import com.google.android.play.core.review.ReviewManager
-import com.google.android.play.core.review.testing.FakeReviewManager
+import com.google.android.play.core.review.ReviewManagerFactory
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -1479,19 +1478,16 @@ class MainActivity : AppCompatActivity(), Adapter.MyOnClickListener {
     }
 
     private fun activateReviewInfo() {
-//        manager = ReviewManagerFactory.create(this@MainActivity)
-        manager = FakeReviewManager(this@MainActivity)
+        manager = ReviewManagerFactory.create(this@MainActivity)
+//        manager = FakeReviewManager(this@MainActivity)
         val request = manager.requestReviewFlow()
         request.addOnCompleteListener { task ->
             if (task.isSuccessful) {
                 // We got the ReviewInfo object
                 reviewInfo = task.result
-
-                Log.d("aaaaaaaaaaaaaaaaa", reviewInfo.toString())
-
             } else {
                 // There was some problem, log or handle the error code.
-//                @ReviewErrorCode val reviewErrorCode = (task.exception as TaskException).errorCode
+                Log.e("ReviewInfo Exception", task.exception?.message!!)
             }
         }
     }
@@ -1525,7 +1521,8 @@ class MainActivity : AppCompatActivity(), Adapter.MyOnClickListener {
         mRewardedAd = null
         mInterstitialAd = null
         imageCapture = null
-        Thread.currentThread().interrupt()
+//        Thread.currentThread().interrupt()
+
     }
 }
 
