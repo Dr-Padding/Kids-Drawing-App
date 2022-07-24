@@ -38,7 +38,8 @@ class BottomSheetFragment : BottomSheetDialogFragment() {
             R.drawable.gif_3,
             R.drawable.gif_4,
             R.drawable.gif_5,
-            R.drawable.gif_6
+            R.drawable.gif_6,
+            R.drawable.gif_7,
         )
 
         val adapter = ViewPagerAdapter(gifsList)
