@@ -103,8 +103,8 @@ class MainActivity : AppCompatActivity(), Adapter.MyOnClickListener {
         installSplashScreen()
         setContentView(binding.root)
 
-        val adRequestBanner = AdRequest.Builder().build()
-        binding.avTopBanner.loadAd(adRequestBanner)
+//        val adRequestBanner = AdRequest.Builder().build()
+//        binding.avTopBanner.loadAd(adRequestBanner)
 
         val toolsList = mutableListOf(
             Tools(R.drawable.ic_camera_sign),
