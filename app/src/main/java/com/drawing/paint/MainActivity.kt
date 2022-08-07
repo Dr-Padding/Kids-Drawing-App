@@ -182,7 +182,7 @@ class MainActivity : AppCompatActivity(), Adapter.MyOnClickListener {
         super.onPause()
         val sharedPref: SharedPreferences = getSharedPreferences("sharedPref", MODE_PRIVATE)
         val editor: SharedPreferences.Editor = sharedPref.edit()
-        val drawingView: DrawingView =
+        val drawingView: CompoundDrawingView =
             findViewById(R.id.drawing_view)
         val bitmapToString = getBitmapFromDrawingView(drawingView)
         val convertedString = convertBitmapToBase64(bitmapToString)
@@ -245,7 +245,6 @@ class MainActivity : AppCompatActivity(), Adapter.MyOnClickListener {
         }
     }
 
-
     private fun cameraLaunch() {
         if (cameraPermissionGranted()) {
             startCamera()
@@ -278,7 +277,6 @@ class MainActivity : AppCompatActivity(), Adapter.MyOnClickListener {
 
 
     private fun brushSizeChooseDialog() {
-
         val brushDialog = Dialog(this@MainActivity)
         brushDialog.setTitle(R.string.brush_size)
 
@@ -309,7 +307,6 @@ class MainActivity : AppCompatActivity(), Adapter.MyOnClickListener {
                             }
                         }
                     }.start()
-
                 }
             }
         } else {
@@ -445,7 +442,6 @@ class MainActivity : AppCompatActivity(), Adapter.MyOnClickListener {
 
 
     private fun eraserSizeChooseDialog() {
-
         val brushDialog = Dialog(this@MainActivity)
         brushDialog.setTitle(R.string.eraser_size)
 
@@ -464,7 +460,6 @@ class MainActivity : AppCompatActivity(), Adapter.MyOnClickListener {
         brushDialog.setContentView(dialogBindingEraserWithButtons.root)
 
         if (!mAdShowedForEraser && !mAdShowedForMaxSize) {
-
             liveData?.observe(this@MainActivity) {
                 if (it == false) {
                     dialogBindingEraserWithButtons.btnMoreSizes.visibility = View.VISIBLE
@@ -515,10 +510,8 @@ class MainActivity : AppCompatActivity(), Adapter.MyOnClickListener {
         dialogBindingEraserWithMoreSizesOnly.apply {
             liveData3?.observe(this@MainActivity) {
                 if (it == true) {
-
                     btnClearAll.isEnabled = true
                     btnClearAll.isClickable = true
-
                     btnClearAll.setOnClickListener {
                         adMobActivity?.showRewardedVideo(applicationContext)
                         adMobActivity?.rewardItem2(this@MainActivity)
@@ -534,16 +527,13 @@ class MainActivity : AppCompatActivity(), Adapter.MyOnClickListener {
                     btnClearAll.isClickable = false
                 }
             }
-
         }
 
         dialogBindingEraserWithMaxSizesOnly.apply {
             liveData3?.observe(this@MainActivity) {
                 if (it == true) {
-
                     btnMoreSizes.isEnabled = true
                     btnMoreSizes.isClickable = true
-
                     btnMoreSizes.setOnClickListener {
                         adMobActivity?.showRewardedVideo(applicationContext)
                         adMobActivity?.rewardItem(this@MainActivity)
@@ -559,8 +549,6 @@ class MainActivity : AppCompatActivity(), Adapter.MyOnClickListener {
                     btnMoreSizes.isClickable = false
                 }
             }
-
-
         }
 
         dialogBindingEraserWithButtons.apply {
@@ -570,13 +558,11 @@ class MainActivity : AppCompatActivity(), Adapter.MyOnClickListener {
                 brushDialog.dismiss()
             }
 
-
             ibMediumBrush.setOnClickListener {
                 binding.drawingView.onClickEraser(true)
                 binding.drawingView.setSizeForEraser(10.toFloat())
                 brushDialog.dismiss()
             }
-
 
             ibLargeBrush.setOnClickListener {
                 binding.drawingView.onClickEraser(true)
@@ -592,13 +578,11 @@ class MainActivity : AppCompatActivity(), Adapter.MyOnClickListener {
                 brushDialog.dismiss()
             }
 
-
             ib6f.setOnClickListener {
                 binding.drawingView.onClickEraser(true)
                 binding.drawingView.setSizeForEraser(6.toFloat())
                 brushDialog.dismiss()
             }
-
 
             ib10f.setOnClickListener {
                 binding.drawingView.onClickEraser(true)
@@ -606,13 +590,11 @@ class MainActivity : AppCompatActivity(), Adapter.MyOnClickListener {
                 brushDialog.dismiss()
             }
 
-
             ib12f.setOnClickListener {
                 binding.drawingView.onClickEraser(true)
                 binding.drawingView.setSizeForEraser(12.toFloat())
                 brushDialog.dismiss()
             }
-
 
             ib16f.setOnClickListener {
                 binding.drawingView.onClickEraser(true)
@@ -620,13 +602,11 @@ class MainActivity : AppCompatActivity(), Adapter.MyOnClickListener {
                 brushDialog.dismiss()
             }
 
-
             ib20f.setOnClickListener {
                 binding.drawingView.onClickEraser(true)
                 binding.drawingView.setSizeForEraser(20.toFloat())
                 brushDialog.dismiss()
             }
-
 
             ib22f.setOnClickListener {
                 binding.drawingView.onClickEraser(true)
@@ -634,13 +614,11 @@ class MainActivity : AppCompatActivity(), Adapter.MyOnClickListener {
                 brushDialog.dismiss()
             }
 
-
             ib26f.setOnClickListener {
                 binding.drawingView.onClickEraser(true)
                 binding.drawingView.setSizeForEraser(26.toFloat())
                 brushDialog.dismiss()
             }
-
 
             ib30f.setOnClickListener {
                 binding.drawingView.onClickEraser(true)
@@ -656,7 +634,6 @@ class MainActivity : AppCompatActivity(), Adapter.MyOnClickListener {
                 binding.drawingView.setSizeForEraser(4.toFloat())
                 brushDialog.dismiss()
             }
-
 
             ibMediumBrush.setOnClickListener {
                 binding.drawingView.onClickEraser(true)
@@ -756,7 +733,6 @@ class MainActivity : AppCompatActivity(), Adapter.MyOnClickListener {
         colorPickerDialog.setContentView(dialogBindingWithMoreColorsBtn.root)
 
         if (!mAdShowedForColors) {
-
             liveData?.observe(this@MainActivity) {
                 if (it == false) {
                     dialogBindingWithMoreColorsBtn.btnMoreColors.visibility = View.VISIBLE
@@ -978,7 +954,6 @@ class MainActivity : AppCompatActivity(), Adapter.MyOnClickListener {
         colorPickerDialog.show()
     }
 
-
     private fun getOutputDirectory(): File {
         val mediaDir = externalMediaDirs.firstOrNull()?.let { mFile ->
             File(mFile, resources.getString(R.string.app_name)).apply {
@@ -988,7 +963,6 @@ class MainActivity : AppCompatActivity(), Adapter.MyOnClickListener {
         return if (mediaDir != null && mediaDir.exists())
             mediaDir else filesDir
     }
-
 
     private fun takePhoto() {
         val imageCapture = imageCapture ?: return
@@ -1061,7 +1035,6 @@ class MainActivity : AppCompatActivity(), Adapter.MyOnClickListener {
                 finish()
             }
         }
-
         if (requestCode == DOWNLOAD_PERMISSION_CODE) {
             if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 lifecycleScope.launch {
@@ -1077,7 +1050,6 @@ class MainActivity : AppCompatActivity(), Adapter.MyOnClickListener {
                 ).show()
             }
         }
-
         if (requestCode == SHARE_PERMISSION_CODE) {
             if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 lifecycleScope.launch {
@@ -1094,7 +1066,6 @@ class MainActivity : AppCompatActivity(), Adapter.MyOnClickListener {
             }
         }
     }
-
 
     private fun startCamera() {
         val cameraProviderFuture = ProcessCameraProvider.getInstance(this@MainActivity)

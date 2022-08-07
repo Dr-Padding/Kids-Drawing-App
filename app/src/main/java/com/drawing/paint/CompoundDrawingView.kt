@@ -1,6 +1,5 @@
 package com.drawing.paint
 
-
 import android.content.Context
 import android.graphics.*
 import android.util.AttributeSet
@@ -8,9 +7,14 @@ import android.util.Base64
 import android.util.TypedValue
 import android.view.MotionEvent
 import android.view.View
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
-
-class DrawingView(context: Context, attrs: AttributeSet) : View(context, attrs) {
+class CompoundDrawingView @JvmOverloads constructor(
+    context: Context, attrs: AttributeSet? = null,
+    defStyleAttr: Int = 0
+) : View(context, attrs, defStyleAttr) {
 
     private var drawPaint: Paint? = null
     private var mBrushSize: Float = 0.toFloat()
@@ -26,7 +30,6 @@ class DrawingView(context: Context, attrs: AttributeSet) : View(context, attrs) 
     private val drawPath: Path = Path()
     private val bitmap = mutableListOf<Bitmap>()
     private val undoBitmap = mutableListOf<Bitmap>()
-
 
     init {
         setUpDrawing()
@@ -62,26 +65,31 @@ class DrawingView(context: Context, attrs: AttributeSet) : View(context, attrs) 
         }
     }
 
+
     fun onClickUndo() {
-        if (newAdded) {
-            bitmap.add(mBitmap!!.copy(mBitmap!!.config, mBitmap!!.isMutable))
-            newAdded = false
-        }
-        if (bitmap.size > 1) {
-            undoBitmap.add(bitmap.removeAt(bitmap.size - 1))
-            mBitmap = bitmap[bitmap.size - 1].copy(mBitmap!!.config, mBitmap!!.isMutable)
-            mCanvas = Canvas(mBitmap!!)
-            invalidate()
-            if (bitmap.size == 1) allClear = true
+        CoroutineScope(Dispatchers.Default).launch {
+            if (newAdded) {
+                bitmap.add(mBitmap!!.copy(mBitmap!!.config, mBitmap!!.isMutable))
+                newAdded = false
+            }
+            if (bitmap.size > 1) {
+                undoBitmap.add(bitmap.removeAt(bitmap.size - 1))
+                mBitmap = bitmap[bitmap.size - 1].copy(mBitmap!!.config, mBitmap!!.isMutable)
+                mCanvas = Canvas(mBitmap!!)
+                invalidate()
+                if (bitmap.size == 1) allClear = true
+            }
         }
     }
 
     fun onClickRedo() {
-        if (undoBitmap.size > 0) {
-            bitmap.add(undoBitmap.removeAt(undoBitmap.size - 1))
-            mBitmap = bitmap[bitmap.size - 1].copy(mBitmap!!.config, mBitmap!!.isMutable)
-            mCanvas = Canvas(mBitmap!!)
-            invalidate()
+        CoroutineScope(Dispatchers.Default).launch {
+            if (undoBitmap.size > 0) {
+                bitmap.add(undoBitmap.removeAt(undoBitmap.size - 1))
+                mBitmap = bitmap[bitmap.size - 1].copy(mBitmap!!.config, mBitmap!!.isMutable)
+                mCanvas = Canvas(mBitmap!!)
+                invalidate()
+            }
         }
     }
 
@@ -92,12 +100,14 @@ class DrawingView(context: Context, attrs: AttributeSet) : View(context, attrs) 
             when (event.action) {
                 MotionEvent.ACTION_DOWN -> {
                     newAdded = true
-                    if (!allClear) bitmap.add(
-                        mBitmap!!.copy(
-                            mBitmap!!.config,
-                            mBitmap!!.isMutable
-                        )
-                    ) else allClear = false
+                    CoroutineScope(Dispatchers.Default).launch {
+                        if (!allClear) bitmap.add(
+                            mBitmap!!.copy(
+                                mBitmap!!.config,
+                                mBitmap!!.isMutable
+                            )
+                        ) else allClear = false
+                    }
                     drawPath.moveTo(touchX, touchY)
                 }
                 MotionEvent.ACTION_MOVE -> if (eraserOn) {
