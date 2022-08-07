@@ -18,7 +18,8 @@ import com.drawing.paint.databinding.GifItemBinding
 class ViewPagerAdapter(val gifs: List<Int>) :
     RecyclerView.Adapter<ViewPagerAdapter.ViewPagerViewHolder>() {
 
-    inner class ViewPagerViewHolder(val binding: GifItemBinding) : RecyclerView.ViewHolder(binding.root)
+    inner class ViewPagerViewHolder(val binding: GifItemBinding) :
+        RecyclerView.ViewHolder(binding.root)
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewPagerViewHolder {
         val binding = GifItemBinding
@@ -41,6 +42,7 @@ class ViewPagerAdapter(val gifs: List<Int>) :
                     ): Boolean {
                         return false
                     }
+
                     override fun onResourceReady(
                         resource: GifDrawable?,
                         model: Any?,

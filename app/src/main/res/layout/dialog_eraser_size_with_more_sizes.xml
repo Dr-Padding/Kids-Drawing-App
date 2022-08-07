@@ -13,35 +13,31 @@
         android:layout_height="wrap_content"
         android:gravity="center"
         android:orientation="horizontal"
+        app:layout_constraintBottom_toTopOf="@id/ll_second_row_eraser"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toTopOf="@id/ll_second_row_eraser"
-        >
+        app:layout_constraintTop_toTopOf="parent">
 
         <ImageButton
             android:id="@+id/ib_2f"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/brush_2f"
-            />
+            android:src="@drawable/brush_2f" />
 
         <ImageButton
             android:id="@+id/ib_6f"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/brush_6f"
             android:layout_marginStart="8dp"
-            />
+            android:src="@drawable/brush_6f" />
 
         <ImageButton
             android:id="@+id/ib_10f"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/brush_10f"
             android:layout_marginStart="8dp"
-            />
+            android:src="@drawable/brush_10f" />
 
     </androidx.appcompat.widget.LinearLayoutCompat>
 
@@ -51,35 +47,31 @@
         android:layout_height="wrap_content"
         android:gravity="center"
         android:orientation="horizontal"
+        app:layout_constraintBottom_toTopOf="@id/ll_third_row_eraser"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/ll_first_row_eraser"
-        app:layout_constraintBottom_toTopOf="@id/ll_third_row_eraser"
-        >
+        app:layout_constraintTop_toBottomOf="@id/ll_first_row_eraser">
 
         <ImageButton
             android:id="@+id/ib_12f"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/brush_12f"
-            />
+            android:src="@drawable/brush_12f" />
 
         <ImageButton
             android:id="@+id/ib_16f"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/brush_16f"
             android:layout_marginStart="8dp"
-            />
+            android:src="@drawable/brush_16f" />
 
         <ImageButton
             android:id="@+id/ib_20f"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/brush_20f"
             android:layout_marginStart="8dp"
-            />
+            android:src="@drawable/brush_20f" />
 
     </androidx.appcompat.widget.LinearLayoutCompat>
 
@@ -89,35 +81,31 @@
         android:layout_height="wrap_content"
         android:gravity="center"
         android:orientation="horizontal"
+        app:layout_constraintBottom_toTopOf="@id/btnClearAll"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/ll_second_row_eraser"
-        app:layout_constraintBottom_toTopOf="@id/btnClearAll"
-        >
+        app:layout_constraintTop_toBottomOf="@id/ll_second_row_eraser">
 
         <ImageButton
             android:id="@+id/ib_22f"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/brush_22f"
-            />
+            android:src="@drawable/brush_22f" />
 
         <ImageButton
             android:id="@+id/ib_26f"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/brush_26f"
             android:layout_marginStart="8dp"
-            />
+            android:src="@drawable/brush_26f" />
 
         <ImageButton
             android:id="@+id/ib_30f"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/brush_30f"
             android:layout_marginStart="8dp"
-            />
+            android:src="@drawable/brush_30f" />
 
     </androidx.appcompat.widget.LinearLayoutCompat>
 
@@ -125,8 +113,9 @@
         android:id="@+id/btnClearAll"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/clear_all"
+        android:enabled="true"
         android:fontFamily="@font/aldrich"
+        android:text="@string/clear_all"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"

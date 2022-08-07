@@ -16,7 +16,7 @@ import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import java.lang.Exception
 
 
-class PrivacyPolicyBottomSheetFragment: BottomSheetDialogFragment() {
+class PrivacyPolicyBottomSheetFragment : BottomSheetDialogFragment() {
 
     private var binding: PrivacyPolicyBottomSheetFragmentBinding? = null
 
@@ -33,15 +33,19 @@ class PrivacyPolicyBottomSheetFragment: BottomSheetDialogFragment() {
         binding = PrivacyPolicyBottomSheetFragmentBinding.bind(view)
 
         binding!!.apply {
-        tvContacts.setOnClickListener {
-            try {
-                val intent = Intent(Intent.ACTION_VIEW, Uri.parse("https://t.me/dr_padding"))
-                startActivity(intent)
-            } catch (e: Exception) {
-                e.printStackTrace()
-                Toast.makeText(requireContext(), "Make sure you have the Telegram app installed", Toast.LENGTH_SHORT).show()
+            tvContacts.setOnClickListener {
+                try {
+                    val intent = Intent(Intent.ACTION_VIEW, Uri.parse("https://t.me/dr_padding"))
+                    startActivity(intent)
+                } catch (e: Exception) {
+                    e.printStackTrace()
+                    Toast.makeText(
+                        requireContext(),
+                        "Make sure you have the Telegram app installed",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
             }
-        }
             tvPrivacyPolicy.movementMethod = LinkMovementMethod.getInstance()
         }
     }
@@ -55,7 +59,7 @@ class PrivacyPolicyBottomSheetFragment: BottomSheetDialogFragment() {
         super.onPause()
         (activity as MainActivity).isFragmentShown = false
     }
-    
+
     override fun onDestroy() {
         super.onDestroy()
         binding = null

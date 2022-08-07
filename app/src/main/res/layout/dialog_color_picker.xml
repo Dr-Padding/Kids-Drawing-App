@@ -3,9 +3,9 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:padding="8dp"
     android:gravity="center"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:padding="8dp">
 
     <ImageButton
         android:id="@+id/ib_white"
@@ -13,11 +13,11 @@
         android:layout_height="wrap_content"
         android:contentDescription="@string/white_color"
         android:src="@drawable/color_circle"
+        android:tag="@color/white"
+        app:layout_constraintBottom_toTopOf="@id/btnMoreColors"
         app:layout_constraintEnd_toStartOf="@id/ib_black"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toTopOf="@id/btnMoreColors"
-        android:tag="@color/white"
         app:tint="@color/white" />
 
 
@@ -28,10 +28,10 @@
         android:contentDescription="@string/black_color"
         android:src="@drawable/color_circle"
         android:tag="@color/black"
+        app:layout_constraintBottom_toTopOf="@id/btnMoreColors"
         app:layout_constraintEnd_toStartOf="@id/ib_green"
         app:layout_constraintStart_toEndOf="@id/ib_white"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toTopOf="@id/btnMoreColors"
         app:tint="@color/black" />
 
     <ImageButton
@@ -40,35 +40,33 @@
         android:layout_height="wrap_content"
         android:contentDescription="@string/green_color"
         android:src="@drawable/color_circle"
+        android:tag="@color/green"
+        app:layout_constraintBottom_toTopOf="@id/btnMoreColors"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@id/ib_black"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toTopOf="@id/btnMoreColors"
-        android:tag="@color/green"
         app:tint="@color/green" />
 
     <Button
         android:id="@+id/btnMoreColors"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:fontFamily="@font/aldrich"
         android:text="@string/more_colors"
         android:visibility="invisible"
-        android:fontFamily="@font/aldrich"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/ib_black"
-        />
+        app:layout_constraintTop_toBottomOf="@id/ib_black" />
 
     <ProgressBar
         android:id="@+id/progress_bar"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:indeterminateTint="@color/grey"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="@id/ib_black"
         app:layout_constraintStart_toStartOf="@id/ib_black"
-        app:layout_constraintTop_toBottomOf="@id/ib_black"
-        app:layout_constraintBottom_toBottomOf="parent"
-        />
+        app:layout_constraintTop_toBottomOf="@id/ib_black" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

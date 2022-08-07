@@ -9,17 +9,16 @@
         android:id="@+id/tvChooseDrawing"
         android:layout_width="match_parent"
         android:layout_height="60dp"
+        android:fontFamily="@font/aldrich"
         android:gravity="center"
+        android:padding="8dp"
         android:text="@string/want_to_try"
         app:autoSizeTextType="uniform"
-        android:fontFamily="@font/aldrich"
-        android:padding="8dp"
+        app:layout_constraintBottom_toTopOf="@id/pager"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toTopOf="@id/pager"
-        />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <androidx.viewpager2.widget.ViewPager2
         android:id="@+id/pager"

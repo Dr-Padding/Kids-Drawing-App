@@ -3,23 +3,16 @@ package com.drawing.paint
 import android.app.Activity
 import android.content.Context
 import android.util.Log
-import android.view.View
-import android.widget.Toast
-import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.MutableLiveData
 import com.google.android.gms.ads.AdError
 import com.google.android.gms.ads.AdRequest
 import com.google.android.gms.ads.FullScreenContentCallback
 import com.google.android.gms.ads.LoadAdError
-import com.google.android.gms.ads.OnUserEarnedRewardListener
-import com.google.android.gms.ads.admanager.AdManagerAdRequest
-import com.google.android.gms.ads.rewarded.RewardItem
 import com.google.android.gms.ads.rewarded.RewardedAd
 import com.google.android.gms.ads.rewarded.RewardedAdLoadCallback
 
 
 const val REWARDED_AD_UNIT_ID = "ca-app-pub-3940256099942544/5224354917"
-const val INTERSTITIAL_AD_UNIT_ID = "ca-app-pub-3940256099942544/1033173712"
 
 class AdMobActivity(context: Context) {
 
@@ -27,13 +20,16 @@ class AdMobActivity(context: Context) {
     var mRewardedAd: RewardedAd? = null
     private var TAG = "AdMobActivity"
     private var _liveData = MutableLiveData<Boolean>()
-    val liveData : MutableLiveData<Boolean> = _liveData
+    val liveData: MutableLiveData<Boolean> = _liveData
 
     private var _liveData2 = MutableLiveData<Boolean>()
-    val liveData2 : MutableLiveData<Boolean> = _liveData2
+    val liveData2: MutableLiveData<Boolean> = _liveData2
 
+    private var _liveData3 = MutableLiveData<Boolean>()
+    val liveData3: MutableLiveData<Boolean> = _liveData3
+
+    var adLoaded = false
     var showed = false
-
 
     fun loadRewardedAd(context: Context) {
         if (mRewardedAd == null) {
@@ -45,12 +41,11 @@ class AdMobActivity(context: Context) {
                 adRequest,
                 object : RewardedAdLoadCallback() {
                     override fun onAdFailedToLoad(loadAdError: LoadAdError) {
-                        // Handle the error.
                         Log.d(TAG, loadAdError.message)
                         mRewardedAd = null
                         mIsLoading = false
-                        Toast.makeText(context.applicationContext, "onAdFailedToLoad", Toast.LENGTH_SHORT)
-                            .show()
+                        adLoaded = false
+                        _liveData3.postValue(adLoaded)
                         loadRewardedAd(context)
                     }
 
@@ -58,13 +53,13 @@ class AdMobActivity(context: Context) {
                         mRewardedAd = rewardedAd
                         Log.d(TAG, "onAdLoaded")
                         mIsLoading = false
-                        Toast.makeText(context.applicationContext, "onAdLoaded", Toast.LENGTH_SHORT).show()
                         _liveData.postValue(mIsLoading)
+                        adLoaded = true
+                        _liveData3.postValue(adLoaded)
                     }
                 })
         }
     }
-
 
     fun showRewardedVideo(context: Context) {
         if (mRewardedAd != null) {
@@ -116,6 +111,8 @@ class AdMobActivity(context: Context) {
         }
     }
 
-
-
+    fun reloadRewardedAd(context: Context) {
+        mRewardedAd = null
+        loadRewardedAd(context)
+    }
 }

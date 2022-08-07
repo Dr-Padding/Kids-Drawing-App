@@ -6,10 +6,8 @@
     <files-path
         name="images"
         path="." />
-    
+
     <external-path
         name="captured"
         path="/files/Pictures" />
 </paths>
-
-    <!--        path="Android/data/com.drawing.paint/files/Pictures" />-->
