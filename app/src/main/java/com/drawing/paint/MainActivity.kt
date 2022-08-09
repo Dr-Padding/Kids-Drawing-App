@@ -182,7 +182,7 @@ class MainActivity : AppCompatActivity(), Adapter.MyOnClickListener {
         super.onPause()
         val sharedPref: SharedPreferences = getSharedPreferences("sharedPref", MODE_PRIVATE)
         val editor: SharedPreferences.Editor = sharedPref.edit()
-        val drawingView: CompoundDrawingView =
+        val drawingView: DrawingView =
             findViewById(R.id.drawing_view)
         val bitmapToString = getBitmapFromDrawingView(drawingView)
         val convertedString = convertBitmapToBase64(bitmapToString)
@@ -297,6 +297,8 @@ class MainActivity : AppCompatActivity(), Adapter.MyOnClickListener {
                     dialogBindingWithMoreSizesBtn.btnMoreSizes.visibility = View.INVISIBLE
                     dialogBindingWithMoreSizesBtn.progressBar.visibility = View.VISIBLE
 
+
+                    /// ???????????????????????????
                     object : CountDownTimer(5000, 1000) {
 
                         override fun onTick(millisUntilFinished: Long) {}

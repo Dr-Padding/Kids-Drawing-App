@@ -111,7 +111,7 @@ class AdMobActivity(context: Context) {
         }
     }
 
-    fun reloadRewardedAd(context: Context) {
+   fun reloadRewardedAd(context: Context) {
         mRewardedAd = null
         loadRewardedAd(context)
     }
