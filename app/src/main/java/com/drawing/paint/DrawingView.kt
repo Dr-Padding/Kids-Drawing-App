@@ -7,9 +7,7 @@ import android.util.Base64
 import android.util.TypedValue
 import android.view.MotionEvent
 import android.view.View
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
+
 
 class DrawingView @JvmOverloads constructor(
     context: Context, attrs: AttributeSet? = null,
@@ -19,8 +17,6 @@ class DrawingView @JvmOverloads constructor(
     private var drawPaint: Paint? = null
     private var mBrushSize: Float = 0.toFloat()
     private var mEraserSize: Float = 0.toFloat()
-    private var penSelected = true
-    private var eraserSelected = false
     private var mBitmap: Bitmap? = null
     private var mCanvas: Canvas? = null
     private val mBitmapPaint: Paint = Paint(Paint.DITHER_FLAG)
@@ -53,86 +49,72 @@ class DrawingView @JvmOverloads constructor(
         if (isEraserOn) {
             eraserOn = true
             drawPaint!!.xfermode = PorterDuffXfermode(PorterDuff.Mode.CLEAR)
-            penSelected = false
-            eraserSelected = true
         } else {
             eraserOn = false
             drawPaint!!.color = drawPaint!!.color
             drawPaint!!.strokeWidth = mBrushSize
             drawPaint!!.xfermode = null
-            eraserSelected = false
-            penSelected = true
         }
     }
 
 
     fun onClickUndo() {
-        CoroutineScope(Dispatchers.Default).launch {
-            if (newAdded) {
-                bitmap.add(mBitmap!!.copy(mBitmap!!.config, mBitmap!!.isMutable))
-                newAdded = false
-            }
-            if (bitmap.size > 1) {
-                undoBitmap.add(bitmap.removeAt(bitmap.size - 1))
-                mBitmap = bitmap[bitmap.size - 1].copy(mBitmap!!.config, mBitmap!!.isMutable)
-                mCanvas = Canvas(mBitmap!!)
-                invalidate()
-                if (bitmap.size == 1) allClear = true
-            }
+        if (newAdded) {
+            bitmap.add(mBitmap!!.copy(mBitmap!!.config, mBitmap!!.isMutable))
+            newAdded = false
+        }
+        if (bitmap.size > 1) {
+            undoBitmap.add(bitmap.removeAt(bitmap.size - 1))
+            mBitmap = bitmap[bitmap.size - 1].copy(mBitmap!!.config, mBitmap!!.isMutable)
+            mCanvas = Canvas(mBitmap!!)
+            invalidate()
+            if (bitmap.size == 1) allClear = true
         }
     }
 
     fun onClickRedo() {
-        CoroutineScope(Dispatchers.Default).launch {
-            if (undoBitmap.size > 0) {
-                bitmap.add(undoBitmap.removeAt(undoBitmap.size - 1))
-                mBitmap = bitmap[bitmap.size - 1].copy(mBitmap!!.config, mBitmap!!.isMutable)
-                mCanvas = Canvas(mBitmap!!)
-                invalidate()
-            }
+        if (undoBitmap.size > 0) {
+            bitmap.add(undoBitmap.removeAt(undoBitmap.size - 1))
+            mBitmap = bitmap[bitmap.size - 1].copy(mBitmap!!.config, mBitmap!!.isMutable)
+            mCanvas = Canvas(mBitmap!!)
+            invalidate()
         }
     }
 
     override fun onTouchEvent(event: MotionEvent): Boolean {
-        if (penSelected || eraserSelected) {
-            val touchX = event.x
-            val touchY = event.y
-            when (event.action) {
-                MotionEvent.ACTION_DOWN -> {
-                    newAdded = true
-                    CoroutineScope(Dispatchers.Default).launch {
-                        if (!allClear) bitmap.add(
-                            mBitmap!!.copy(
-                                mBitmap!!.config,
-                                mBitmap!!.isMutable
-                            )
-                        ) else allClear = false
-                    }
-                    drawPath.moveTo(touchX, touchY)
-                }
-                MotionEvent.ACTION_MOVE -> if (eraserOn) {
-                    drawPath.lineTo(touchX, touchY)
-                    mCanvas!!.drawPath(drawPath, drawPaint!!)
-                    drawPath.reset()
-                    drawPath.moveTo(touchX, touchY)
-                } else {
-                    drawPath.lineTo(touchX, touchY)
-                }
-                MotionEvent.ACTION_UP -> {
-                    drawPath.lineTo(touchX, touchY)
-                    mCanvas!!.drawPath(drawPath, drawPaint!!)
-                    drawPath.reset()
-                    if (drawPaint!!.strokeWidth >= 9999.toFloat()) {
-                        onClickEraser(false)
-                    }
-                }
-                MotionEvent.ACTION_CANCEL -> return false
-                else -> return false
+        val touchX = event.x
+        val touchY = event.y
+        when (event.action) {
+            MotionEvent.ACTION_DOWN -> {
+                newAdded = true
+                if (!allClear) bitmap.add(
+                    mBitmap!!.copy(
+                        mBitmap!!.config,
+                        mBitmap!!.isMutable
+                    )
+                ) else allClear = false
+                drawPath.moveTo(touchX, touchY)
             }
-            invalidate()
-            return true
+            MotionEvent.ACTION_MOVE -> if (eraserOn) {
+                drawPath.lineTo(touchX, touchY)
+                mCanvas!!.drawPath(drawPath, drawPaint!!)
+                drawPath.reset()
+                drawPath.moveTo(touchX, touchY)
+            } else {
+                drawPath.lineTo(touchX, touchY)
+            }
+            MotionEvent.ACTION_UP -> {
+                drawPath.lineTo(touchX, touchY)
+                mCanvas!!.drawPath(drawPath, drawPaint!!)
+                drawPath.reset()
+                if (drawPaint!!.strokeWidth >= 9999.toFloat()) {
+                    onClickEraser(false)
+                }
+            }
+            else -> return false
         }
-        return false
+        invalidate()
+        return true
     }
 
     private fun setUpDrawing() {

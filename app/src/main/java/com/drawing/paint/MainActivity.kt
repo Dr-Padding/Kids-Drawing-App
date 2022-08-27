@@ -296,8 +296,6 @@ class MainActivity : AppCompatActivity(), Adapter.MyOnClickListener {
                 } else {
                     dialogBindingWithMoreSizesBtn.btnMoreSizes.visibility = View.INVISIBLE
                     dialogBindingWithMoreSizesBtn.progressBar.visibility = View.VISIBLE
-
-
                     /// ???????????????????????????
                     object : CountDownTimer(5000, 1000) {
 

@@ -12,7 +12,7 @@ import com.google.android.gms.ads.rewarded.RewardedAd
 import com.google.android.gms.ads.rewarded.RewardedAdLoadCallback
 
 
-const val REWARDED_AD_UNIT_ID = "ca-app-pub-3940256099942544/5224354917"
+const val REWARDED_AD_UNIT_ID = "ca-app-pub-7754594115862131/7622782375"
 
 class AdMobActivity(context: Context) {
 

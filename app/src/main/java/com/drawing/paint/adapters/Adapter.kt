@@ -39,5 +39,4 @@ class Adapter(val tools: List<Tools>, val listener: MyOnClickListener) :
     interface MyOnClickListener {
         fun onClick(position: Int)
     }
-
 }
