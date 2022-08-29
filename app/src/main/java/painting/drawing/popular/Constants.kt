@@ -1,4 +1,4 @@
-package com.drawing.paint
+package painting.drawing.popular
 
 object Constants {
     const val tag = "BottomSheetDialog"

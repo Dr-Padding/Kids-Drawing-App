@@ -1,4 +1,4 @@
-package com.drawing.paint
+package painting.drawing.popular
 
 
 import android.Manifest
@@ -38,15 +38,16 @@ import androidx.core.view.isVisible
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.drawing.paint.Constants.DOWNLOAD_PERMISSION_CODE
-import com.drawing.paint.Constants.SHARE_PERMISSION_CODE
-import com.drawing.paint.Constants.STORAGE_PERMISSION_CODE
-import com.drawing.paint.Constants.UPLOAD_PERMISSION
-import com.drawing.paint.Constants.tag
-import com.drawing.paint.adapters.Adapter
+import com.drawing.paint.R
+import painting.drawing.popular.Constants.DOWNLOAD_PERMISSION_CODE
+import painting.drawing.popular.Constants.SHARE_PERMISSION_CODE
+import painting.drawing.popular.Constants.STORAGE_PERMISSION_CODE
+import painting.drawing.popular.Constants.UPLOAD_PERMISSION
+import painting.drawing.popular.Constants.tag
+import painting.drawing.popular.adapters.Adapter
 import com.drawing.paint.databinding.*
-import com.drawing.paint.fragments.BottomSheetFragment
-import com.drawing.paint.fragments.PrivacyPolicyBottomSheetFragment
+import painting.drawing.popular.fragments.BottomSheetFragment
+import painting.drawing.popular.fragments.PrivacyPolicyBottomSheetFragment
 import com.google.android.gms.ads.*
 import com.google.android.play.core.review.ReviewInfo
 import com.google.android.play.core.review.ReviewManager

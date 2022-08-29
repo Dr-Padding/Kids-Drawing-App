@@ -1,9 +1,9 @@
-package com.drawing.paint.adapters
+package painting.drawing.popular.adapters
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.drawing.paint.Tools
+import painting.drawing.popular.Tools
 import com.drawing.paint.databinding.ItemToolBinding
 
 

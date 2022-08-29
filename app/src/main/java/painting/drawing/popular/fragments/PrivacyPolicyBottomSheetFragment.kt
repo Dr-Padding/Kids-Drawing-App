@@ -1,4 +1,4 @@
-package com.drawing.paint.fragments
+package painting.drawing.popular.fragments
 
 
 import android.content.Intent
@@ -9,7 +9,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
-import com.drawing.paint.MainActivity
+import painting.drawing.popular.MainActivity
 import com.drawing.paint.R
 import com.drawing.paint.databinding.PrivacyPolicyBottomSheetFragmentBinding
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
