@@ -1,4 +1,4 @@
-package painting.drawing.popular
+package painting.drawing.nft
 
 
 import android.Manifest
@@ -15,7 +15,6 @@ import android.media.MediaScannerConnection
 import android.net.ConnectivityManager
 import android.net.Uri
 import android.os.Bundle
-import android.os.CountDownTimer
 import android.os.Environment
 import android.provider.MediaStore
 import android.util.Base64
@@ -34,20 +33,19 @@ import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
-import androidx.core.view.isVisible
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.drawing.paint.R
-import painting.drawing.popular.Constants.DOWNLOAD_PERMISSION_CODE
-import painting.drawing.popular.Constants.SHARE_PERMISSION_CODE
-import painting.drawing.popular.Constants.STORAGE_PERMISSION_CODE
-import painting.drawing.popular.Constants.UPLOAD_PERMISSION
-import painting.drawing.popular.Constants.tag
-import painting.drawing.popular.adapters.Adapter
+import painting.drawing.nft.Constants.DOWNLOAD_PERMISSION_CODE
+import painting.drawing.nft.Constants.SHARE_PERMISSION_CODE
+import painting.drawing.nft.Constants.STORAGE_PERMISSION_CODE
+import painting.drawing.nft.Constants.UPLOAD_PERMISSION
+import painting.drawing.nft.Constants.tag
+import painting.drawing.nft.adapters.Adapter
 import com.drawing.paint.databinding.*
-import painting.drawing.popular.fragments.BottomSheetFragment
-import painting.drawing.popular.fragments.PrivacyPolicyBottomSheetFragment
+import painting.drawing.nft.fragments.BottomSheetFragment
+import painting.drawing.nft.fragments.PrivacyPolicyBottomSheetFragment
 import com.google.android.gms.ads.*
 import com.google.android.play.core.review.ReviewInfo
 import com.google.android.play.core.review.ReviewManager
@@ -107,7 +105,6 @@ class MainActivity : AppCompatActivity(), Adapter.MyOnClickListener {
             Tools(R.drawable.ic_play),
             Tools(R.drawable.ic_save),
             Tools(R.drawable.ic_share),
-            Tools(R.drawable.ic_star),
             Tools(R.drawable.ic_dr)
         )
 
@@ -145,8 +142,10 @@ class MainActivity : AppCompatActivity(), Adapter.MyOnClickListener {
                     .setCancelable(false)
                     .setPositiveButton("Yes") { _, _ ->
                         binding.drawingView.restoreLastDrawing(revertedBitmap)
+                        startReviewFlow()
                     }
                     .setNegativeButton("No") { dialog, _ ->
+                        startReviewFlow()
                         dialog.dismiss()
                     }
                 val alert = builder.create()
@@ -162,8 +161,12 @@ class MainActivity : AppCompatActivity(), Adapter.MyOnClickListener {
             )
                 .show()
         }
-
         activateReviewInfo()
+
+        if (!isFragmentShown) {
+            BottomSheetFragment().show(supportFragmentManager, tag)
+        }
+
     }
 
     override fun onRestart() {
@@ -276,7 +279,6 @@ class MainActivity : AppCompatActivity(), Adapter.MyOnClickListener {
         }
     }
 
-
     private fun brushSizeChooseDialog() {
         val brushDialog = Dialog(this@MainActivity)
         brushDialog.setTitle(R.string.brush_size)
@@ -297,17 +299,6 @@ class MainActivity : AppCompatActivity(), Adapter.MyOnClickListener {
                 } else {
                     dialogBindingWithMoreSizesBtn.btnMoreSizes.visibility = View.INVISIBLE
                     dialogBindingWithMoreSizesBtn.progressBar.visibility = View.VISIBLE
-                    /// ???????????????????????????
-                    object : CountDownTimer(5000, 1000) {
-
-                        override fun onTick(millisUntilFinished: Long) {}
-
-                        override fun onFinish() {
-                            if (dialogBindingWithMoreSizesBtn.progressBar.isVisible) {
-                                adMobActivity?.reloadRewardedAd(applicationContext)
-                            }
-                        }
-                    }.start()
                 }
             }
         } else {
@@ -440,7 +431,6 @@ class MainActivity : AppCompatActivity(), Adapter.MyOnClickListener {
         }
         brushDialog.show()
     }
-
 
     private fun eraserSizeChooseDialog() {
         val brushDialog = Dialog(this@MainActivity)
@@ -719,7 +709,6 @@ class MainActivity : AppCompatActivity(), Adapter.MyOnClickListener {
         }
         brushDialog.show()
     }
-
 
     private fun colorPicker() {
         val colorPickerDialog = Dialog(this@MainActivity)
@@ -1175,9 +1164,6 @@ class MainActivity : AppCompatActivity(), Adapter.MyOnClickListener {
                 }
             }
             11 -> {
-                startReviewFlow()
-            }
-            12 -> {
                 val privacyPolicyBottomSheetFragment = PrivacyPolicyBottomSheetFragment()
                 if (!isFragmentShown) {
                     privacyPolicyBottomSheetFragment.show(supportFragmentManager, tag)
@@ -1356,9 +1342,11 @@ class MainActivity : AppCompatActivity(), Adapter.MyOnClickListener {
             // The flow has finished. The API does not indicate whether the user
             // reviewed or not, or even whether the review dialog was shown. Thus, no
             // matter the result, we continue our app flow.
+            activateReviewInfo()
         }
     }
 
+    @Deprecated("Deprecated in Java")
     override fun onBackPressed() {
         if (mCameraLaunched) {
             cameraProvider.unbind(preview)
@@ -1368,7 +1356,7 @@ class MainActivity : AppCompatActivity(), Adapter.MyOnClickListener {
             binding.drawingView.visibility = View.VISIBLE
             mCameraLaunched = false
         } else {
-            super.onBackPressed()
+            onBackPressedDispatcher.onBackPressed()
         }
     }
 

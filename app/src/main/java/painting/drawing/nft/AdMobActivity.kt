@@ -1,4 +1,4 @@
-package painting.drawing.popular
+package painting.drawing.nft
 
 import android.app.Activity
 import android.content.Context
@@ -12,7 +12,7 @@ import com.google.android.gms.ads.rewarded.RewardedAd
 import com.google.android.gms.ads.rewarded.RewardedAdLoadCallback
 
 
-const val REWARDED_AD_UNIT_ID = "ca-app-pub-7754594115862131/7622782375"
+const val REWARDED_AD_UNIT_ID = "ca-app-pub-7754594115862131/1574911988"
 
 class AdMobActivity(context: Context) {
 
@@ -79,7 +79,7 @@ class AdMobActivity(context: Context) {
                 override fun onAdShowedFullScreenContent() {
                     // Called when ad is shown.
                     mRewardedAd = null //??
-                    loadRewardedAd(context)   //??
+                    loadRewardedAd(context) //??
                 }
             }
         }
@@ -87,7 +87,9 @@ class AdMobActivity(context: Context) {
 
     fun rewardItem(context: Context) {
         if (mRewardedAd != null) {
-            mRewardedAd?.show(context as Activity) {
+            mRewardedAd?.show(
+                context as Activity
+            ) {
                 showed = true
                 _liveData.postValue(showed)
             }
@@ -109,10 +111,5 @@ class AdMobActivity(context: Context) {
             _liveData2.postValue(showed)
             Log.d(TAG, "The rewarded ad wasn't ready yet.")
         }
-    }
-
-   fun reloadRewardedAd(context: Context) {
-        mRewardedAd = null
-        loadRewardedAd(context)
     }
 }

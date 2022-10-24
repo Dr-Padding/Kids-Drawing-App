@@ -4,6 +4,7 @@
     android:id="@+id/cv_cardView"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
+    android:background="@color/white"
     android:layout_margin="4dp"
     android:clickable="true"
     android:focusable="true"
@@ -14,6 +15,7 @@
         android:id="@+id/ib_tool"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:background="@color/white"
         android:contentDescription="@string/camera_image"
         android:scaleType="fitXY"
         android:src="@drawable/ic_camera_sign" />

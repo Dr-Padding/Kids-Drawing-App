@@ -5,13 +5,10 @@
         <shape xmlns:android="http://schemas.android.com/apk/res/android"
             android:dither="true"
             android:shape="oval">
-
             <size
                 android:width="50dp"
                 android:height="50dp" />
-
-            <solid android:color="#FF666666" />
-
+            <solid  android:color="@color/SteelGrey"/>
         </shape>
     </item>
     <item

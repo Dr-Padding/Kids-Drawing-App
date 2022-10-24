@@ -1,4 +1,4 @@
-package painting.drawing.popular.adapters
+package painting.drawing.nft.adapters
 
 
 import android.view.LayoutInflater

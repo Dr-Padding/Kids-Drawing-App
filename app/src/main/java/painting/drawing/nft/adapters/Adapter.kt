@@ -1,9 +1,9 @@
-package painting.drawing.popular.adapters
+package painting.drawing.nft.adapters
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import painting.drawing.popular.Tools
+import painting.drawing.nft.Tools
 import com.drawing.paint.databinding.ItemToolBinding
 
 

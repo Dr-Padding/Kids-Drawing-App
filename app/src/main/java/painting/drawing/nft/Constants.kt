@@ -1,4 +1,4 @@
-package painting.drawing.popular
+package painting.drawing.nft
 
 object Constants {
     const val tag = "BottomSheetDialog"

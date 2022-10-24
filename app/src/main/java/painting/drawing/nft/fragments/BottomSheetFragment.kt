@@ -1,4 +1,4 @@
-package painting.drawing.popular.fragments
+package painting.drawing.nft.fragments
 
 
 import android.os.Bundle
@@ -6,9 +6,9 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.viewpager2.widget.ViewPager2
-import painting.drawing.popular.MainActivity
+import painting.drawing.nft.MainActivity
 import com.drawing.paint.R
-import painting.drawing.popular.adapters.ViewPagerAdapter
+import painting.drawing.nft.adapters.ViewPagerAdapter
 import com.drawing.paint.databinding.BottomSheetFragmentBinding
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 
