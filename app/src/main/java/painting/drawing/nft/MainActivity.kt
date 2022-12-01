@@ -37,15 +37,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.drawing.paint.R
-import painting.drawing.nft.Constants.DOWNLOAD_PERMISSION_CODE
-import painting.drawing.nft.Constants.SHARE_PERMISSION_CODE
-import painting.drawing.nft.Constants.STORAGE_PERMISSION_CODE
-import painting.drawing.nft.Constants.UPLOAD_PERMISSION
-import painting.drawing.nft.Constants.tag
-import painting.drawing.nft.adapters.Adapter
 import com.drawing.paint.databinding.*
-import painting.drawing.nft.fragments.BottomSheetFragment
-import painting.drawing.nft.fragments.PrivacyPolicyBottomSheetFragment
 import com.google.android.gms.ads.*
 import com.google.android.play.core.review.ReviewInfo
 import com.google.android.play.core.review.ReviewManager
@@ -53,6 +45,14 @@ import com.google.android.play.core.review.ReviewManagerFactory
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import painting.drawing.nft.Constants.DOWNLOAD_PERMISSION_CODE
+import painting.drawing.nft.Constants.SHARE_PERMISSION_CODE
+import painting.drawing.nft.Constants.STORAGE_PERMISSION_CODE
+import painting.drawing.nft.Constants.UPLOAD_PERMISSION
+import painting.drawing.nft.Constants.tag
+import painting.drawing.nft.adapters.Adapter
+import painting.drawing.nft.fragments.BottomSheetFragment
+import painting.drawing.nft.fragments.PrivacyPolicyBottomSheetFragment
 import java.io.ByteArrayOutputStream
 import java.io.File
 import java.io.FileOutputStream
@@ -86,6 +86,18 @@ class MainActivity : AppCompatActivity(), Adapter.MyOnClickListener {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        //this code is required according to  Families Policy Requirements in order to show ads for both children and adults
+
+        val requestConfiguration = MobileAds.getRequestConfiguration()
+            .toBuilder()
+            .setTagForChildDirectedTreatment(
+                RequestConfiguration.TAG_FOR_CHILD_DIRECTED_TREATMENT_TRUE
+            )
+            .setMaxAdContentRating(RequestConfiguration.MAX_AD_CONTENT_RATING_G)
+            .build()
+        MobileAds.setRequestConfiguration(requestConfiguration)
+
         MobileAds.initialize(this@MainActivity) {}
         adMobActivity?.loadRewardedAd(applicationContext)
         checkConnection()
